@@ -41,7 +41,7 @@ reserved = {
     'program' : 'PROGRAM_KEYWORD'
 }
         #New tokens:
-tokens = ['ID', 'EQX', 'EQY', 'CONS_STRING', 'CONS_INT', 
+tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRING', 'CONS_INT', 
         'CONS_FLOAT', 'CONS_BOOL', 'RELOP',
         #Old tokens:
         'OPEN_BRACKET','CLOSE_BRACKET','OPEN_SQUARE_BRACKET','CLOSE_SQUARE_BRACKET', 'COMMA', 'POINT', 'PLUSOP', 'MINUSOP',
@@ -49,8 +49,10 @@ tokens = ['ID', 'EQX', 'EQY', 'CONS_STRING', 'CONS_INT',
         'ARROW','TWO_POINTS', 'SEMICOLON', 'EQUALOP', 'CTE_I', 'CTE_F', 'STRING'] + list(reserved.values())
 #New tokens:
 #t_ID = r'[a-zA-Z_][a-zA-Z0-9]*' #Not needed since it's already been made below for LittleDuck
-t_EQX = r'[[0-9]+\.[0-9]+] ["x^2"] [/] [[0-9]+\.[0-9]+]'
-t_EQY = r'[[0-9]+\.[0-9]+] ["y^2"] [/] [[0-9]+\.[0-9]+]'
+t_EQPARABOLA = r'\s*\y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
+t_EQCIRCLE = r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*'
+t_EQELLIPSE = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
+t_EQHYPERBOLA = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
 t_CONS_STRING = r'\".*\"'
 t_CONS_INT = r'[0-9]+'
 t_CONS_FLOAT = r'[0-9]+\.[0-9]+'
@@ -70,7 +72,7 @@ t_TIMESOP = r'\*'
 t_DIVIDEOP = r'/'
 t_OPEN_PARENTHESES = r'\('
 t_CLOSE_PARENTHESES = r'\)'
-t_ARROW = r'~'#flechita
+t_ARROW = r'\~'#flechita
 t_TWO_POINTS = r':'
 t_SEMICOLON = r';'
 t_EQUALOP = r'='
@@ -151,7 +153,7 @@ def p_STATEMENT(t):
 			| WRITE
 			| FOR_LOOP
 			| WHILE_LOOP
-			| CONDIITON
+			| CONDITION
             | F_CALL'''
 			
 def p_ASSIGN(t):
@@ -217,7 +219,8 @@ def p_WHILE_LOOP(t):
     'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK'
 	
 def p_PLOT(t):
-    'PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON'
+    '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+            | PLOT_KEYWORD OPEN_PARENTHESES ID CLOSE_PARENTHESES SEMICOLON'''
 	
 def p_TRANSFORM(t):
     '''TRANSFORM : REFLECTION_KEYWORD
@@ -229,7 +232,7 @@ def p_F_CALL(t):
     'F_CALL : ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON'
 	
 def p_CONDITION(t):
-    'CONDIITON : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N'
+    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N'
 	
 def p_N(t):
     '''N : ELSE_STATEMENT BLOCK
@@ -282,7 +285,10 @@ def p_FACTOR(t):
             | VAR_CONS'''
 			
 def p_EQUATION(t):
-    'EQUATION : EQX R EQY EQUALOP CONS_FLOAT'
+    '''EQUATION : EQPARABOLA
+			| EQCIRCLE
+			| EQELLIPSE
+            | EQHYPERBOLA'''
 	
 def p_R(t):
     '''R : PLUSOP

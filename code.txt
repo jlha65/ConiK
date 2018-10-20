@@ -5,8 +5,6 @@ var p1: parabola;
     h4: hyperbola;
 {
     c2 ~ x^2 + y^2 = 1;
-    e3 ~ x^2 / 3 + y^2 / 5 = 1;
-    h4 ~ x^2 / 3 - y^2 / 5 = 1;
  
     print(p1.focus);
     print(c2.radius);
