@@ -1,0 +1,28 @@
+Here are the regex for the conic sections general form equations
+
+Please take note of this:
+    - The equations to be tested MUST be in the defined form, '/' is not optional, 
+      if there is nothing dividing then an 1 must be the divisor
+
+Parabola regex:
+\s*\y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)
+Accepts equations in the form: y = ax2 + bx + c
+
+
+
+Circle regex:
+\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*
+Accepts equations in the form: x2 + y2 = r2
+
+
+
+Ellipse regex:
+\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*
+Accepts equations in the form: x2 / a2 + y2 / b2 = 1
+    
+
+
+Hyperbola regex:
+\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*
+Accepts equations in the form: x2 / a2 + y2 / b2 = 1
+

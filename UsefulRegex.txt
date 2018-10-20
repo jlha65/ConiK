@@ -1,0 +1,47 @@
+Floating number (with or without +-):
+    ([\-]?[0-9]+(\.[0-9]+)?\s*)
+
+Floating number (without +-):
+    ([0-9]+(\.[0-9]+)?\s*)
+
+Possible floating number (with or without +-):
+    ([\-]?[0-9]+(\.[0-9]+)?)?\s*
+
+Possible floating number (without +-):
+    ([0-9]+(\.[0-9]+)?)?\s*
+
+Possible either floating number (with or without +-) or just a '-' sign:
+    ([\-]?|([\-]?[0-9]+(\.[0-9]+)?)?\s*)
+
+Possible either floating number (without +-) or just a '-' sign:
+    ([\-]?|([0-9]+(\.[0-9]+)?)?\s*)
+
+The 'x' character:
+    x\s*
+
+The 'y' character:
+    y\s*
+
+The '^' character:
+    \^\s*
+
+The '+' character:
+    \+\s*
+
+The '-' character:
+    \-\s*
+
+The '=' character:
+    \=\s*
+
+The '/' character:
+    \/\s*
+
+A positive integer (for example, 2):
+    2\s*
+
+An integer (for example, 2):
+    \-?2\s*
+
+Any integer:
+    \-?[0-9]+\s*
