@@ -1,0 +1,3890 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    EULER_KEYWORD
+    FALSE_KEYWORD
+    TRUE_KEYWORD
+    CONS_BOOL
+    PI_KEYWORD
+    CTE_I
+    CTE_F
+    STRING
+    AXIS_KEYWORD
+    STANDARD_KEYWORD
+    GENERAL_KEYWORD
+
+Grammar
+
+Rule 0     S' -> PROGRAM
+Rule 1     PROGRAM -> PROGRAM_KEYWORD ID SEMICOLON A
+Rule 2     A -> VARS B
+Rule 3     A -> B
+Rule 4     B -> MODULE B
+Rule 5     B -> MODULE BLOCK
+Rule 6     B -> BLOCK
+Rule 7     VARS -> VAR_KEYWORD C
+Rule 8     C -> ID D
+Rule 9     C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+Rule 10    C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+Rule 11    D -> COMMA C
+Rule 12    D -> TWO_POINTS E
+Rule 13    E -> TYPE_P F
+Rule 14    E -> TYPE_S F
+Rule 15    F -> SEMICOLON C
+Rule 16    F -> SEMICOLON
+Rule 17    BLOCK -> OPEN_BRACKET G
+Rule 18    G -> STATEMENT CLOSE_BRACKET
+Rule 19    G -> STATEMENT G
+Rule 20    G -> CLOSE_BRACKET
+Rule 21    STATEMENT -> EXPRESSION_OP
+Rule 22    STATEMENT -> ASSIGN
+Rule 23    STATEMENT -> WRITE
+Rule 24    STATEMENT -> FOR_LOOP
+Rule 25    STATEMENT -> WHILE_LOOP
+Rule 26    STATEMENT -> CONDIITON
+Rule 27    STATEMENT -> F_CALL
+Rule 28    ASSIGN -> ID H
+Rule 29    H -> ARROW EQUATION SEMICOLON
+Rule 30    H -> EQUALOP EXPRESSION SEMICOLON
+Rule 31    FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+Rule 32    MODULE -> ID OPEN_PARENTHESES I
+Rule 33    I -> ID TWO_POINTS J
+Rule 34    I -> L
+Rule 35    J -> TYPE_P K
+Rule 36    J -> TYPE_S K
+Rule 37    L -> CLOSE_PARENTHESES BLOCK
+Rule 38    K -> COMMA I
+Rule 39    K -> CLOSE_PARENTHESES BLOCK
+Rule 40    COLOR -> RED_KEYWORD
+Rule 41    COLOR -> ORANGE_KEYWORD
+Rule 42    COLOR -> YELLOW_KEYWORD
+Rule 43    COLOR -> GREEN_KEYWORD
+Rule 44    COLOR -> BLUE_KEYWORD
+Rule 45    COLOR -> PURPLE_KEYWORD
+Rule 46    TYPE_S -> PARABOLA_KEYWORD
+Rule 47    TYPE_S -> ELLIPSE_KEYWORD
+Rule 48    TYPE_S -> HYPERBOLA_KEYWORD
+Rule 49    TYPE_S -> CIRCLE_KEYWORD
+Rule 50    TYPE_P -> INT_KEYWORD
+Rule 51    TYPE_P -> FLOAT_KEYWORD
+Rule 52    TYPE_P -> BOOL_KEYWORD
+Rule 53    WRITE -> PRINT
+Rule 54    WRITE -> PLOT
+Rule 55    PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M
+Rule 56    M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON
+Rule 57    M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON
+Rule 58    WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK
+Rule 59    PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+Rule 60    TRANSFORM -> REFLECTION_KEYWORD
+Rule 61    TRANSFORM -> TRANS_KEYWORD
+Rule 62    TRANSFORM -> ROTATION_KEYWORD
+Rule 63    TRANSFORM -> STRETCH_KEYWORD
+Rule 64    F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON
+Rule 65    CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N
+Rule 66    N -> ELSE_STATEMENT BLOCK
+Rule 67    N -> empty
+Rule 68    EXPRESSION_OP -> EXPRESSION
+Rule 69    EXPRESSION_OP -> ATTRIBUTE_2
+Rule 70    ATTR_2 -> CENTER_KEYWORD
+Rule 71    ATTR_2 -> FOCUS_KEYWORD
+Rule 72    ATTR_2 -> VERTEX_KEYWORD
+Rule 73    EXPRESSION -> EXP O
+Rule 74    O -> RELOP EXP
+Rule 75    O -> empty
+Rule 76    EXP -> ATTRIBUTE P
+Rule 77    EXP -> TERM P
+Rule 78    P -> PLUSOP EXP
+Rule 79    P -> MINUSOP EXP
+Rule 80    P -> empty
+Rule 81    TERM -> ATTRIBUTE Q
+Rule 82    TERM -> FACTOR Q
+Rule 83    Q -> TIMESOP TERM
+Rule 84    Q -> DIVIDEOP TERM
+Rule 85    Q -> empty
+Rule 86    ATTR -> AREA_KEYWORD
+Rule 87    ATTR -> PERIMETER_KEYWORD
+Rule 88    ATTR -> EXC_KEYWORD
+Rule 89    ATTR -> RADIUS_KEYWORD
+Rule 90    FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+Rule 91    FACTOR -> PLUSOP VAR_CONS
+Rule 92    FACTOR -> MINUSOP VAR_CONS
+Rule 93    FACTOR -> VAR_CONS
+Rule 94    EQUATION -> EQX R EQY EQUALOP CONS_FLOAT
+Rule 95    R -> PLUSOP
+Rule 96    R -> MINUSOP
+Rule 97    ATTRIBUTE -> ID POINT ATTR
+Rule 98    ATTRIBUTE_2 -> ID POINT ATTR_2
+Rule 99    VAR_CONS -> ID
+Rule 100   VAR_CONS -> ID S
+Rule 101   VAR_CONS -> CONS_INT
+Rule 102   VAR_CONS -> CONS_FLOAT
+Rule 103   S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T
+Rule 104   S -> OPEN_PARENTHESES EXP U
+Rule 105   T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
+Rule 106   T -> empty
+Rule 107   U -> COMMA EXP U
+Rule 108   U -> CLOSE_PARENTHESES
+Rule 109   empty -> <empty>
+
+Terminals, with rules where they appear
+
+AREA_KEYWORD         : 86
+ARROW                : 29
+AXIS_KEYWORD         : 
+BLUE_KEYWORD         : 44
+BOOL_KEYWORD         : 52
+CENTER_KEYWORD       : 70
+CIRCLE_KEYWORD       : 49
+CLOSE_BRACKET        : 18 20
+CLOSE_PARENTHESES    : 31 37 39 56 57 58 59 64 65 90 108
+CLOSE_SQUARE_BRACKET : 9 10 10 103 105
+COMMA                : 11 38 59 107
+CONS_BOOL            : 
+CONS_FLOAT           : 94 102
+CONS_INT             : 101
+CONS_STRING          : 57
+CTE_F                : 
+CTE_I                : 
+DIVIDEOP             : 84
+ELLIPSE_KEYWORD      : 47
+ELSE_STATEMENT       : 66
+EQUALOP              : 30 31 31 94
+EQX                  : 94
+EQY                  : 94
+EULER_KEYWORD        : 
+EXC_KEYWORD          : 88
+FALSE_KEYWORD        : 
+FLOAT_KEYWORD        : 51
+FOCUS_KEYWORD        : 71
+FOR_LOOP_KEYWORD     : 31
+GENERAL_KEYWORD      : 
+GREEN_KEYWORD        : 43
+HYPERBOLA_KEYWORD    : 48
+ID                   : 1 8 9 10 28 31 31 32 33 59 64 97 98 99 100
+IF_STATEMENT         : 65
+INT_KEYWORD          : 50
+MINUSOP              : 79 92 96
+OPEN_BRACKET         : 17
+OPEN_PARENTHESES     : 31 32 55 58 59 64 65 90 104
+OPEN_SQUARE_BRACKET  : 9 10 10 103 105
+ORANGE_KEYWORD       : 41
+PARABOLA_KEYWORD     : 46
+PERIMETER_KEYWORD    : 87
+PI_KEYWORD           : 
+PLOT_KEYWORD         : 59
+PLUSOP               : 78 91 95
+POINT                : 64 97 98
+PRINT_KEYWORD        : 55
+PROGRAM_KEYWORD      : 1
+PURPLE_KEYWORD       : 45
+RADIUS_KEYWORD       : 89
+RED_KEYWORD          : 40
+REFLECTION_KEYWORD   : 60
+RELOP                : 74
+ROTATION_KEYWORD     : 62
+SEMICOLON            : 1 15 16 29 30 31 31 56 57 59 64
+STANDARD_KEYWORD     : 
+STRETCH_KEYWORD      : 63
+STRING               : 
+TIMESOP              : 83
+TRANS_KEYWORD        : 61
+TRUE_KEYWORD         : 
+TWO_POINTS           : 12 33
+VAR_KEYWORD          : 7
+VERTEX_KEYWORD       : 72
+WHILE_LOOP_KEYWORD   : 58
+YELLOW_KEYWORD       : 42
+error                : 
+
+Nonterminals, with rules where they appear
+
+A                    : 1
+ASSIGN               : 22
+ATTR                 : 97
+ATTRIBUTE            : 76 81
+ATTRIBUTE_2          : 69
+ATTR_2               : 98
+B                    : 2 3 4
+BLOCK                : 5 6 31 37 39 58 65 66
+C                    : 7 11 15
+COLOR                : 59
+CONDIITON            : 26
+D                    : 8 9 10
+E                    : 12
+EQUATION             : 29
+EXP                  : 9 10 10 31 31 64 73 74 78 79 103 104 105 107
+EXPRESSION           : 30 31 58 65 68 90
+EXPRESSION_OP        : 21 56
+F                    : 13 14
+FACTOR               : 82
+FOR_LOOP             : 24
+F_CALL               : 27
+G                    : 17 19
+H                    : 28
+I                    : 32 38
+J                    : 33
+K                    : 35 36
+L                    : 34
+M                    : 55
+MODULE               : 4 5
+N                    : 65
+O                    : 73
+P                    : 76 77
+PLOT                 : 54
+PRINT                : 53
+PROGRAM              : 0
+Q                    : 81 82
+R                    : 94
+S                    : 100
+STATEMENT            : 18 19
+T                    : 103
+TERM                 : 77 83 84
+TRANSFORM            : 64
+TYPE_P               : 13 35
+TYPE_S               : 14 36
+U                    : 104 107
+VARS                 : 2
+VAR_CONS             : 91 92 93
+WHILE_LOOP           : 25
+WRITE                : 23
+empty                : 67 75 80 85 106
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . PROGRAM
+    (1) PROGRAM -> . PROGRAM_KEYWORD ID SEMICOLON A
+
+    PROGRAM_KEYWORD shift and go to state 2
+
+    PROGRAM                        shift and go to state 1
+
+state 1
+
+    (0) S' -> PROGRAM .
+
+
+
+state 2
+
+    (1) PROGRAM -> PROGRAM_KEYWORD . ID SEMICOLON A
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) PROGRAM -> PROGRAM_KEYWORD ID . SEMICOLON A
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) PROGRAM -> PROGRAM_KEYWORD ID SEMICOLON . A
+    (2) A -> . VARS B
+    (3) A -> . B
+    (7) VARS -> . VAR_KEYWORD C
+    (4) B -> . MODULE B
+    (5) B -> . MODULE BLOCK
+    (6) B -> . BLOCK
+    (32) MODULE -> . ID OPEN_PARENTHESES I
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    VAR_KEYWORD     shift and go to state 10
+    ID              shift and go to state 11
+    OPEN_BRACKET    shift and go to state 8
+
+    A                              shift and go to state 5
+    B                              shift and go to state 6
+    VARS                           shift and go to state 7
+    MODULE                         shift and go to state 9
+    BLOCK                          shift and go to state 12
+
+state 5
+
+    (1) PROGRAM -> PROGRAM_KEYWORD ID SEMICOLON A .
+
+    $end            reduce using rule 1 (PROGRAM -> PROGRAM_KEYWORD ID SEMICOLON A .)
+
+
+state 6
+
+    (3) A -> B .
+
+    $end            reduce using rule 3 (A -> B .)
+
+
+state 7
+
+    (2) A -> VARS . B
+    (4) B -> . MODULE B
+    (5) B -> . MODULE BLOCK
+    (6) B -> . BLOCK
+    (32) MODULE -> . ID OPEN_PARENTHESES I
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    ID              shift and go to state 11
+    OPEN_BRACKET    shift and go to state 8
+
+    B                              shift and go to state 13
+    MODULE                         shift and go to state 9
+    BLOCK                          shift and go to state 12
+
+state 8
+
+    (17) BLOCK -> OPEN_BRACKET . G
+    (18) G -> . STATEMENT CLOSE_BRACKET
+    (19) G -> . STATEMENT G
+    (20) G -> . CLOSE_BRACKET
+    (21) STATEMENT -> . EXPRESSION_OP
+    (22) STATEMENT -> . ASSIGN
+    (23) STATEMENT -> . WRITE
+    (24) STATEMENT -> . FOR_LOOP
+    (25) STATEMENT -> . WHILE_LOOP
+    (26) STATEMENT -> . CONDIITON
+    (27) STATEMENT -> . F_CALL
+    (68) EXPRESSION_OP -> . EXPRESSION
+    (69) EXPRESSION_OP -> . ATTRIBUTE_2
+    (28) ASSIGN -> . ID H
+    (53) WRITE -> . PRINT
+    (54) WRITE -> . PLOT
+    (31) FOR_LOOP -> . FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+    (58) WHILE_LOOP -> . WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK
+    (65) CONDIITON -> . IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N
+    (64) F_CALL -> . ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON
+    (73) EXPRESSION -> . EXP O
+    (98) ATTRIBUTE_2 -> . ID POINT ATTR_2
+    (55) PRINT -> . PRINT_KEYWORD OPEN_PARENTHESES M
+    (59) PLOT -> . PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    CLOSE_BRACKET   shift and go to state 14
+    ID              shift and go to state 37
+    FOR_LOOP_KEYWORD shift and go to state 35
+    WHILE_LOOP_KEYWORD shift and go to state 22
+    IF_STATEMENT    shift and go to state 36
+    PRINT_KEYWORD   shift and go to state 21
+    PLOT_KEYWORD    shift and go to state 43
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    ATTRIBUTE_2                    shift and go to state 16
+    EXP                            shift and go to state 19
+    PRINT                          shift and go to state 20
+    FOR_LOOP                       shift and go to state 23
+    F_CALL                         shift and go to state 24
+    VAR_CONS                       shift and go to state 18
+    EXPRESSION_OP                  shift and go to state 25
+    EXPRESSION                     shift and go to state 26
+    ASSIGN                         shift and go to state 27
+    G                              shift and go to state 29
+    CONDIITON                      shift and go to state 30
+    TERM                           shift and go to state 31
+    WRITE                          shift and go to state 32
+    STATEMENT                      shift and go to state 34
+    PLOT                           shift and go to state 38
+    WHILE_LOOP                     shift and go to state 39
+    ATTRIBUTE                      shift and go to state 40
+    FACTOR                         shift and go to state 42
+
+state 9
+
+    (4) B -> MODULE . B
+    (5) B -> MODULE . BLOCK
+    (4) B -> . MODULE B
+    (5) B -> . MODULE BLOCK
+    (6) B -> . BLOCK
+    (17) BLOCK -> . OPEN_BRACKET G
+    (32) MODULE -> . ID OPEN_PARENTHESES I
+
+    OPEN_BRACKET    shift and go to state 8
+    ID              shift and go to state 11
+
+    B                              shift and go to state 44
+    BLOCK                          shift and go to state 45
+    MODULE                         shift and go to state 9
+
+state 10
+
+    (7) VARS -> VAR_KEYWORD . C
+    (8) C -> . ID D
+    (9) C -> . ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (10) C -> . ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+
+    ID              shift and go to state 47
+
+    C                              shift and go to state 46
+
+state 11
+
+    (32) MODULE -> ID . OPEN_PARENTHESES I
+
+    OPEN_PARENTHESES shift and go to state 48
+
+
+state 12
+
+    (6) B -> BLOCK .
+
+    $end            reduce using rule 6 (B -> BLOCK .)
+
+
+state 13
+
+    (2) A -> VARS B .
+
+    $end            reduce using rule 2 (A -> VARS B .)
+
+
+state 14
+
+    (20) G -> CLOSE_BRACKET .
+
+    $end            reduce using rule 20 (G -> CLOSE_BRACKET .)
+    OPEN_BRACKET    reduce using rule 20 (G -> CLOSE_BRACKET .)
+    ID              reduce using rule 20 (G -> CLOSE_BRACKET .)
+    CLOSE_BRACKET   reduce using rule 20 (G -> CLOSE_BRACKET .)
+    FOR_LOOP_KEYWORD reduce using rule 20 (G -> CLOSE_BRACKET .)
+    WHILE_LOOP_KEYWORD reduce using rule 20 (G -> CLOSE_BRACKET .)
+    IF_STATEMENT    reduce using rule 20 (G -> CLOSE_BRACKET .)
+    PRINT_KEYWORD   reduce using rule 20 (G -> CLOSE_BRACKET .)
+    PLOT_KEYWORD    reduce using rule 20 (G -> CLOSE_BRACKET .)
+    OPEN_PARENTHESES reduce using rule 20 (G -> CLOSE_BRACKET .)
+    PLUSOP          reduce using rule 20 (G -> CLOSE_BRACKET .)
+    MINUSOP         reduce using rule 20 (G -> CLOSE_BRACKET .)
+    CONS_INT        reduce using rule 20 (G -> CLOSE_BRACKET .)
+    CONS_FLOAT      reduce using rule 20 (G -> CLOSE_BRACKET .)
+    ELSE_STATEMENT  reduce using rule 20 (G -> CLOSE_BRACKET .)
+
+
+state 15
+
+    (92) FACTOR -> MINUSOP . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 50
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    VAR_CONS                       shift and go to state 49
+
+state 16
+
+    (69) EXPRESSION_OP -> ATTRIBUTE_2 .
+
+    CLOSE_PARENTHESES reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    CLOSE_BRACKET   reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    ID              reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    FOR_LOOP_KEYWORD reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    WHILE_LOOP_KEYWORD reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    IF_STATEMENT    reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    PRINT_KEYWORD   reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    PLOT_KEYWORD    reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    OPEN_PARENTHESES reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    PLUSOP          reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    MINUSOP         reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    CONS_INT        reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+    CONS_FLOAT      reduce using rule 69 (EXPRESSION_OP -> ATTRIBUTE_2 .)
+
+
+state 17
+
+    (91) FACTOR -> PLUSOP . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 50
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    VAR_CONS                       shift and go to state 51
+
+state 18
+
+    (93) FACTOR -> VAR_CONS .
+
+    TIMESOP         reduce using rule 93 (FACTOR -> VAR_CONS .)
+    DIVIDEOP        reduce using rule 93 (FACTOR -> VAR_CONS .)
+    PLUSOP          reduce using rule 93 (FACTOR -> VAR_CONS .)
+    MINUSOP         reduce using rule 93 (FACTOR -> VAR_CONS .)
+    CLOSE_SQUARE_BRACKET reduce using rule 93 (FACTOR -> VAR_CONS .)
+    RELOP           reduce using rule 93 (FACTOR -> VAR_CONS .)
+    CLOSE_BRACKET   reduce using rule 93 (FACTOR -> VAR_CONS .)
+    ID              reduce using rule 93 (FACTOR -> VAR_CONS .)
+    FOR_LOOP_KEYWORD reduce using rule 93 (FACTOR -> VAR_CONS .)
+    WHILE_LOOP_KEYWORD reduce using rule 93 (FACTOR -> VAR_CONS .)
+    IF_STATEMENT    reduce using rule 93 (FACTOR -> VAR_CONS .)
+    PRINT_KEYWORD   reduce using rule 93 (FACTOR -> VAR_CONS .)
+    PLOT_KEYWORD    reduce using rule 93 (FACTOR -> VAR_CONS .)
+    OPEN_PARENTHESES reduce using rule 93 (FACTOR -> VAR_CONS .)
+    CONS_INT        reduce using rule 93 (FACTOR -> VAR_CONS .)
+    CONS_FLOAT      reduce using rule 93 (FACTOR -> VAR_CONS .)
+    CLOSE_PARENTHESES reduce using rule 93 (FACTOR -> VAR_CONS .)
+    SEMICOLON       reduce using rule 93 (FACTOR -> VAR_CONS .)
+    COMMA           reduce using rule 93 (FACTOR -> VAR_CONS .)
+
+
+state 19
+
+    (73) EXPRESSION -> EXP . O
+    (74) O -> . RELOP EXP
+    (75) O -> . empty
+    (109) empty -> .
+
+    RELOP           shift and go to state 54
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    PLUSOP          reduce using rule 109 (empty -> .)
+    MINUSOP         reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+    CLOSE_PARENTHESES reduce using rule 109 (empty -> .)
+    SEMICOLON       reduce using rule 109 (empty -> .)
+
+    empty                          shift and go to state 52
+    O                              shift and go to state 53
+
+state 20
+
+    (53) WRITE -> PRINT .
+
+    CLOSE_BRACKET   reduce using rule 53 (WRITE -> PRINT .)
+    ID              reduce using rule 53 (WRITE -> PRINT .)
+    FOR_LOOP_KEYWORD reduce using rule 53 (WRITE -> PRINT .)
+    WHILE_LOOP_KEYWORD reduce using rule 53 (WRITE -> PRINT .)
+    IF_STATEMENT    reduce using rule 53 (WRITE -> PRINT .)
+    PRINT_KEYWORD   reduce using rule 53 (WRITE -> PRINT .)
+    PLOT_KEYWORD    reduce using rule 53 (WRITE -> PRINT .)
+    OPEN_PARENTHESES reduce using rule 53 (WRITE -> PRINT .)
+    PLUSOP          reduce using rule 53 (WRITE -> PRINT .)
+    MINUSOP         reduce using rule 53 (WRITE -> PRINT .)
+    CONS_INT        reduce using rule 53 (WRITE -> PRINT .)
+    CONS_FLOAT      reduce using rule 53 (WRITE -> PRINT .)
+
+
+state 21
+
+    (55) PRINT -> PRINT_KEYWORD . OPEN_PARENTHESES M
+
+    OPEN_PARENTHESES shift and go to state 55
+
+
+state 22
+
+    (58) WHILE_LOOP -> WHILE_LOOP_KEYWORD . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK
+
+    OPEN_PARENTHESES shift and go to state 56
+
+
+state 23
+
+    (24) STATEMENT -> FOR_LOOP .
+
+    CLOSE_BRACKET   reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    ID              reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    FOR_LOOP_KEYWORD reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    WHILE_LOOP_KEYWORD reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    IF_STATEMENT    reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    PRINT_KEYWORD   reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    PLOT_KEYWORD    reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    OPEN_PARENTHESES reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    PLUSOP          reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    MINUSOP         reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    CONS_INT        reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+    CONS_FLOAT      reduce using rule 24 (STATEMENT -> FOR_LOOP .)
+
+
+state 24
+
+    (27) STATEMENT -> F_CALL .
+
+    CLOSE_BRACKET   reduce using rule 27 (STATEMENT -> F_CALL .)
+    ID              reduce using rule 27 (STATEMENT -> F_CALL .)
+    FOR_LOOP_KEYWORD reduce using rule 27 (STATEMENT -> F_CALL .)
+    WHILE_LOOP_KEYWORD reduce using rule 27 (STATEMENT -> F_CALL .)
+    IF_STATEMENT    reduce using rule 27 (STATEMENT -> F_CALL .)
+    PRINT_KEYWORD   reduce using rule 27 (STATEMENT -> F_CALL .)
+    PLOT_KEYWORD    reduce using rule 27 (STATEMENT -> F_CALL .)
+    OPEN_PARENTHESES reduce using rule 27 (STATEMENT -> F_CALL .)
+    PLUSOP          reduce using rule 27 (STATEMENT -> F_CALL .)
+    MINUSOP         reduce using rule 27 (STATEMENT -> F_CALL .)
+    CONS_INT        reduce using rule 27 (STATEMENT -> F_CALL .)
+    CONS_FLOAT      reduce using rule 27 (STATEMENT -> F_CALL .)
+
+
+state 25
+
+    (21) STATEMENT -> EXPRESSION_OP .
+
+    CLOSE_BRACKET   reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    ID              reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    FOR_LOOP_KEYWORD reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    WHILE_LOOP_KEYWORD reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    IF_STATEMENT    reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    PRINT_KEYWORD   reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    PLOT_KEYWORD    reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    OPEN_PARENTHESES reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    PLUSOP          reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    MINUSOP         reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    CONS_INT        reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+    CONS_FLOAT      reduce using rule 21 (STATEMENT -> EXPRESSION_OP .)
+
+
+state 26
+
+    (68) EXPRESSION_OP -> EXPRESSION .
+
+    CLOSE_PARENTHESES reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    CLOSE_BRACKET   reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    ID              reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    FOR_LOOP_KEYWORD reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    WHILE_LOOP_KEYWORD reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    IF_STATEMENT    reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    PRINT_KEYWORD   reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    PLOT_KEYWORD    reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    OPEN_PARENTHESES reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    PLUSOP          reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    MINUSOP         reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    CONS_INT        reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+    CONS_FLOAT      reduce using rule 68 (EXPRESSION_OP -> EXPRESSION .)
+
+
+state 27
+
+    (22) STATEMENT -> ASSIGN .
+
+    CLOSE_BRACKET   reduce using rule 22 (STATEMENT -> ASSIGN .)
+    ID              reduce using rule 22 (STATEMENT -> ASSIGN .)
+    FOR_LOOP_KEYWORD reduce using rule 22 (STATEMENT -> ASSIGN .)
+    WHILE_LOOP_KEYWORD reduce using rule 22 (STATEMENT -> ASSIGN .)
+    IF_STATEMENT    reduce using rule 22 (STATEMENT -> ASSIGN .)
+    PRINT_KEYWORD   reduce using rule 22 (STATEMENT -> ASSIGN .)
+    PLOT_KEYWORD    reduce using rule 22 (STATEMENT -> ASSIGN .)
+    OPEN_PARENTHESES reduce using rule 22 (STATEMENT -> ASSIGN .)
+    PLUSOP          reduce using rule 22 (STATEMENT -> ASSIGN .)
+    MINUSOP         reduce using rule 22 (STATEMENT -> ASSIGN .)
+    CONS_INT        reduce using rule 22 (STATEMENT -> ASSIGN .)
+    CONS_FLOAT      reduce using rule 22 (STATEMENT -> ASSIGN .)
+
+
+state 28
+
+    (90) FACTOR -> OPEN_PARENTHESES . EXPRESSION CLOSE_PARENTHESES
+    (73) EXPRESSION -> . EXP O
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 19
+    FACTOR                         shift and go to state 42
+    EXPRESSION                     shift and go to state 57
+
+state 29
+
+    (17) BLOCK -> OPEN_BRACKET G .
+
+    CLOSE_BRACKET   reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    ID              reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    FOR_LOOP_KEYWORD reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    WHILE_LOOP_KEYWORD reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    IF_STATEMENT    reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    PRINT_KEYWORD   reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    PLOT_KEYWORD    reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    OPEN_PARENTHESES reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    PLUSOP          reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    MINUSOP         reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    CONS_INT        reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    CONS_FLOAT      reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    ELSE_STATEMENT  reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    $end            reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+    OPEN_BRACKET    reduce using rule 17 (BLOCK -> OPEN_BRACKET G .)
+
+
+state 30
+
+    (26) STATEMENT -> CONDIITON .
+
+    CLOSE_BRACKET   reduce using rule 26 (STATEMENT -> CONDIITON .)
+    ID              reduce using rule 26 (STATEMENT -> CONDIITON .)
+    FOR_LOOP_KEYWORD reduce using rule 26 (STATEMENT -> CONDIITON .)
+    WHILE_LOOP_KEYWORD reduce using rule 26 (STATEMENT -> CONDIITON .)
+    IF_STATEMENT    reduce using rule 26 (STATEMENT -> CONDIITON .)
+    PRINT_KEYWORD   reduce using rule 26 (STATEMENT -> CONDIITON .)
+    PLOT_KEYWORD    reduce using rule 26 (STATEMENT -> CONDIITON .)
+    OPEN_PARENTHESES reduce using rule 26 (STATEMENT -> CONDIITON .)
+    PLUSOP          reduce using rule 26 (STATEMENT -> CONDIITON .)
+    MINUSOP         reduce using rule 26 (STATEMENT -> CONDIITON .)
+    CONS_INT        reduce using rule 26 (STATEMENT -> CONDIITON .)
+    CONS_FLOAT      reduce using rule 26 (STATEMENT -> CONDIITON .)
+
+
+state 31
+
+    (77) EXP -> TERM . P
+    (78) P -> . PLUSOP EXP
+    (79) P -> . MINUSOP EXP
+    (80) P -> . empty
+    (109) empty -> .
+
+  ! shift/reduce conflict for PLUSOP resolved as shift
+  ! shift/reduce conflict for MINUSOP resolved as shift
+    PLUSOP          shift and go to state 59
+    MINUSOP         shift and go to state 60
+    RELOP           reduce using rule 109 (empty -> .)
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+    CLOSE_PARENTHESES reduce using rule 109 (empty -> .)
+    SEMICOLON       reduce using rule 109 (empty -> .)
+    CLOSE_SQUARE_BRACKET reduce using rule 109 (empty -> .)
+    COMMA           reduce using rule 109 (empty -> .)
+
+  ! PLUSOP          [ reduce using rule 109 (empty -> .) ]
+  ! MINUSOP         [ reduce using rule 109 (empty -> .) ]
+
+    P                              shift and go to state 61
+    empty                          shift and go to state 62
+
+state 32
+
+    (23) STATEMENT -> WRITE .
+
+    CLOSE_BRACKET   reduce using rule 23 (STATEMENT -> WRITE .)
+    ID              reduce using rule 23 (STATEMENT -> WRITE .)
+    FOR_LOOP_KEYWORD reduce using rule 23 (STATEMENT -> WRITE .)
+    WHILE_LOOP_KEYWORD reduce using rule 23 (STATEMENT -> WRITE .)
+    IF_STATEMENT    reduce using rule 23 (STATEMENT -> WRITE .)
+    PRINT_KEYWORD   reduce using rule 23 (STATEMENT -> WRITE .)
+    PLOT_KEYWORD    reduce using rule 23 (STATEMENT -> WRITE .)
+    OPEN_PARENTHESES reduce using rule 23 (STATEMENT -> WRITE .)
+    PLUSOP          reduce using rule 23 (STATEMENT -> WRITE .)
+    MINUSOP         reduce using rule 23 (STATEMENT -> WRITE .)
+    CONS_INT        reduce using rule 23 (STATEMENT -> WRITE .)
+    CONS_FLOAT      reduce using rule 23 (STATEMENT -> WRITE .)
+
+
+state 33
+
+    (102) VAR_CONS -> CONS_FLOAT .
+
+    TIMESOP         reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    DIVIDEOP        reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    PLUSOP          reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    MINUSOP         reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    RELOP           reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    CLOSE_BRACKET   reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    ID              reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    FOR_LOOP_KEYWORD reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    WHILE_LOOP_KEYWORD reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    IF_STATEMENT    reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    PRINT_KEYWORD   reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    PLOT_KEYWORD    reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    OPEN_PARENTHESES reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    CONS_INT        reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    CONS_FLOAT      reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    CLOSE_PARENTHESES reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    SEMICOLON       reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    CLOSE_SQUARE_BRACKET reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+    COMMA           reduce using rule 102 (VAR_CONS -> CONS_FLOAT .)
+
+
+state 34
+
+    (18) G -> STATEMENT . CLOSE_BRACKET
+    (19) G -> STATEMENT . G
+    (18) G -> . STATEMENT CLOSE_BRACKET
+    (19) G -> . STATEMENT G
+    (20) G -> . CLOSE_BRACKET
+    (21) STATEMENT -> . EXPRESSION_OP
+    (22) STATEMENT -> . ASSIGN
+    (23) STATEMENT -> . WRITE
+    (24) STATEMENT -> . FOR_LOOP
+    (25) STATEMENT -> . WHILE_LOOP
+    (26) STATEMENT -> . CONDIITON
+    (27) STATEMENT -> . F_CALL
+    (68) EXPRESSION_OP -> . EXPRESSION
+    (69) EXPRESSION_OP -> . ATTRIBUTE_2
+    (28) ASSIGN -> . ID H
+    (53) WRITE -> . PRINT
+    (54) WRITE -> . PLOT
+    (31) FOR_LOOP -> . FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+    (58) WHILE_LOOP -> . WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK
+    (65) CONDIITON -> . IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N
+    (64) F_CALL -> . ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON
+    (73) EXPRESSION -> . EXP O
+    (98) ATTRIBUTE_2 -> . ID POINT ATTR_2
+    (55) PRINT -> . PRINT_KEYWORD OPEN_PARENTHESES M
+    (59) PLOT -> . PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    CLOSE_BRACKET   shift and go to state 63
+    ID              shift and go to state 37
+    FOR_LOOP_KEYWORD shift and go to state 35
+    WHILE_LOOP_KEYWORD shift and go to state 22
+    IF_STATEMENT    shift and go to state 36
+    PRINT_KEYWORD   shift and go to state 21
+    PLOT_KEYWORD    shift and go to state 43
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    ATTRIBUTE_2                    shift and go to state 16
+    EXP                            shift and go to state 19
+    PRINT                          shift and go to state 20
+    FOR_LOOP                       shift and go to state 23
+    F_CALL                         shift and go to state 24
+    VAR_CONS                       shift and go to state 18
+    EXPRESSION_OP                  shift and go to state 25
+    EXPRESSION                     shift and go to state 26
+    ASSIGN                         shift and go to state 27
+    G                              shift and go to state 64
+    CONDIITON                      shift and go to state 30
+    TERM                           shift and go to state 31
+    WRITE                          shift and go to state 32
+    STATEMENT                      shift and go to state 34
+    PLOT                           shift and go to state 38
+    WHILE_LOOP                     shift and go to state 39
+    ATTRIBUTE                      shift and go to state 40
+    FACTOR                         shift and go to state 42
+
+state 35
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD . OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    OPEN_PARENTHESES shift and go to state 65
+
+
+state 36
+
+    (65) CONDIITON -> IF_STATEMENT . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N
+
+    OPEN_PARENTHESES shift and go to state 66
+
+
+state 37
+
+    (28) ASSIGN -> ID . H
+    (64) F_CALL -> ID . POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON
+    (98) ATTRIBUTE_2 -> ID . POINT ATTR_2
+    (97) ATTRIBUTE -> ID . POINT ATTR
+    (99) VAR_CONS -> ID .
+    (100) VAR_CONS -> ID . S
+    (29) H -> . ARROW EQUATION SEMICOLON
+    (30) H -> . EQUALOP EXPRESSION SEMICOLON
+    (103) S -> . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T
+    (104) S -> . OPEN_PARENTHESES EXP U
+
+  ! shift/reduce conflict for OPEN_PARENTHESES resolved as shift
+    POINT           shift and go to state 67
+    TIMESOP         reduce using rule 99 (VAR_CONS -> ID .)
+    DIVIDEOP        reduce using rule 99 (VAR_CONS -> ID .)
+    PLUSOP          reduce using rule 99 (VAR_CONS -> ID .)
+    MINUSOP         reduce using rule 99 (VAR_CONS -> ID .)
+    RELOP           reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_BRACKET   reduce using rule 99 (VAR_CONS -> ID .)
+    ID              reduce using rule 99 (VAR_CONS -> ID .)
+    FOR_LOOP_KEYWORD reduce using rule 99 (VAR_CONS -> ID .)
+    WHILE_LOOP_KEYWORD reduce using rule 99 (VAR_CONS -> ID .)
+    IF_STATEMENT    reduce using rule 99 (VAR_CONS -> ID .)
+    PRINT_KEYWORD   reduce using rule 99 (VAR_CONS -> ID .)
+    PLOT_KEYWORD    reduce using rule 99 (VAR_CONS -> ID .)
+    CONS_INT        reduce using rule 99 (VAR_CONS -> ID .)
+    CONS_FLOAT      reduce using rule 99 (VAR_CONS -> ID .)
+    ARROW           shift and go to state 70
+    EQUALOP         shift and go to state 68
+    OPEN_SQUARE_BRACKET shift and go to state 72
+    OPEN_PARENTHESES shift and go to state 73
+
+  ! OPEN_PARENTHESES [ reduce using rule 99 (VAR_CONS -> ID .) ]
+
+    H                              shift and go to state 69
+    S                              shift and go to state 71
+
+state 38
+
+    (54) WRITE -> PLOT .
+
+    CLOSE_BRACKET   reduce using rule 54 (WRITE -> PLOT .)
+    ID              reduce using rule 54 (WRITE -> PLOT .)
+    FOR_LOOP_KEYWORD reduce using rule 54 (WRITE -> PLOT .)
+    WHILE_LOOP_KEYWORD reduce using rule 54 (WRITE -> PLOT .)
+    IF_STATEMENT    reduce using rule 54 (WRITE -> PLOT .)
+    PRINT_KEYWORD   reduce using rule 54 (WRITE -> PLOT .)
+    PLOT_KEYWORD    reduce using rule 54 (WRITE -> PLOT .)
+    OPEN_PARENTHESES reduce using rule 54 (WRITE -> PLOT .)
+    PLUSOP          reduce using rule 54 (WRITE -> PLOT .)
+    MINUSOP         reduce using rule 54 (WRITE -> PLOT .)
+    CONS_INT        reduce using rule 54 (WRITE -> PLOT .)
+    CONS_FLOAT      reduce using rule 54 (WRITE -> PLOT .)
+
+
+state 39
+
+    (25) STATEMENT -> WHILE_LOOP .
+
+    CLOSE_BRACKET   reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    ID              reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    FOR_LOOP_KEYWORD reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    WHILE_LOOP_KEYWORD reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    IF_STATEMENT    reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    PRINT_KEYWORD   reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    PLOT_KEYWORD    reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    OPEN_PARENTHESES reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    PLUSOP          reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    MINUSOP         reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    CONS_INT        reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+    CONS_FLOAT      reduce using rule 25 (STATEMENT -> WHILE_LOOP .)
+
+
+state 40
+
+    (76) EXP -> ATTRIBUTE . P
+    (81) TERM -> ATTRIBUTE . Q
+    (78) P -> . PLUSOP EXP
+    (79) P -> . MINUSOP EXP
+    (80) P -> . empty
+    (83) Q -> . TIMESOP TERM
+    (84) Q -> . DIVIDEOP TERM
+    (85) Q -> . empty
+    (109) empty -> .
+
+  ! shift/reduce conflict for PLUSOP resolved as shift
+  ! shift/reduce conflict for MINUSOP resolved as shift
+    PLUSOP          shift and go to state 59
+    MINUSOP         shift and go to state 60
+    TIMESOP         shift and go to state 74
+    DIVIDEOP        shift and go to state 75
+    RELOP           reduce using rule 109 (empty -> .)
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+    CLOSE_PARENTHESES reduce using rule 109 (empty -> .)
+    SEMICOLON       reduce using rule 109 (empty -> .)
+    CLOSE_SQUARE_BRACKET reduce using rule 109 (empty -> .)
+    COMMA           reduce using rule 109 (empty -> .)
+
+  ! PLUSOP          [ reduce using rule 109 (empty -> .) ]
+  ! MINUSOP         [ reduce using rule 109 (empty -> .) ]
+
+    Q                              shift and go to state 76
+    P                              shift and go to state 77
+    empty                          shift and go to state 78
+
+state 41
+
+    (101) VAR_CONS -> CONS_INT .
+
+    TIMESOP         reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    DIVIDEOP        reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    PLUSOP          reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    MINUSOP         reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    RELOP           reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    CLOSE_BRACKET   reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    ID              reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    FOR_LOOP_KEYWORD reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    WHILE_LOOP_KEYWORD reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    IF_STATEMENT    reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    PRINT_KEYWORD   reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    PLOT_KEYWORD    reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    OPEN_PARENTHESES reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    CONS_INT        reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    CONS_FLOAT      reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    CLOSE_PARENTHESES reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    SEMICOLON       reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    CLOSE_SQUARE_BRACKET reduce using rule 101 (VAR_CONS -> CONS_INT .)
+    COMMA           reduce using rule 101 (VAR_CONS -> CONS_INT .)
+
+
+state 42
+
+    (82) TERM -> FACTOR . Q
+    (83) Q -> . TIMESOP TERM
+    (84) Q -> . DIVIDEOP TERM
+    (85) Q -> . empty
+    (109) empty -> .
+
+    TIMESOP         shift and go to state 74
+    DIVIDEOP        shift and go to state 75
+    PLUSOP          reduce using rule 109 (empty -> .)
+    MINUSOP         reduce using rule 109 (empty -> .)
+    RELOP           reduce using rule 109 (empty -> .)
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+    CLOSE_PARENTHESES reduce using rule 109 (empty -> .)
+    SEMICOLON       reduce using rule 109 (empty -> .)
+    CLOSE_SQUARE_BRACKET reduce using rule 109 (empty -> .)
+    COMMA           reduce using rule 109 (empty -> .)
+
+    Q                              shift and go to state 79
+    empty                          shift and go to state 80
+
+state 43
+
+    (59) PLOT -> PLOT_KEYWORD . OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+
+    OPEN_PARENTHESES shift and go to state 81
+
+
+state 44
+
+    (4) B -> MODULE B .
+
+    $end            reduce using rule 4 (B -> MODULE B .)
+
+
+state 45
+
+    (5) B -> MODULE BLOCK .
+    (6) B -> BLOCK .
+
+  ! reduce/reduce conflict for $end resolved using rule 5 (B -> MODULE BLOCK .)
+    $end            reduce using rule 5 (B -> MODULE BLOCK .)
+
+  ! $end            [ reduce using rule 6 (B -> BLOCK .) ]
+
+
+state 46
+
+    (7) VARS -> VAR_KEYWORD C .
+
+    ID              reduce using rule 7 (VARS -> VAR_KEYWORD C .)
+    OPEN_BRACKET    reduce using rule 7 (VARS -> VAR_KEYWORD C .)
+
+
+state 47
+
+    (8) C -> ID . D
+    (9) C -> ID . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (10) C -> ID . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (11) D -> . COMMA C
+    (12) D -> . TWO_POINTS E
+
+    OPEN_SQUARE_BRACKET shift and go to state 85
+    COMMA           shift and go to state 84
+    TWO_POINTS      shift and go to state 83
+
+    D                              shift and go to state 82
+
+state 48
+
+    (32) MODULE -> ID OPEN_PARENTHESES . I
+    (33) I -> . ID TWO_POINTS J
+    (34) I -> . L
+    (37) L -> . CLOSE_PARENTHESES BLOCK
+
+    ID              shift and go to state 89
+    CLOSE_PARENTHESES shift and go to state 88
+
+    I                              shift and go to state 86
+    L                              shift and go to state 87
+
+state 49
+
+    (92) FACTOR -> MINUSOP VAR_CONS .
+
+    TIMESOP         reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    DIVIDEOP        reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    PLUSOP          reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    MINUSOP         reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    CLOSE_SQUARE_BRACKET reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    RELOP           reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    CLOSE_BRACKET   reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    ID              reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    FOR_LOOP_KEYWORD reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    WHILE_LOOP_KEYWORD reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    IF_STATEMENT    reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    PRINT_KEYWORD   reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    PLOT_KEYWORD    reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    OPEN_PARENTHESES reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    CONS_INT        reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    CONS_FLOAT      reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    CLOSE_PARENTHESES reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    SEMICOLON       reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+    COMMA           reduce using rule 92 (FACTOR -> MINUSOP VAR_CONS .)
+
+
+state 50
+
+    (99) VAR_CONS -> ID .
+    (100) VAR_CONS -> ID . S
+    (103) S -> . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T
+    (104) S -> . OPEN_PARENTHESES EXP U
+
+  ! shift/reduce conflict for OPEN_PARENTHESES resolved as shift
+    TIMESOP         reduce using rule 99 (VAR_CONS -> ID .)
+    DIVIDEOP        reduce using rule 99 (VAR_CONS -> ID .)
+    PLUSOP          reduce using rule 99 (VAR_CONS -> ID .)
+    MINUSOP         reduce using rule 99 (VAR_CONS -> ID .)
+    RELOP           reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_BRACKET   reduce using rule 99 (VAR_CONS -> ID .)
+    ID              reduce using rule 99 (VAR_CONS -> ID .)
+    FOR_LOOP_KEYWORD reduce using rule 99 (VAR_CONS -> ID .)
+    WHILE_LOOP_KEYWORD reduce using rule 99 (VAR_CONS -> ID .)
+    IF_STATEMENT    reduce using rule 99 (VAR_CONS -> ID .)
+    PRINT_KEYWORD   reduce using rule 99 (VAR_CONS -> ID .)
+    PLOT_KEYWORD    reduce using rule 99 (VAR_CONS -> ID .)
+    CONS_INT        reduce using rule 99 (VAR_CONS -> ID .)
+    CONS_FLOAT      reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_PARENTHESES reduce using rule 99 (VAR_CONS -> ID .)
+    SEMICOLON       reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_SQUARE_BRACKET reduce using rule 99 (VAR_CONS -> ID .)
+    COMMA           reduce using rule 99 (VAR_CONS -> ID .)
+    OPEN_SQUARE_BRACKET shift and go to state 72
+    OPEN_PARENTHESES shift and go to state 73
+
+  ! OPEN_PARENTHESES [ reduce using rule 99 (VAR_CONS -> ID .) ]
+
+    S                              shift and go to state 71
+
+state 51
+
+    (91) FACTOR -> PLUSOP VAR_CONS .
+
+    TIMESOP         reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    DIVIDEOP        reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    PLUSOP          reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    MINUSOP         reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    CLOSE_SQUARE_BRACKET reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    RELOP           reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    CLOSE_BRACKET   reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    ID              reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    FOR_LOOP_KEYWORD reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    WHILE_LOOP_KEYWORD reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    IF_STATEMENT    reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    PRINT_KEYWORD   reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    PLOT_KEYWORD    reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    OPEN_PARENTHESES reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    CONS_INT        reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    CONS_FLOAT      reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    CLOSE_PARENTHESES reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    SEMICOLON       reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+    COMMA           reduce using rule 91 (FACTOR -> PLUSOP VAR_CONS .)
+
+
+state 52
+
+    (75) O -> empty .
+
+    CLOSE_BRACKET   reduce using rule 75 (O -> empty .)
+    ID              reduce using rule 75 (O -> empty .)
+    FOR_LOOP_KEYWORD reduce using rule 75 (O -> empty .)
+    WHILE_LOOP_KEYWORD reduce using rule 75 (O -> empty .)
+    IF_STATEMENT    reduce using rule 75 (O -> empty .)
+    PRINT_KEYWORD   reduce using rule 75 (O -> empty .)
+    PLOT_KEYWORD    reduce using rule 75 (O -> empty .)
+    OPEN_PARENTHESES reduce using rule 75 (O -> empty .)
+    PLUSOP          reduce using rule 75 (O -> empty .)
+    MINUSOP         reduce using rule 75 (O -> empty .)
+    CONS_INT        reduce using rule 75 (O -> empty .)
+    CONS_FLOAT      reduce using rule 75 (O -> empty .)
+    CLOSE_PARENTHESES reduce using rule 75 (O -> empty .)
+    SEMICOLON       reduce using rule 75 (O -> empty .)
+
+
+state 53
+
+    (73) EXPRESSION -> EXP O .
+
+    CLOSE_PARENTHESES reduce using rule 73 (EXPRESSION -> EXP O .)
+    CLOSE_BRACKET   reduce using rule 73 (EXPRESSION -> EXP O .)
+    ID              reduce using rule 73 (EXPRESSION -> EXP O .)
+    FOR_LOOP_KEYWORD reduce using rule 73 (EXPRESSION -> EXP O .)
+    WHILE_LOOP_KEYWORD reduce using rule 73 (EXPRESSION -> EXP O .)
+    IF_STATEMENT    reduce using rule 73 (EXPRESSION -> EXP O .)
+    PRINT_KEYWORD   reduce using rule 73 (EXPRESSION -> EXP O .)
+    PLOT_KEYWORD    reduce using rule 73 (EXPRESSION -> EXP O .)
+    OPEN_PARENTHESES reduce using rule 73 (EXPRESSION -> EXP O .)
+    PLUSOP          reduce using rule 73 (EXPRESSION -> EXP O .)
+    MINUSOP         reduce using rule 73 (EXPRESSION -> EXP O .)
+    CONS_INT        reduce using rule 73 (EXPRESSION -> EXP O .)
+    CONS_FLOAT      reduce using rule 73 (EXPRESSION -> EXP O .)
+    SEMICOLON       reduce using rule 73 (EXPRESSION -> EXP O .)
+
+
+state 54
+
+    (74) O -> RELOP . EXP
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 90
+    FACTOR                         shift and go to state 42
+
+state 55
+
+    (55) PRINT -> PRINT_KEYWORD OPEN_PARENTHESES . M
+    (56) M -> . EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON
+    (57) M -> . CONS_STRING CLOSE_PARENTHESES SEMICOLON
+    (68) EXPRESSION_OP -> . EXPRESSION
+    (69) EXPRESSION_OP -> . ATTRIBUTE_2
+    (73) EXPRESSION -> . EXP O
+    (98) ATTRIBUTE_2 -> . ID POINT ATTR_2
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    CONS_STRING     shift and go to state 91
+    ID              shift and go to state 94
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE_2                    shift and go to state 16
+    ATTRIBUTE                      shift and go to state 40
+    M                              shift and go to state 93
+    VAR_CONS                       shift and go to state 18
+    EXPRESSION_OP                  shift and go to state 92
+    EXP                            shift and go to state 19
+    FACTOR                         shift and go to state 42
+    EXPRESSION                     shift and go to state 26
+
+state 56
+
+    (58) WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES . EXPRESSION CLOSE_PARENTHESES BLOCK
+    (73) EXPRESSION -> . EXP O
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 19
+    FACTOR                         shift and go to state 42
+    EXPRESSION                     shift and go to state 95
+
+state 57
+
+    (90) FACTOR -> OPEN_PARENTHESES EXPRESSION . CLOSE_PARENTHESES
+
+    CLOSE_PARENTHESES shift and go to state 96
+
+
+state 58
+
+    (97) ATTRIBUTE -> ID . POINT ATTR
+    (99) VAR_CONS -> ID .
+    (100) VAR_CONS -> ID . S
+    (103) S -> . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T
+    (104) S -> . OPEN_PARENTHESES EXP U
+
+  ! shift/reduce conflict for OPEN_PARENTHESES resolved as shift
+    POINT           shift and go to state 97
+    TIMESOP         reduce using rule 99 (VAR_CONS -> ID .)
+    DIVIDEOP        reduce using rule 99 (VAR_CONS -> ID .)
+    PLUSOP          reduce using rule 99 (VAR_CONS -> ID .)
+    MINUSOP         reduce using rule 99 (VAR_CONS -> ID .)
+    RELOP           reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_BRACKET   reduce using rule 99 (VAR_CONS -> ID .)
+    ID              reduce using rule 99 (VAR_CONS -> ID .)
+    FOR_LOOP_KEYWORD reduce using rule 99 (VAR_CONS -> ID .)
+    WHILE_LOOP_KEYWORD reduce using rule 99 (VAR_CONS -> ID .)
+    IF_STATEMENT    reduce using rule 99 (VAR_CONS -> ID .)
+    PRINT_KEYWORD   reduce using rule 99 (VAR_CONS -> ID .)
+    PLOT_KEYWORD    reduce using rule 99 (VAR_CONS -> ID .)
+    CONS_INT        reduce using rule 99 (VAR_CONS -> ID .)
+    CONS_FLOAT      reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_PARENTHESES reduce using rule 99 (VAR_CONS -> ID .)
+    SEMICOLON       reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_SQUARE_BRACKET reduce using rule 99 (VAR_CONS -> ID .)
+    COMMA           reduce using rule 99 (VAR_CONS -> ID .)
+    OPEN_SQUARE_BRACKET shift and go to state 72
+    OPEN_PARENTHESES shift and go to state 73
+
+  ! OPEN_PARENTHESES [ reduce using rule 99 (VAR_CONS -> ID .) ]
+
+    S                              shift and go to state 71
+
+state 59
+
+    (78) P -> PLUSOP . EXP
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 98
+    FACTOR                         shift and go to state 42
+
+state 60
+
+    (79) P -> MINUSOP . EXP
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 99
+    FACTOR                         shift and go to state 42
+
+state 61
+
+    (77) EXP -> TERM P .
+
+    COMMA           reduce using rule 77 (EXP -> TERM P .)
+    CLOSE_PARENTHESES reduce using rule 77 (EXP -> TERM P .)
+    CLOSE_SQUARE_BRACKET reduce using rule 77 (EXP -> TERM P .)
+    RELOP           reduce using rule 77 (EXP -> TERM P .)
+    SEMICOLON       reduce using rule 77 (EXP -> TERM P .)
+    CLOSE_BRACKET   reduce using rule 77 (EXP -> TERM P .)
+    ID              reduce using rule 77 (EXP -> TERM P .)
+    FOR_LOOP_KEYWORD reduce using rule 77 (EXP -> TERM P .)
+    WHILE_LOOP_KEYWORD reduce using rule 77 (EXP -> TERM P .)
+    IF_STATEMENT    reduce using rule 77 (EXP -> TERM P .)
+    PRINT_KEYWORD   reduce using rule 77 (EXP -> TERM P .)
+    PLOT_KEYWORD    reduce using rule 77 (EXP -> TERM P .)
+    OPEN_PARENTHESES reduce using rule 77 (EXP -> TERM P .)
+    PLUSOP          reduce using rule 77 (EXP -> TERM P .)
+    MINUSOP         reduce using rule 77 (EXP -> TERM P .)
+    CONS_INT        reduce using rule 77 (EXP -> TERM P .)
+    CONS_FLOAT      reduce using rule 77 (EXP -> TERM P .)
+
+
+state 62
+
+    (80) P -> empty .
+
+    RELOP           reduce using rule 80 (P -> empty .)
+    CLOSE_BRACKET   reduce using rule 80 (P -> empty .)
+    ID              reduce using rule 80 (P -> empty .)
+    FOR_LOOP_KEYWORD reduce using rule 80 (P -> empty .)
+    WHILE_LOOP_KEYWORD reduce using rule 80 (P -> empty .)
+    IF_STATEMENT    reduce using rule 80 (P -> empty .)
+    PRINT_KEYWORD   reduce using rule 80 (P -> empty .)
+    PLOT_KEYWORD    reduce using rule 80 (P -> empty .)
+    OPEN_PARENTHESES reduce using rule 80 (P -> empty .)
+    PLUSOP          reduce using rule 80 (P -> empty .)
+    MINUSOP         reduce using rule 80 (P -> empty .)
+    CONS_INT        reduce using rule 80 (P -> empty .)
+    CONS_FLOAT      reduce using rule 80 (P -> empty .)
+    CLOSE_PARENTHESES reduce using rule 80 (P -> empty .)
+    SEMICOLON       reduce using rule 80 (P -> empty .)
+    CLOSE_SQUARE_BRACKET reduce using rule 80 (P -> empty .)
+    COMMA           reduce using rule 80 (P -> empty .)
+
+
+state 63
+
+    (18) G -> STATEMENT CLOSE_BRACKET .
+    (20) G -> CLOSE_BRACKET .
+
+  ! reduce/reduce conflict for $end resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for OPEN_BRACKET resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for ID resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for CLOSE_BRACKET resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for FOR_LOOP_KEYWORD resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for WHILE_LOOP_KEYWORD resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for IF_STATEMENT resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for PRINT_KEYWORD resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for PLOT_KEYWORD resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for OPEN_PARENTHESES resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for PLUSOP resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for MINUSOP resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for CONS_INT resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for CONS_FLOAT resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+  ! reduce/reduce conflict for ELSE_STATEMENT resolved using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    $end            reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    OPEN_BRACKET    reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    ID              reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    CLOSE_BRACKET   reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    FOR_LOOP_KEYWORD reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    WHILE_LOOP_KEYWORD reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    IF_STATEMENT    reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    PRINT_KEYWORD   reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    PLOT_KEYWORD    reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    OPEN_PARENTHESES reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    PLUSOP          reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    MINUSOP         reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    CONS_INT        reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    CONS_FLOAT      reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+    ELSE_STATEMENT  reduce using rule 18 (G -> STATEMENT CLOSE_BRACKET .)
+
+  ! $end            [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! OPEN_BRACKET    [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! ID              [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! CLOSE_BRACKET   [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! FOR_LOOP_KEYWORD [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! WHILE_LOOP_KEYWORD [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! IF_STATEMENT    [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! PRINT_KEYWORD   [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! PLOT_KEYWORD    [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! OPEN_PARENTHESES [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! PLUSOP          [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! MINUSOP         [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! CONS_INT        [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! CONS_FLOAT      [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+  ! ELSE_STATEMENT  [ reduce using rule 20 (G -> CLOSE_BRACKET .) ]
+
+
+state 64
+
+    (19) G -> STATEMENT G .
+
+    $end            reduce using rule 19 (G -> STATEMENT G .)
+    OPEN_BRACKET    reduce using rule 19 (G -> STATEMENT G .)
+    ID              reduce using rule 19 (G -> STATEMENT G .)
+    CLOSE_BRACKET   reduce using rule 19 (G -> STATEMENT G .)
+    FOR_LOOP_KEYWORD reduce using rule 19 (G -> STATEMENT G .)
+    WHILE_LOOP_KEYWORD reduce using rule 19 (G -> STATEMENT G .)
+    IF_STATEMENT    reduce using rule 19 (G -> STATEMENT G .)
+    PRINT_KEYWORD   reduce using rule 19 (G -> STATEMENT G .)
+    PLOT_KEYWORD    reduce using rule 19 (G -> STATEMENT G .)
+    OPEN_PARENTHESES reduce using rule 19 (G -> STATEMENT G .)
+    PLUSOP          reduce using rule 19 (G -> STATEMENT G .)
+    MINUSOP         reduce using rule 19 (G -> STATEMENT G .)
+    CONS_INT        reduce using rule 19 (G -> STATEMENT G .)
+    CONS_FLOAT      reduce using rule 19 (G -> STATEMENT G .)
+    ELSE_STATEMENT  reduce using rule 19 (G -> STATEMENT G .)
+
+
+state 65
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES . ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    ID              shift and go to state 100
+
+
+state 66
+
+    (65) CONDIITON -> IF_STATEMENT OPEN_PARENTHESES . EXPRESSION CLOSE_PARENTHESES BLOCK N
+    (73) EXPRESSION -> . EXP O
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 19
+    FACTOR                         shift and go to state 42
+    EXPRESSION                     shift and go to state 101
+
+state 67
+
+    (64) F_CALL -> ID POINT . TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON
+    (98) ATTRIBUTE_2 -> ID POINT . ATTR_2
+    (97) ATTRIBUTE -> ID POINT . ATTR
+    (60) TRANSFORM -> . REFLECTION_KEYWORD
+    (61) TRANSFORM -> . TRANS_KEYWORD
+    (62) TRANSFORM -> . ROTATION_KEYWORD
+    (63) TRANSFORM -> . STRETCH_KEYWORD
+    (70) ATTR_2 -> . CENTER_KEYWORD
+    (71) ATTR_2 -> . FOCUS_KEYWORD
+    (72) ATTR_2 -> . VERTEX_KEYWORD
+    (86) ATTR -> . AREA_KEYWORD
+    (87) ATTR -> . PERIMETER_KEYWORD
+    (88) ATTR -> . EXC_KEYWORD
+    (89) ATTR -> . RADIUS_KEYWORD
+
+    REFLECTION_KEYWORD shift and go to state 115
+    TRANS_KEYWORD   shift and go to state 112
+    ROTATION_KEYWORD shift and go to state 103
+    STRETCH_KEYWORD shift and go to state 110
+    CENTER_KEYWORD  shift and go to state 109
+    FOCUS_KEYWORD   shift and go to state 114
+    VERTEX_KEYWORD  shift and go to state 104
+    AREA_KEYWORD    shift and go to state 106
+    PERIMETER_KEYWORD shift and go to state 107
+    EXC_KEYWORD     shift and go to state 111
+    RADIUS_KEYWORD  shift and go to state 113
+
+    ATTR_2                         shift and go to state 102
+    TRANSFORM                      shift and go to state 108
+    ATTR                           shift and go to state 105
+
+state 68
+
+    (30) H -> EQUALOP . EXPRESSION SEMICOLON
+    (73) EXPRESSION -> . EXP O
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 19
+    FACTOR                         shift and go to state 42
+    EXPRESSION                     shift and go to state 116
+
+state 69
+
+    (28) ASSIGN -> ID H .
+
+    CLOSE_BRACKET   reduce using rule 28 (ASSIGN -> ID H .)
+    ID              reduce using rule 28 (ASSIGN -> ID H .)
+    FOR_LOOP_KEYWORD reduce using rule 28 (ASSIGN -> ID H .)
+    WHILE_LOOP_KEYWORD reduce using rule 28 (ASSIGN -> ID H .)
+    IF_STATEMENT    reduce using rule 28 (ASSIGN -> ID H .)
+    PRINT_KEYWORD   reduce using rule 28 (ASSIGN -> ID H .)
+    PLOT_KEYWORD    reduce using rule 28 (ASSIGN -> ID H .)
+    OPEN_PARENTHESES reduce using rule 28 (ASSIGN -> ID H .)
+    PLUSOP          reduce using rule 28 (ASSIGN -> ID H .)
+    MINUSOP         reduce using rule 28 (ASSIGN -> ID H .)
+    CONS_INT        reduce using rule 28 (ASSIGN -> ID H .)
+    CONS_FLOAT      reduce using rule 28 (ASSIGN -> ID H .)
+
+
+state 70
+
+    (29) H -> ARROW . EQUATION SEMICOLON
+    (94) EQUATION -> . EQX R EQY EQUALOP CONS_FLOAT
+
+    EQX             shift and go to state 117
+
+    EQUATION                       shift and go to state 118
+
+state 71
+
+    (100) VAR_CONS -> ID S .
+
+    TIMESOP         reduce using rule 100 (VAR_CONS -> ID S .)
+    DIVIDEOP        reduce using rule 100 (VAR_CONS -> ID S .)
+    PLUSOP          reduce using rule 100 (VAR_CONS -> ID S .)
+    MINUSOP         reduce using rule 100 (VAR_CONS -> ID S .)
+    RELOP           reduce using rule 100 (VAR_CONS -> ID S .)
+    CLOSE_BRACKET   reduce using rule 100 (VAR_CONS -> ID S .)
+    ID              reduce using rule 100 (VAR_CONS -> ID S .)
+    FOR_LOOP_KEYWORD reduce using rule 100 (VAR_CONS -> ID S .)
+    WHILE_LOOP_KEYWORD reduce using rule 100 (VAR_CONS -> ID S .)
+    IF_STATEMENT    reduce using rule 100 (VAR_CONS -> ID S .)
+    PRINT_KEYWORD   reduce using rule 100 (VAR_CONS -> ID S .)
+    PLOT_KEYWORD    reduce using rule 100 (VAR_CONS -> ID S .)
+    OPEN_PARENTHESES reduce using rule 100 (VAR_CONS -> ID S .)
+    CONS_INT        reduce using rule 100 (VAR_CONS -> ID S .)
+    CONS_FLOAT      reduce using rule 100 (VAR_CONS -> ID S .)
+    CLOSE_PARENTHESES reduce using rule 100 (VAR_CONS -> ID S .)
+    SEMICOLON       reduce using rule 100 (VAR_CONS -> ID S .)
+    CLOSE_SQUARE_BRACKET reduce using rule 100 (VAR_CONS -> ID S .)
+    COMMA           reduce using rule 100 (VAR_CONS -> ID S .)
+
+
+state 72
+
+    (103) S -> OPEN_SQUARE_BRACKET . EXP CLOSE_SQUARE_BRACKET T
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 119
+    FACTOR                         shift and go to state 42
+
+state 73
+
+    (104) S -> OPEN_PARENTHESES . EXP U
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 120
+    FACTOR                         shift and go to state 42
+
+state 74
+
+    (83) Q -> TIMESOP . TERM
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 121
+    ATTRIBUTE                      shift and go to state 122
+    VAR_CONS                       shift and go to state 18
+    FACTOR                         shift and go to state 42
+
+state 75
+
+    (84) Q -> DIVIDEOP . TERM
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 123
+    ATTRIBUTE                      shift and go to state 122
+    VAR_CONS                       shift and go to state 18
+    FACTOR                         shift and go to state 42
+
+state 76
+
+    (81) TERM -> ATTRIBUTE Q .
+
+    PLUSOP          reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    MINUSOP         reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    CLOSE_SQUARE_BRACKET reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    RELOP           reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    CLOSE_PARENTHESES reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    SEMICOLON       reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    CLOSE_BRACKET   reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    ID              reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    FOR_LOOP_KEYWORD reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    WHILE_LOOP_KEYWORD reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    IF_STATEMENT    reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    PRINT_KEYWORD   reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    PLOT_KEYWORD    reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    OPEN_PARENTHESES reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    CONS_INT        reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    CONS_FLOAT      reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+    COMMA           reduce using rule 81 (TERM -> ATTRIBUTE Q .)
+
+
+state 77
+
+    (76) EXP -> ATTRIBUTE P .
+
+    COMMA           reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    CLOSE_PARENTHESES reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    CLOSE_SQUARE_BRACKET reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    RELOP           reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    SEMICOLON       reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    CLOSE_BRACKET   reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    ID              reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    FOR_LOOP_KEYWORD reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    WHILE_LOOP_KEYWORD reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    IF_STATEMENT    reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    PRINT_KEYWORD   reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    PLOT_KEYWORD    reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    OPEN_PARENTHESES reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    PLUSOP          reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    MINUSOP         reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    CONS_INT        reduce using rule 76 (EXP -> ATTRIBUTE P .)
+    CONS_FLOAT      reduce using rule 76 (EXP -> ATTRIBUTE P .)
+
+
+state 78
+
+    (80) P -> empty .
+    (85) Q -> empty .
+
+  ! reduce/reduce conflict for PLUSOP resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for MINUSOP resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for RELOP resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for CLOSE_BRACKET resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for ID resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for FOR_LOOP_KEYWORD resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for WHILE_LOOP_KEYWORD resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for IF_STATEMENT resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for PRINT_KEYWORD resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for PLOT_KEYWORD resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for OPEN_PARENTHESES resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for CONS_INT resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for CONS_FLOAT resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for CLOSE_PARENTHESES resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for SEMICOLON resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for CLOSE_SQUARE_BRACKET resolved using rule 80 (P -> empty .)
+  ! reduce/reduce conflict for COMMA resolved using rule 80 (P -> empty .)
+    RELOP           reduce using rule 80 (P -> empty .)
+    CLOSE_BRACKET   reduce using rule 80 (P -> empty .)
+    ID              reduce using rule 80 (P -> empty .)
+    FOR_LOOP_KEYWORD reduce using rule 80 (P -> empty .)
+    WHILE_LOOP_KEYWORD reduce using rule 80 (P -> empty .)
+    IF_STATEMENT    reduce using rule 80 (P -> empty .)
+    PRINT_KEYWORD   reduce using rule 80 (P -> empty .)
+    PLOT_KEYWORD    reduce using rule 80 (P -> empty .)
+    OPEN_PARENTHESES reduce using rule 80 (P -> empty .)
+    PLUSOP          reduce using rule 80 (P -> empty .)
+    MINUSOP         reduce using rule 80 (P -> empty .)
+    CONS_INT        reduce using rule 80 (P -> empty .)
+    CONS_FLOAT      reduce using rule 80 (P -> empty .)
+    CLOSE_PARENTHESES reduce using rule 80 (P -> empty .)
+    SEMICOLON       reduce using rule 80 (P -> empty .)
+    CLOSE_SQUARE_BRACKET reduce using rule 80 (P -> empty .)
+    COMMA           reduce using rule 80 (P -> empty .)
+
+  ! PLUSOP          [ reduce using rule 85 (Q -> empty .) ]
+  ! MINUSOP         [ reduce using rule 85 (Q -> empty .) ]
+  ! RELOP           [ reduce using rule 85 (Q -> empty .) ]
+  ! CLOSE_BRACKET   [ reduce using rule 85 (Q -> empty .) ]
+  ! ID              [ reduce using rule 85 (Q -> empty .) ]
+  ! FOR_LOOP_KEYWORD [ reduce using rule 85 (Q -> empty .) ]
+  ! WHILE_LOOP_KEYWORD [ reduce using rule 85 (Q -> empty .) ]
+  ! IF_STATEMENT    [ reduce using rule 85 (Q -> empty .) ]
+  ! PRINT_KEYWORD   [ reduce using rule 85 (Q -> empty .) ]
+  ! PLOT_KEYWORD    [ reduce using rule 85 (Q -> empty .) ]
+  ! OPEN_PARENTHESES [ reduce using rule 85 (Q -> empty .) ]
+  ! CONS_INT        [ reduce using rule 85 (Q -> empty .) ]
+  ! CONS_FLOAT      [ reduce using rule 85 (Q -> empty .) ]
+  ! CLOSE_PARENTHESES [ reduce using rule 85 (Q -> empty .) ]
+  ! SEMICOLON       [ reduce using rule 85 (Q -> empty .) ]
+  ! CLOSE_SQUARE_BRACKET [ reduce using rule 85 (Q -> empty .) ]
+  ! COMMA           [ reduce using rule 85 (Q -> empty .) ]
+
+
+state 79
+
+    (82) TERM -> FACTOR Q .
+
+    PLUSOP          reduce using rule 82 (TERM -> FACTOR Q .)
+    MINUSOP         reduce using rule 82 (TERM -> FACTOR Q .)
+    CLOSE_SQUARE_BRACKET reduce using rule 82 (TERM -> FACTOR Q .)
+    RELOP           reduce using rule 82 (TERM -> FACTOR Q .)
+    CLOSE_PARENTHESES reduce using rule 82 (TERM -> FACTOR Q .)
+    SEMICOLON       reduce using rule 82 (TERM -> FACTOR Q .)
+    CLOSE_BRACKET   reduce using rule 82 (TERM -> FACTOR Q .)
+    ID              reduce using rule 82 (TERM -> FACTOR Q .)
+    FOR_LOOP_KEYWORD reduce using rule 82 (TERM -> FACTOR Q .)
+    WHILE_LOOP_KEYWORD reduce using rule 82 (TERM -> FACTOR Q .)
+    IF_STATEMENT    reduce using rule 82 (TERM -> FACTOR Q .)
+    PRINT_KEYWORD   reduce using rule 82 (TERM -> FACTOR Q .)
+    PLOT_KEYWORD    reduce using rule 82 (TERM -> FACTOR Q .)
+    OPEN_PARENTHESES reduce using rule 82 (TERM -> FACTOR Q .)
+    CONS_INT        reduce using rule 82 (TERM -> FACTOR Q .)
+    CONS_FLOAT      reduce using rule 82 (TERM -> FACTOR Q .)
+    COMMA           reduce using rule 82 (TERM -> FACTOR Q .)
+
+
+state 80
+
+    (85) Q -> empty .
+
+    PLUSOP          reduce using rule 85 (Q -> empty .)
+    MINUSOP         reduce using rule 85 (Q -> empty .)
+    RELOP           reduce using rule 85 (Q -> empty .)
+    CLOSE_BRACKET   reduce using rule 85 (Q -> empty .)
+    ID              reduce using rule 85 (Q -> empty .)
+    FOR_LOOP_KEYWORD reduce using rule 85 (Q -> empty .)
+    WHILE_LOOP_KEYWORD reduce using rule 85 (Q -> empty .)
+    IF_STATEMENT    reduce using rule 85 (Q -> empty .)
+    PRINT_KEYWORD   reduce using rule 85 (Q -> empty .)
+    PLOT_KEYWORD    reduce using rule 85 (Q -> empty .)
+    OPEN_PARENTHESES reduce using rule 85 (Q -> empty .)
+    CONS_INT        reduce using rule 85 (Q -> empty .)
+    CONS_FLOAT      reduce using rule 85 (Q -> empty .)
+    CLOSE_PARENTHESES reduce using rule 85 (Q -> empty .)
+    SEMICOLON       reduce using rule 85 (Q -> empty .)
+    CLOSE_SQUARE_BRACKET reduce using rule 85 (Q -> empty .)
+    COMMA           reduce using rule 85 (Q -> empty .)
+
+
+state 81
+
+    (59) PLOT -> PLOT_KEYWORD OPEN_PARENTHESES . ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+
+    ID              shift and go to state 124
+
+
+state 82
+
+    (8) C -> ID D .
+
+    ID              reduce using rule 8 (C -> ID D .)
+    OPEN_BRACKET    reduce using rule 8 (C -> ID D .)
+
+
+state 83
+
+    (12) D -> TWO_POINTS . E
+    (13) E -> . TYPE_P F
+    (14) E -> . TYPE_S F
+    (50) TYPE_P -> . INT_KEYWORD
+    (51) TYPE_P -> . FLOAT_KEYWORD
+    (52) TYPE_P -> . BOOL_KEYWORD
+    (46) TYPE_S -> . PARABOLA_KEYWORD
+    (47) TYPE_S -> . ELLIPSE_KEYWORD
+    (48) TYPE_S -> . HYPERBOLA_KEYWORD
+    (49) TYPE_S -> . CIRCLE_KEYWORD
+
+    INT_KEYWORD     shift and go to state 125
+    FLOAT_KEYWORD   shift and go to state 130
+    BOOL_KEYWORD    shift and go to state 129
+    PARABOLA_KEYWORD shift and go to state 134
+    ELLIPSE_KEYWORD shift and go to state 133
+    HYPERBOLA_KEYWORD shift and go to state 126
+    CIRCLE_KEYWORD  shift and go to state 128
+
+    TYPE_S                         shift and go to state 131
+    TYPE_P                         shift and go to state 132
+    E                              shift and go to state 127
+
+state 84
+
+    (11) D -> COMMA . C
+    (8) C -> . ID D
+    (9) C -> . ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (10) C -> . ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+
+    ID              shift and go to state 47
+
+    C                              shift and go to state 135
+
+state 85
+
+    (9) C -> ID OPEN_SQUARE_BRACKET . EXP CLOSE_SQUARE_BRACKET D
+    (10) C -> ID OPEN_SQUARE_BRACKET . EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 136
+    FACTOR                         shift and go to state 42
+
+state 86
+
+    (32) MODULE -> ID OPEN_PARENTHESES I .
+
+    OPEN_BRACKET    reduce using rule 32 (MODULE -> ID OPEN_PARENTHESES I .)
+    ID              reduce using rule 32 (MODULE -> ID OPEN_PARENTHESES I .)
+
+
+state 87
+
+    (34) I -> L .
+
+    OPEN_BRACKET    reduce using rule 34 (I -> L .)
+    ID              reduce using rule 34 (I -> L .)
+
+
+state 88
+
+    (37) L -> CLOSE_PARENTHESES . BLOCK
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    OPEN_BRACKET    shift and go to state 8
+
+    BLOCK                          shift and go to state 137
+
+state 89
+
+    (33) I -> ID . TWO_POINTS J
+
+    TWO_POINTS      shift and go to state 138
+
+
+state 90
+
+    (74) O -> RELOP EXP .
+
+    CLOSE_BRACKET   reduce using rule 74 (O -> RELOP EXP .)
+    ID              reduce using rule 74 (O -> RELOP EXP .)
+    FOR_LOOP_KEYWORD reduce using rule 74 (O -> RELOP EXP .)
+    WHILE_LOOP_KEYWORD reduce using rule 74 (O -> RELOP EXP .)
+    IF_STATEMENT    reduce using rule 74 (O -> RELOP EXP .)
+    PRINT_KEYWORD   reduce using rule 74 (O -> RELOP EXP .)
+    PLOT_KEYWORD    reduce using rule 74 (O -> RELOP EXP .)
+    OPEN_PARENTHESES reduce using rule 74 (O -> RELOP EXP .)
+    PLUSOP          reduce using rule 74 (O -> RELOP EXP .)
+    MINUSOP         reduce using rule 74 (O -> RELOP EXP .)
+    CONS_INT        reduce using rule 74 (O -> RELOP EXP .)
+    CONS_FLOAT      reduce using rule 74 (O -> RELOP EXP .)
+    CLOSE_PARENTHESES reduce using rule 74 (O -> RELOP EXP .)
+    SEMICOLON       reduce using rule 74 (O -> RELOP EXP .)
+
+
+state 91
+
+    (57) M -> CONS_STRING . CLOSE_PARENTHESES SEMICOLON
+
+    CLOSE_PARENTHESES shift and go to state 139
+
+
+state 92
+
+    (56) M -> EXPRESSION_OP . CLOSE_PARENTHESES SEMICOLON
+
+    CLOSE_PARENTHESES shift and go to state 140
+
+
+state 93
+
+    (55) PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .
+
+    CLOSE_BRACKET   reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    ID              reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    FOR_LOOP_KEYWORD reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    WHILE_LOOP_KEYWORD reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    IF_STATEMENT    reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    PRINT_KEYWORD   reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    PLOT_KEYWORD    reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    OPEN_PARENTHESES reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    PLUSOP          reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    MINUSOP         reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    CONS_INT        reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+    CONS_FLOAT      reduce using rule 55 (PRINT -> PRINT_KEYWORD OPEN_PARENTHESES M .)
+
+
+state 94
+
+    (98) ATTRIBUTE_2 -> ID . POINT ATTR_2
+    (97) ATTRIBUTE -> ID . POINT ATTR
+    (99) VAR_CONS -> ID .
+    (100) VAR_CONS -> ID . S
+    (103) S -> . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T
+    (104) S -> . OPEN_PARENTHESES EXP U
+
+    POINT           shift and go to state 141
+    TIMESOP         reduce using rule 99 (VAR_CONS -> ID .)
+    DIVIDEOP        reduce using rule 99 (VAR_CONS -> ID .)
+    PLUSOP          reduce using rule 99 (VAR_CONS -> ID .)
+    MINUSOP         reduce using rule 99 (VAR_CONS -> ID .)
+    RELOP           reduce using rule 99 (VAR_CONS -> ID .)
+    CLOSE_PARENTHESES reduce using rule 99 (VAR_CONS -> ID .)
+    OPEN_SQUARE_BRACKET shift and go to state 72
+    OPEN_PARENTHESES shift and go to state 73
+
+    S                              shift and go to state 71
+
+state 95
+
+    (58) WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION . CLOSE_PARENTHESES BLOCK
+
+    CLOSE_PARENTHESES shift and go to state 142
+
+
+state 96
+
+    (90) FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .
+
+    TIMESOP         reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    DIVIDEOP        reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    PLUSOP          reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    MINUSOP         reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    CLOSE_SQUARE_BRACKET reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    RELOP           reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    CLOSE_BRACKET   reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    ID              reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    FOR_LOOP_KEYWORD reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    WHILE_LOOP_KEYWORD reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    IF_STATEMENT    reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    PRINT_KEYWORD   reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    PLOT_KEYWORD    reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    OPEN_PARENTHESES reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    CONS_INT        reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    CONS_FLOAT      reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    CLOSE_PARENTHESES reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    SEMICOLON       reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+    COMMA           reduce using rule 90 (FACTOR -> OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES .)
+
+
+state 97
+
+    (97) ATTRIBUTE -> ID POINT . ATTR
+    (86) ATTR -> . AREA_KEYWORD
+    (87) ATTR -> . PERIMETER_KEYWORD
+    (88) ATTR -> . EXC_KEYWORD
+    (89) ATTR -> . RADIUS_KEYWORD
+
+    AREA_KEYWORD    shift and go to state 106
+    PERIMETER_KEYWORD shift and go to state 107
+    EXC_KEYWORD     shift and go to state 111
+    RADIUS_KEYWORD  shift and go to state 113
+
+    ATTR                           shift and go to state 105
+
+state 98
+
+    (78) P -> PLUSOP EXP .
+
+    RELOP           reduce using rule 78 (P -> PLUSOP EXP .)
+    CLOSE_BRACKET   reduce using rule 78 (P -> PLUSOP EXP .)
+    ID              reduce using rule 78 (P -> PLUSOP EXP .)
+    FOR_LOOP_KEYWORD reduce using rule 78 (P -> PLUSOP EXP .)
+    WHILE_LOOP_KEYWORD reduce using rule 78 (P -> PLUSOP EXP .)
+    IF_STATEMENT    reduce using rule 78 (P -> PLUSOP EXP .)
+    PRINT_KEYWORD   reduce using rule 78 (P -> PLUSOP EXP .)
+    PLOT_KEYWORD    reduce using rule 78 (P -> PLUSOP EXP .)
+    OPEN_PARENTHESES reduce using rule 78 (P -> PLUSOP EXP .)
+    PLUSOP          reduce using rule 78 (P -> PLUSOP EXP .)
+    MINUSOP         reduce using rule 78 (P -> PLUSOP EXP .)
+    CONS_INT        reduce using rule 78 (P -> PLUSOP EXP .)
+    CONS_FLOAT      reduce using rule 78 (P -> PLUSOP EXP .)
+    CLOSE_PARENTHESES reduce using rule 78 (P -> PLUSOP EXP .)
+    SEMICOLON       reduce using rule 78 (P -> PLUSOP EXP .)
+    CLOSE_SQUARE_BRACKET reduce using rule 78 (P -> PLUSOP EXP .)
+    COMMA           reduce using rule 78 (P -> PLUSOP EXP .)
+
+
+state 99
+
+    (79) P -> MINUSOP EXP .
+
+    RELOP           reduce using rule 79 (P -> MINUSOP EXP .)
+    CLOSE_BRACKET   reduce using rule 79 (P -> MINUSOP EXP .)
+    ID              reduce using rule 79 (P -> MINUSOP EXP .)
+    FOR_LOOP_KEYWORD reduce using rule 79 (P -> MINUSOP EXP .)
+    WHILE_LOOP_KEYWORD reduce using rule 79 (P -> MINUSOP EXP .)
+    IF_STATEMENT    reduce using rule 79 (P -> MINUSOP EXP .)
+    PRINT_KEYWORD   reduce using rule 79 (P -> MINUSOP EXP .)
+    PLOT_KEYWORD    reduce using rule 79 (P -> MINUSOP EXP .)
+    OPEN_PARENTHESES reduce using rule 79 (P -> MINUSOP EXP .)
+    PLUSOP          reduce using rule 79 (P -> MINUSOP EXP .)
+    MINUSOP         reduce using rule 79 (P -> MINUSOP EXP .)
+    CONS_INT        reduce using rule 79 (P -> MINUSOP EXP .)
+    CONS_FLOAT      reduce using rule 79 (P -> MINUSOP EXP .)
+    CLOSE_PARENTHESES reduce using rule 79 (P -> MINUSOP EXP .)
+    SEMICOLON       reduce using rule 79 (P -> MINUSOP EXP .)
+    CLOSE_SQUARE_BRACKET reduce using rule 79 (P -> MINUSOP EXP .)
+    COMMA           reduce using rule 79 (P -> MINUSOP EXP .)
+
+
+state 100
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID . EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    EQUALOP         shift and go to state 143
+
+
+state 101
+
+    (65) CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION . CLOSE_PARENTHESES BLOCK N
+
+    CLOSE_PARENTHESES shift and go to state 144
+
+
+state 102
+
+    (98) ATTRIBUTE_2 -> ID POINT ATTR_2 .
+
+    CLOSE_BRACKET   reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    ID              reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    FOR_LOOP_KEYWORD reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    WHILE_LOOP_KEYWORD reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    IF_STATEMENT    reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    PRINT_KEYWORD   reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    PLOT_KEYWORD    reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    OPEN_PARENTHESES reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    PLUSOP          reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    MINUSOP         reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    CONS_INT        reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    CONS_FLOAT      reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+    CLOSE_PARENTHESES reduce using rule 98 (ATTRIBUTE_2 -> ID POINT ATTR_2 .)
+
+
+state 103
+
+    (62) TRANSFORM -> ROTATION_KEYWORD .
+
+    OPEN_PARENTHESES reduce using rule 62 (TRANSFORM -> ROTATION_KEYWORD .)
+
+
+state 104
+
+    (72) ATTR_2 -> VERTEX_KEYWORD .
+
+    CLOSE_BRACKET   reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    ID              reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    IF_STATEMENT    reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    PLUSOP          reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    MINUSOP         reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    CONS_INT        reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    CONS_FLOAT      reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 72 (ATTR_2 -> VERTEX_KEYWORD .)
+
+
+state 105
+
+    (97) ATTRIBUTE -> ID POINT ATTR .
+
+    PLUSOP          reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    MINUSOP         reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    TIMESOP         reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    DIVIDEOP        reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    RELOP           reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    CLOSE_PARENTHESES reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    CLOSE_SQUARE_BRACKET reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    CLOSE_BRACKET   reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    ID              reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    FOR_LOOP_KEYWORD reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    WHILE_LOOP_KEYWORD reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    IF_STATEMENT    reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    PRINT_KEYWORD   reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    PLOT_KEYWORD    reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    OPEN_PARENTHESES reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    CONS_INT        reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    CONS_FLOAT      reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    SEMICOLON       reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+    COMMA           reduce using rule 97 (ATTRIBUTE -> ID POINT ATTR .)
+
+
+state 106
+
+    (86) ATTR -> AREA_KEYWORD .
+
+    PLUSOP          reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    MINUSOP         reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    TIMESOP         reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    DIVIDEOP        reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    RELOP           reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    CLOSE_BRACKET   reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    ID              reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    IF_STATEMENT    reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    CONS_INT        reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    CONS_FLOAT      reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    SEMICOLON       reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    CLOSE_SQUARE_BRACKET reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+    COMMA           reduce using rule 86 (ATTR -> AREA_KEYWORD .)
+
+
+state 107
+
+    (87) ATTR -> PERIMETER_KEYWORD .
+
+    PLUSOP          reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    MINUSOP         reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    TIMESOP         reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    DIVIDEOP        reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    RELOP           reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    CLOSE_BRACKET   reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    ID              reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    IF_STATEMENT    reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    CONS_INT        reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    CONS_FLOAT      reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    SEMICOLON       reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    CLOSE_SQUARE_BRACKET reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+    COMMA           reduce using rule 87 (ATTR -> PERIMETER_KEYWORD .)
+
+
+state 108
+
+    (64) F_CALL -> ID POINT TRANSFORM . OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON
+
+    OPEN_PARENTHESES shift and go to state 145
+
+
+state 109
+
+    (70) ATTR_2 -> CENTER_KEYWORD .
+
+    CLOSE_BRACKET   reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    ID              reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    IF_STATEMENT    reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    PLUSOP          reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    MINUSOP         reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    CONS_INT        reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    CONS_FLOAT      reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 70 (ATTR_2 -> CENTER_KEYWORD .)
+
+
+state 110
+
+    (63) TRANSFORM -> STRETCH_KEYWORD .
+
+    OPEN_PARENTHESES reduce using rule 63 (TRANSFORM -> STRETCH_KEYWORD .)
+
+
+state 111
+
+    (88) ATTR -> EXC_KEYWORD .
+
+    PLUSOP          reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    MINUSOP         reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    TIMESOP         reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    DIVIDEOP        reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    RELOP           reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    CLOSE_BRACKET   reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    ID              reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    IF_STATEMENT    reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    CONS_INT        reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    CONS_FLOAT      reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    SEMICOLON       reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    CLOSE_SQUARE_BRACKET reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+    COMMA           reduce using rule 88 (ATTR -> EXC_KEYWORD .)
+
+
+state 112
+
+    (61) TRANSFORM -> TRANS_KEYWORD .
+
+    OPEN_PARENTHESES reduce using rule 61 (TRANSFORM -> TRANS_KEYWORD .)
+
+
+state 113
+
+    (89) ATTR -> RADIUS_KEYWORD .
+
+    PLUSOP          reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    MINUSOP         reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    TIMESOP         reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    DIVIDEOP        reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    RELOP           reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    CLOSE_BRACKET   reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    ID              reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    IF_STATEMENT    reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    CONS_INT        reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    CONS_FLOAT      reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    SEMICOLON       reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    CLOSE_SQUARE_BRACKET reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+    COMMA           reduce using rule 89 (ATTR -> RADIUS_KEYWORD .)
+
+
+state 114
+
+    (71) ATTR_2 -> FOCUS_KEYWORD .
+
+    CLOSE_BRACKET   reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    ID              reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    FOR_LOOP_KEYWORD reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    WHILE_LOOP_KEYWORD reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    IF_STATEMENT    reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    PRINT_KEYWORD   reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    PLOT_KEYWORD    reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    OPEN_PARENTHESES reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    PLUSOP          reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    MINUSOP         reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    CONS_INT        reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    CONS_FLOAT      reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 71 (ATTR_2 -> FOCUS_KEYWORD .)
+
+
+state 115
+
+    (60) TRANSFORM -> REFLECTION_KEYWORD .
+
+    OPEN_PARENTHESES reduce using rule 60 (TRANSFORM -> REFLECTION_KEYWORD .)
+
+
+state 116
+
+    (30) H -> EQUALOP EXPRESSION . SEMICOLON
+
+    SEMICOLON       shift and go to state 146
+
+
+state 117
+
+    (94) EQUATION -> EQX . R EQY EQUALOP CONS_FLOAT
+    (95) R -> . PLUSOP
+    (96) R -> . MINUSOP
+
+    PLUSOP          shift and go to state 148
+    MINUSOP         shift and go to state 147
+
+    R                              shift and go to state 149
+
+state 118
+
+    (29) H -> ARROW EQUATION . SEMICOLON
+
+    SEMICOLON       shift and go to state 150
+
+
+state 119
+
+    (103) S -> OPEN_SQUARE_BRACKET EXP . CLOSE_SQUARE_BRACKET T
+
+    CLOSE_SQUARE_BRACKET shift and go to state 151
+
+
+state 120
+
+    (104) S -> OPEN_PARENTHESES EXP . U
+    (107) U -> . COMMA EXP U
+    (108) U -> . CLOSE_PARENTHESES
+
+    COMMA           shift and go to state 153
+    CLOSE_PARENTHESES shift and go to state 152
+
+    U                              shift and go to state 154
+
+state 121
+
+    (83) Q -> TIMESOP TERM .
+
+    PLUSOP          reduce using rule 83 (Q -> TIMESOP TERM .)
+    MINUSOP         reduce using rule 83 (Q -> TIMESOP TERM .)
+    RELOP           reduce using rule 83 (Q -> TIMESOP TERM .)
+    CLOSE_BRACKET   reduce using rule 83 (Q -> TIMESOP TERM .)
+    ID              reduce using rule 83 (Q -> TIMESOP TERM .)
+    FOR_LOOP_KEYWORD reduce using rule 83 (Q -> TIMESOP TERM .)
+    WHILE_LOOP_KEYWORD reduce using rule 83 (Q -> TIMESOP TERM .)
+    IF_STATEMENT    reduce using rule 83 (Q -> TIMESOP TERM .)
+    PRINT_KEYWORD   reduce using rule 83 (Q -> TIMESOP TERM .)
+    PLOT_KEYWORD    reduce using rule 83 (Q -> TIMESOP TERM .)
+    OPEN_PARENTHESES reduce using rule 83 (Q -> TIMESOP TERM .)
+    CONS_INT        reduce using rule 83 (Q -> TIMESOP TERM .)
+    CONS_FLOAT      reduce using rule 83 (Q -> TIMESOP TERM .)
+    CLOSE_PARENTHESES reduce using rule 83 (Q -> TIMESOP TERM .)
+    SEMICOLON       reduce using rule 83 (Q -> TIMESOP TERM .)
+    CLOSE_SQUARE_BRACKET reduce using rule 83 (Q -> TIMESOP TERM .)
+    COMMA           reduce using rule 83 (Q -> TIMESOP TERM .)
+
+
+state 122
+
+    (81) TERM -> ATTRIBUTE . Q
+    (83) Q -> . TIMESOP TERM
+    (84) Q -> . DIVIDEOP TERM
+    (85) Q -> . empty
+    (109) empty -> .
+
+    TIMESOP         shift and go to state 74
+    DIVIDEOP        shift and go to state 75
+    PLUSOP          reduce using rule 109 (empty -> .)
+    MINUSOP         reduce using rule 109 (empty -> .)
+    RELOP           reduce using rule 109 (empty -> .)
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+    CLOSE_PARENTHESES reduce using rule 109 (empty -> .)
+    SEMICOLON       reduce using rule 109 (empty -> .)
+    CLOSE_SQUARE_BRACKET reduce using rule 109 (empty -> .)
+    COMMA           reduce using rule 109 (empty -> .)
+
+    Q                              shift and go to state 76
+    empty                          shift and go to state 80
+
+state 123
+
+    (84) Q -> DIVIDEOP TERM .
+
+    PLUSOP          reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    MINUSOP         reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    RELOP           reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    CLOSE_BRACKET   reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    ID              reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    FOR_LOOP_KEYWORD reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    WHILE_LOOP_KEYWORD reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    IF_STATEMENT    reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    PRINT_KEYWORD   reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    PLOT_KEYWORD    reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    OPEN_PARENTHESES reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    CONS_INT        reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    CONS_FLOAT      reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    CLOSE_PARENTHESES reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    SEMICOLON       reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    CLOSE_SQUARE_BRACKET reduce using rule 84 (Q -> DIVIDEOP TERM .)
+    COMMA           reduce using rule 84 (Q -> DIVIDEOP TERM .)
+
+
+state 124
+
+    (59) PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID . COMMA COLOR CLOSE_PARENTHESES SEMICOLON
+
+    COMMA           shift and go to state 155
+
+
+state 125
+
+    (50) TYPE_P -> INT_KEYWORD .
+
+    SEMICOLON       reduce using rule 50 (TYPE_P -> INT_KEYWORD .)
+    COMMA           reduce using rule 50 (TYPE_P -> INT_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 50 (TYPE_P -> INT_KEYWORD .)
+
+
+state 126
+
+    (48) TYPE_S -> HYPERBOLA_KEYWORD .
+
+    COMMA           reduce using rule 48 (TYPE_S -> HYPERBOLA_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 48 (TYPE_S -> HYPERBOLA_KEYWORD .)
+    SEMICOLON       reduce using rule 48 (TYPE_S -> HYPERBOLA_KEYWORD .)
+
+
+state 127
+
+    (12) D -> TWO_POINTS E .
+
+    ID              reduce using rule 12 (D -> TWO_POINTS E .)
+    OPEN_BRACKET    reduce using rule 12 (D -> TWO_POINTS E .)
+
+
+state 128
+
+    (49) TYPE_S -> CIRCLE_KEYWORD .
+
+    COMMA           reduce using rule 49 (TYPE_S -> CIRCLE_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 49 (TYPE_S -> CIRCLE_KEYWORD .)
+    SEMICOLON       reduce using rule 49 (TYPE_S -> CIRCLE_KEYWORD .)
+
+
+state 129
+
+    (52) TYPE_P -> BOOL_KEYWORD .
+
+    SEMICOLON       reduce using rule 52 (TYPE_P -> BOOL_KEYWORD .)
+    COMMA           reduce using rule 52 (TYPE_P -> BOOL_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 52 (TYPE_P -> BOOL_KEYWORD .)
+
+
+state 130
+
+    (51) TYPE_P -> FLOAT_KEYWORD .
+
+    SEMICOLON       reduce using rule 51 (TYPE_P -> FLOAT_KEYWORD .)
+    COMMA           reduce using rule 51 (TYPE_P -> FLOAT_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 51 (TYPE_P -> FLOAT_KEYWORD .)
+
+
+state 131
+
+    (14) E -> TYPE_S . F
+    (15) F -> . SEMICOLON C
+    (16) F -> . SEMICOLON
+
+    SEMICOLON       shift and go to state 156
+
+    F                              shift and go to state 157
+
+state 132
+
+    (13) E -> TYPE_P . F
+    (15) F -> . SEMICOLON C
+    (16) F -> . SEMICOLON
+
+    SEMICOLON       shift and go to state 156
+
+    F                              shift and go to state 158
+
+state 133
+
+    (47) TYPE_S -> ELLIPSE_KEYWORD .
+
+    COMMA           reduce using rule 47 (TYPE_S -> ELLIPSE_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 47 (TYPE_S -> ELLIPSE_KEYWORD .)
+    SEMICOLON       reduce using rule 47 (TYPE_S -> ELLIPSE_KEYWORD .)
+
+
+state 134
+
+    (46) TYPE_S -> PARABOLA_KEYWORD .
+
+    COMMA           reduce using rule 46 (TYPE_S -> PARABOLA_KEYWORD .)
+    CLOSE_PARENTHESES reduce using rule 46 (TYPE_S -> PARABOLA_KEYWORD .)
+    SEMICOLON       reduce using rule 46 (TYPE_S -> PARABOLA_KEYWORD .)
+
+
+state 135
+
+    (11) D -> COMMA C .
+
+    ID              reduce using rule 11 (D -> COMMA C .)
+    OPEN_BRACKET    reduce using rule 11 (D -> COMMA C .)
+
+
+state 136
+
+    (9) C -> ID OPEN_SQUARE_BRACKET EXP . CLOSE_SQUARE_BRACKET D
+    (10) C -> ID OPEN_SQUARE_BRACKET EXP . CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+
+    CLOSE_SQUARE_BRACKET shift and go to state 159
+
+
+state 137
+
+    (37) L -> CLOSE_PARENTHESES BLOCK .
+
+    OPEN_BRACKET    reduce using rule 37 (L -> CLOSE_PARENTHESES BLOCK .)
+    ID              reduce using rule 37 (L -> CLOSE_PARENTHESES BLOCK .)
+
+
+state 138
+
+    (33) I -> ID TWO_POINTS . J
+    (35) J -> . TYPE_P K
+    (36) J -> . TYPE_S K
+    (50) TYPE_P -> . INT_KEYWORD
+    (51) TYPE_P -> . FLOAT_KEYWORD
+    (52) TYPE_P -> . BOOL_KEYWORD
+    (46) TYPE_S -> . PARABOLA_KEYWORD
+    (47) TYPE_S -> . ELLIPSE_KEYWORD
+    (48) TYPE_S -> . HYPERBOLA_KEYWORD
+    (49) TYPE_S -> . CIRCLE_KEYWORD
+
+    INT_KEYWORD     shift and go to state 125
+    FLOAT_KEYWORD   shift and go to state 130
+    BOOL_KEYWORD    shift and go to state 129
+    PARABOLA_KEYWORD shift and go to state 134
+    ELLIPSE_KEYWORD shift and go to state 133
+    HYPERBOLA_KEYWORD shift and go to state 126
+    CIRCLE_KEYWORD  shift and go to state 128
+
+    TYPE_S                         shift and go to state 161
+    TYPE_P                         shift and go to state 162
+    J                              shift and go to state 160
+
+state 139
+
+    (57) M -> CONS_STRING CLOSE_PARENTHESES . SEMICOLON
+
+    SEMICOLON       shift and go to state 163
+
+
+state 140
+
+    (56) M -> EXPRESSION_OP CLOSE_PARENTHESES . SEMICOLON
+
+    SEMICOLON       shift and go to state 164
+
+
+state 141
+
+    (98) ATTRIBUTE_2 -> ID POINT . ATTR_2
+    (97) ATTRIBUTE -> ID POINT . ATTR
+    (70) ATTR_2 -> . CENTER_KEYWORD
+    (71) ATTR_2 -> . FOCUS_KEYWORD
+    (72) ATTR_2 -> . VERTEX_KEYWORD
+    (86) ATTR -> . AREA_KEYWORD
+    (87) ATTR -> . PERIMETER_KEYWORD
+    (88) ATTR -> . EXC_KEYWORD
+    (89) ATTR -> . RADIUS_KEYWORD
+
+    CENTER_KEYWORD  shift and go to state 109
+    FOCUS_KEYWORD   shift and go to state 114
+    VERTEX_KEYWORD  shift and go to state 104
+    AREA_KEYWORD    shift and go to state 106
+    PERIMETER_KEYWORD shift and go to state 107
+    EXC_KEYWORD     shift and go to state 111
+    RADIUS_KEYWORD  shift and go to state 113
+
+    ATTR_2                         shift and go to state 102
+    ATTR                           shift and go to state 105
+
+state 142
+
+    (58) WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES . BLOCK
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    OPEN_BRACKET    shift and go to state 8
+
+    BLOCK                          shift and go to state 165
+
+state 143
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP . EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 166
+    FACTOR                         shift and go to state 42
+
+state 144
+
+    (65) CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES . BLOCK N
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    OPEN_BRACKET    shift and go to state 8
+
+    BLOCK                          shift and go to state 167
+
+state 145
+
+    (64) F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES . EXP CLOSE_PARENTHESES SEMICOLON
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 168
+    FACTOR                         shift and go to state 42
+
+state 146
+
+    (30) H -> EQUALOP EXPRESSION SEMICOLON .
+
+    CLOSE_BRACKET   reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    ID              reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    FOR_LOOP_KEYWORD reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    WHILE_LOOP_KEYWORD reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    IF_STATEMENT    reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    PRINT_KEYWORD   reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    PLOT_KEYWORD    reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    OPEN_PARENTHESES reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    PLUSOP          reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    MINUSOP         reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    CONS_INT        reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+    CONS_FLOAT      reduce using rule 30 (H -> EQUALOP EXPRESSION SEMICOLON .)
+
+
+state 147
+
+    (96) R -> MINUSOP .
+
+    EQY             reduce using rule 96 (R -> MINUSOP .)
+
+
+state 148
+
+    (95) R -> PLUSOP .
+
+    EQY             reduce using rule 95 (R -> PLUSOP .)
+
+
+state 149
+
+    (94) EQUATION -> EQX R . EQY EQUALOP CONS_FLOAT
+
+    EQY             shift and go to state 169
+
+
+state 150
+
+    (29) H -> ARROW EQUATION SEMICOLON .
+
+    CLOSE_BRACKET   reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    ID              reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    FOR_LOOP_KEYWORD reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    WHILE_LOOP_KEYWORD reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    IF_STATEMENT    reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    PRINT_KEYWORD   reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    PLOT_KEYWORD    reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    OPEN_PARENTHESES reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    PLUSOP          reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    MINUSOP         reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    CONS_INT        reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+    CONS_FLOAT      reduce using rule 29 (H -> ARROW EQUATION SEMICOLON .)
+
+
+state 151
+
+    (103) S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET . T
+    (105) T -> . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
+    (106) T -> . empty
+    (109) empty -> .
+
+    OPEN_SQUARE_BRACKET shift and go to state 171
+    TIMESOP         reduce using rule 109 (empty -> .)
+    DIVIDEOP        reduce using rule 109 (empty -> .)
+    PLUSOP          reduce using rule 109 (empty -> .)
+    MINUSOP         reduce using rule 109 (empty -> .)
+    RELOP           reduce using rule 109 (empty -> .)
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+    CLOSE_PARENTHESES reduce using rule 109 (empty -> .)
+    SEMICOLON       reduce using rule 109 (empty -> .)
+    CLOSE_SQUARE_BRACKET reduce using rule 109 (empty -> .)
+    COMMA           reduce using rule 109 (empty -> .)
+
+    empty                          shift and go to state 170
+    T                              shift and go to state 172
+
+state 152
+
+    (108) U -> CLOSE_PARENTHESES .
+
+    TIMESOP         reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    DIVIDEOP        reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    PLUSOP          reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    MINUSOP         reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    RELOP           reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    CLOSE_BRACKET   reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    ID              reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    FOR_LOOP_KEYWORD reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    WHILE_LOOP_KEYWORD reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    IF_STATEMENT    reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    PRINT_KEYWORD   reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    PLOT_KEYWORD    reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    OPEN_PARENTHESES reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    CONS_INT        reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    CONS_FLOAT      reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    CLOSE_PARENTHESES reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    SEMICOLON       reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    CLOSE_SQUARE_BRACKET reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+    COMMA           reduce using rule 108 (U -> CLOSE_PARENTHESES .)
+
+
+state 153
+
+    (107) U -> COMMA . EXP U
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 173
+    FACTOR                         shift and go to state 42
+
+state 154
+
+    (104) S -> OPEN_PARENTHESES EXP U .
+
+    TIMESOP         reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    DIVIDEOP        reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    PLUSOP          reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    MINUSOP         reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    RELOP           reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    CLOSE_BRACKET   reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    ID              reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    FOR_LOOP_KEYWORD reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    WHILE_LOOP_KEYWORD reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    IF_STATEMENT    reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    PRINT_KEYWORD   reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    PLOT_KEYWORD    reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    OPEN_PARENTHESES reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    CONS_INT        reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    CONS_FLOAT      reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    CLOSE_PARENTHESES reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    SEMICOLON       reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    CLOSE_SQUARE_BRACKET reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+    COMMA           reduce using rule 104 (S -> OPEN_PARENTHESES EXP U .)
+
+
+state 155
+
+    (59) PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA . COLOR CLOSE_PARENTHESES SEMICOLON
+    (40) COLOR -> . RED_KEYWORD
+    (41) COLOR -> . ORANGE_KEYWORD
+    (42) COLOR -> . YELLOW_KEYWORD
+    (43) COLOR -> . GREEN_KEYWORD
+    (44) COLOR -> . BLUE_KEYWORD
+    (45) COLOR -> . PURPLE_KEYWORD
+
+    RED_KEYWORD     shift and go to state 174
+    ORANGE_KEYWORD  shift and go to state 177
+    YELLOW_KEYWORD  shift and go to state 178
+    GREEN_KEYWORD   shift and go to state 179
+    BLUE_KEYWORD    shift and go to state 176
+    PURPLE_KEYWORD  shift and go to state 180
+
+    COLOR                          shift and go to state 175
+
+state 156
+
+    (15) F -> SEMICOLON . C
+    (16) F -> SEMICOLON .
+    (8) C -> . ID D
+    (9) C -> . ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (10) C -> . ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+
+  ! shift/reduce conflict for ID resolved as shift
+    OPEN_BRACKET    reduce using rule 16 (F -> SEMICOLON .)
+    ID              shift and go to state 47
+
+  ! ID              [ reduce using rule 16 (F -> SEMICOLON .) ]
+
+    C                              shift and go to state 181
+
+state 157
+
+    (14) E -> TYPE_S F .
+
+    ID              reduce using rule 14 (E -> TYPE_S F .)
+    OPEN_BRACKET    reduce using rule 14 (E -> TYPE_S F .)
+
+
+state 158
+
+    (13) E -> TYPE_P F .
+
+    ID              reduce using rule 13 (E -> TYPE_P F .)
+    OPEN_BRACKET    reduce using rule 13 (E -> TYPE_P F .)
+
+
+state 159
+
+    (9) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET . D
+    (10) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET . OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+    (11) D -> . COMMA C
+    (12) D -> . TWO_POINTS E
+
+    OPEN_SQUARE_BRACKET shift and go to state 183
+    COMMA           shift and go to state 84
+    TWO_POINTS      shift and go to state 83
+
+    D                              shift and go to state 182
+
+state 160
+
+    (33) I -> ID TWO_POINTS J .
+
+    OPEN_BRACKET    reduce using rule 33 (I -> ID TWO_POINTS J .)
+    ID              reduce using rule 33 (I -> ID TWO_POINTS J .)
+
+
+state 161
+
+    (36) J -> TYPE_S . K
+    (38) K -> . COMMA I
+    (39) K -> . CLOSE_PARENTHESES BLOCK
+
+    COMMA           shift and go to state 185
+    CLOSE_PARENTHESES shift and go to state 186
+
+    K                              shift and go to state 184
+
+state 162
+
+    (35) J -> TYPE_P . K
+    (38) K -> . COMMA I
+    (39) K -> . CLOSE_PARENTHESES BLOCK
+
+    COMMA           shift and go to state 185
+    CLOSE_PARENTHESES shift and go to state 186
+
+    K                              shift and go to state 187
+
+state 163
+
+    (57) M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .
+
+    CLOSE_BRACKET   reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    ID              reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    FOR_LOOP_KEYWORD reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    WHILE_LOOP_KEYWORD reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    IF_STATEMENT    reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    PRINT_KEYWORD   reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    PLOT_KEYWORD    reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    OPEN_PARENTHESES reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    PLUSOP          reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    MINUSOP         reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    CONS_INT        reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+    CONS_FLOAT      reduce using rule 57 (M -> CONS_STRING CLOSE_PARENTHESES SEMICOLON .)
+
+
+state 164
+
+    (56) M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .
+
+    CLOSE_BRACKET   reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    ID              reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    FOR_LOOP_KEYWORD reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    WHILE_LOOP_KEYWORD reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    IF_STATEMENT    reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    PRINT_KEYWORD   reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    PLOT_KEYWORD    reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    OPEN_PARENTHESES reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    PLUSOP          reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    MINUSOP         reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    CONS_INT        reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+    CONS_FLOAT      reduce using rule 56 (M -> EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON .)
+
+
+state 165
+
+    (58) WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .
+
+    CLOSE_BRACKET   reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    ID              reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    FOR_LOOP_KEYWORD reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    WHILE_LOOP_KEYWORD reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    IF_STATEMENT    reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    PRINT_KEYWORD   reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    PLOT_KEYWORD    reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    OPEN_PARENTHESES reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    PLUSOP          reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    MINUSOP         reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    CONS_INT        reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+    CONS_FLOAT      reduce using rule 58 (WHILE_LOOP -> WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK .)
+
+
+state 166
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP . SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    SEMICOLON       shift and go to state 188
+
+
+state 167
+
+    (65) CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK . N
+    (66) N -> . ELSE_STATEMENT BLOCK
+    (67) N -> . empty
+    (109) empty -> .
+
+    ELSE_STATEMENT  shift and go to state 191
+    CLOSE_BRACKET   reduce using rule 109 (empty -> .)
+    ID              reduce using rule 109 (empty -> .)
+    FOR_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    WHILE_LOOP_KEYWORD reduce using rule 109 (empty -> .)
+    IF_STATEMENT    reduce using rule 109 (empty -> .)
+    PRINT_KEYWORD   reduce using rule 109 (empty -> .)
+    PLOT_KEYWORD    reduce using rule 109 (empty -> .)
+    OPEN_PARENTHESES reduce using rule 109 (empty -> .)
+    PLUSOP          reduce using rule 109 (empty -> .)
+    MINUSOP         reduce using rule 109 (empty -> .)
+    CONS_INT        reduce using rule 109 (empty -> .)
+    CONS_FLOAT      reduce using rule 109 (empty -> .)
+
+    empty                          shift and go to state 190
+    N                              shift and go to state 189
+
+state 168
+
+    (64) F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP . CLOSE_PARENTHESES SEMICOLON
+
+    CLOSE_PARENTHESES shift and go to state 192
+
+
+state 169
+
+    (94) EQUATION -> EQX R EQY . EQUALOP CONS_FLOAT
+
+    EQUALOP         shift and go to state 193
+
+
+state 170
+
+    (106) T -> empty .
+
+    TIMESOP         reduce using rule 106 (T -> empty .)
+    DIVIDEOP        reduce using rule 106 (T -> empty .)
+    PLUSOP          reduce using rule 106 (T -> empty .)
+    MINUSOP         reduce using rule 106 (T -> empty .)
+    RELOP           reduce using rule 106 (T -> empty .)
+    CLOSE_BRACKET   reduce using rule 106 (T -> empty .)
+    ID              reduce using rule 106 (T -> empty .)
+    FOR_LOOP_KEYWORD reduce using rule 106 (T -> empty .)
+    WHILE_LOOP_KEYWORD reduce using rule 106 (T -> empty .)
+    IF_STATEMENT    reduce using rule 106 (T -> empty .)
+    PRINT_KEYWORD   reduce using rule 106 (T -> empty .)
+    PLOT_KEYWORD    reduce using rule 106 (T -> empty .)
+    OPEN_PARENTHESES reduce using rule 106 (T -> empty .)
+    CONS_INT        reduce using rule 106 (T -> empty .)
+    CONS_FLOAT      reduce using rule 106 (T -> empty .)
+    CLOSE_PARENTHESES reduce using rule 106 (T -> empty .)
+    SEMICOLON       reduce using rule 106 (T -> empty .)
+    CLOSE_SQUARE_BRACKET reduce using rule 106 (T -> empty .)
+    COMMA           reduce using rule 106 (T -> empty .)
+
+
+state 171
+
+    (105) T -> OPEN_SQUARE_BRACKET . EXP CLOSE_SQUARE_BRACKET
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 194
+    FACTOR                         shift and go to state 42
+
+state 172
+
+    (103) S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .
+
+    TIMESOP         reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    DIVIDEOP        reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    PLUSOP          reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    MINUSOP         reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    RELOP           reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    CLOSE_BRACKET   reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    ID              reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    FOR_LOOP_KEYWORD reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    WHILE_LOOP_KEYWORD reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    IF_STATEMENT    reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    PRINT_KEYWORD   reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    PLOT_KEYWORD    reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    OPEN_PARENTHESES reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    CONS_INT        reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    CONS_FLOAT      reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    CLOSE_PARENTHESES reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    SEMICOLON       reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    CLOSE_SQUARE_BRACKET reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+    COMMA           reduce using rule 103 (S -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T .)
+
+
+state 173
+
+    (107) U -> COMMA EXP . U
+    (107) U -> . COMMA EXP U
+    (108) U -> . CLOSE_PARENTHESES
+
+    COMMA           shift and go to state 153
+    CLOSE_PARENTHESES shift and go to state 152
+
+    U                              shift and go to state 195
+
+state 174
+
+    (40) COLOR -> RED_KEYWORD .
+
+    CLOSE_PARENTHESES reduce using rule 40 (COLOR -> RED_KEYWORD .)
+
+
+state 175
+
+    (59) PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR . CLOSE_PARENTHESES SEMICOLON
+
+    CLOSE_PARENTHESES shift and go to state 196
+
+
+state 176
+
+    (44) COLOR -> BLUE_KEYWORD .
+
+    CLOSE_PARENTHESES reduce using rule 44 (COLOR -> BLUE_KEYWORD .)
+
+
+state 177
+
+    (41) COLOR -> ORANGE_KEYWORD .
+
+    CLOSE_PARENTHESES reduce using rule 41 (COLOR -> ORANGE_KEYWORD .)
+
+
+state 178
+
+    (42) COLOR -> YELLOW_KEYWORD .
+
+    CLOSE_PARENTHESES reduce using rule 42 (COLOR -> YELLOW_KEYWORD .)
+
+
+state 179
+
+    (43) COLOR -> GREEN_KEYWORD .
+
+    CLOSE_PARENTHESES reduce using rule 43 (COLOR -> GREEN_KEYWORD .)
+
+
+state 180
+
+    (45) COLOR -> PURPLE_KEYWORD .
+
+    CLOSE_PARENTHESES reduce using rule 45 (COLOR -> PURPLE_KEYWORD .)
+
+
+state 181
+
+    (15) F -> SEMICOLON C .
+
+    ID              reduce using rule 15 (F -> SEMICOLON C .)
+    OPEN_BRACKET    reduce using rule 15 (F -> SEMICOLON C .)
+
+
+state 182
+
+    (9) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D .
+
+    ID              reduce using rule 9 (C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D .)
+    OPEN_BRACKET    reduce using rule 9 (C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D .)
+
+
+state 183
+
+    (10) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET . EXP CLOSE_SQUARE_BRACKET D
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 197
+    FACTOR                         shift and go to state 42
+
+state 184
+
+    (36) J -> TYPE_S K .
+
+    OPEN_BRACKET    reduce using rule 36 (J -> TYPE_S K .)
+    ID              reduce using rule 36 (J -> TYPE_S K .)
+
+
+state 185
+
+    (38) K -> COMMA . I
+    (33) I -> . ID TWO_POINTS J
+    (34) I -> . L
+    (37) L -> . CLOSE_PARENTHESES BLOCK
+
+    ID              shift and go to state 89
+    CLOSE_PARENTHESES shift and go to state 88
+
+    I                              shift and go to state 198
+    L                              shift and go to state 87
+
+state 186
+
+    (39) K -> CLOSE_PARENTHESES . BLOCK
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    OPEN_BRACKET    shift and go to state 8
+
+    BLOCK                          shift and go to state 199
+
+state 187
+
+    (35) J -> TYPE_P K .
+
+    OPEN_BRACKET    reduce using rule 35 (J -> TYPE_P K .)
+    ID              reduce using rule 35 (J -> TYPE_P K .)
+
+
+state 188
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON . EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+    (73) EXPRESSION -> . EXP O
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 19
+    FACTOR                         shift and go to state 42
+    EXPRESSION                     shift and go to state 200
+
+state 189
+
+    (65) CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .
+
+    CLOSE_BRACKET   reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    ID              reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    FOR_LOOP_KEYWORD reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    WHILE_LOOP_KEYWORD reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    IF_STATEMENT    reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    PRINT_KEYWORD   reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    PLOT_KEYWORD    reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    OPEN_PARENTHESES reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    PLUSOP          reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    MINUSOP         reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    CONS_INT        reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+    CONS_FLOAT      reduce using rule 65 (CONDIITON -> IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N .)
+
+
+state 190
+
+    (67) N -> empty .
+
+    CLOSE_BRACKET   reduce using rule 67 (N -> empty .)
+    ID              reduce using rule 67 (N -> empty .)
+    FOR_LOOP_KEYWORD reduce using rule 67 (N -> empty .)
+    WHILE_LOOP_KEYWORD reduce using rule 67 (N -> empty .)
+    IF_STATEMENT    reduce using rule 67 (N -> empty .)
+    PRINT_KEYWORD   reduce using rule 67 (N -> empty .)
+    PLOT_KEYWORD    reduce using rule 67 (N -> empty .)
+    OPEN_PARENTHESES reduce using rule 67 (N -> empty .)
+    PLUSOP          reduce using rule 67 (N -> empty .)
+    MINUSOP         reduce using rule 67 (N -> empty .)
+    CONS_INT        reduce using rule 67 (N -> empty .)
+    CONS_FLOAT      reduce using rule 67 (N -> empty .)
+
+
+state 191
+
+    (66) N -> ELSE_STATEMENT . BLOCK
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    OPEN_BRACKET    shift and go to state 8
+
+    BLOCK                          shift and go to state 201
+
+state 192
+
+    (64) F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES . SEMICOLON
+
+    SEMICOLON       shift and go to state 202
+
+
+state 193
+
+    (94) EQUATION -> EQX R EQY EQUALOP . CONS_FLOAT
+
+    CONS_FLOAT      shift and go to state 203
+
+
+state 194
+
+    (105) T -> OPEN_SQUARE_BRACKET EXP . CLOSE_SQUARE_BRACKET
+
+    CLOSE_SQUARE_BRACKET shift and go to state 204
+
+
+state 195
+
+    (107) U -> COMMA EXP U .
+
+    TIMESOP         reduce using rule 107 (U -> COMMA EXP U .)
+    DIVIDEOP        reduce using rule 107 (U -> COMMA EXP U .)
+    PLUSOP          reduce using rule 107 (U -> COMMA EXP U .)
+    MINUSOP         reduce using rule 107 (U -> COMMA EXP U .)
+    RELOP           reduce using rule 107 (U -> COMMA EXP U .)
+    CLOSE_BRACKET   reduce using rule 107 (U -> COMMA EXP U .)
+    ID              reduce using rule 107 (U -> COMMA EXP U .)
+    FOR_LOOP_KEYWORD reduce using rule 107 (U -> COMMA EXP U .)
+    WHILE_LOOP_KEYWORD reduce using rule 107 (U -> COMMA EXP U .)
+    IF_STATEMENT    reduce using rule 107 (U -> COMMA EXP U .)
+    PRINT_KEYWORD   reduce using rule 107 (U -> COMMA EXP U .)
+    PLOT_KEYWORD    reduce using rule 107 (U -> COMMA EXP U .)
+    OPEN_PARENTHESES reduce using rule 107 (U -> COMMA EXP U .)
+    CONS_INT        reduce using rule 107 (U -> COMMA EXP U .)
+    CONS_FLOAT      reduce using rule 107 (U -> COMMA EXP U .)
+    CLOSE_PARENTHESES reduce using rule 107 (U -> COMMA EXP U .)
+    SEMICOLON       reduce using rule 107 (U -> COMMA EXP U .)
+    CLOSE_SQUARE_BRACKET reduce using rule 107 (U -> COMMA EXP U .)
+    COMMA           reduce using rule 107 (U -> COMMA EXP U .)
+
+
+state 196
+
+    (59) PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES . SEMICOLON
+
+    SEMICOLON       shift and go to state 205
+
+
+state 197
+
+    (10) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP . CLOSE_SQUARE_BRACKET D
+
+    CLOSE_SQUARE_BRACKET shift and go to state 206
+
+
+state 198
+
+    (38) K -> COMMA I .
+
+    OPEN_BRACKET    reduce using rule 38 (K -> COMMA I .)
+    ID              reduce using rule 38 (K -> COMMA I .)
+
+
+state 199
+
+    (39) K -> CLOSE_PARENTHESES BLOCK .
+
+    OPEN_BRACKET    reduce using rule 39 (K -> CLOSE_PARENTHESES BLOCK .)
+    ID              reduce using rule 39 (K -> CLOSE_PARENTHESES BLOCK .)
+
+
+state 200
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION . SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    SEMICOLON       shift and go to state 207
+
+
+state 201
+
+    (66) N -> ELSE_STATEMENT BLOCK .
+
+    CLOSE_BRACKET   reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    ID              reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    FOR_LOOP_KEYWORD reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    WHILE_LOOP_KEYWORD reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    IF_STATEMENT    reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    PRINT_KEYWORD   reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    PLOT_KEYWORD    reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    OPEN_PARENTHESES reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    PLUSOP          reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    MINUSOP         reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    CONS_INT        reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+    CONS_FLOAT      reduce using rule 66 (N -> ELSE_STATEMENT BLOCK .)
+
+
+state 202
+
+    (64) F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .
+
+    CLOSE_BRACKET   reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    ID              reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    FOR_LOOP_KEYWORD reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    WHILE_LOOP_KEYWORD reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    IF_STATEMENT    reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    PRINT_KEYWORD   reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    PLOT_KEYWORD    reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    OPEN_PARENTHESES reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    PLUSOP          reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    MINUSOP         reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    CONS_INT        reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+    CONS_FLOAT      reduce using rule 64 (F_CALL -> ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON .)
+
+
+state 203
+
+    (94) EQUATION -> EQX R EQY EQUALOP CONS_FLOAT .
+
+    SEMICOLON       reduce using rule 94 (EQUATION -> EQX R EQY EQUALOP CONS_FLOAT .)
+
+
+state 204
+
+    (105) T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .
+
+    TIMESOP         reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    DIVIDEOP        reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    PLUSOP          reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    MINUSOP         reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    RELOP           reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    CLOSE_BRACKET   reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    ID              reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    FOR_LOOP_KEYWORD reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    WHILE_LOOP_KEYWORD reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    IF_STATEMENT    reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    PRINT_KEYWORD   reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    PLOT_KEYWORD    reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    OPEN_PARENTHESES reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    CONS_INT        reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    CONS_FLOAT      reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    CLOSE_PARENTHESES reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    SEMICOLON       reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    CLOSE_SQUARE_BRACKET reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+    COMMA           reduce using rule 105 (T -> OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET .)
+
+
+state 205
+
+    (59) PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .
+
+    CLOSE_BRACKET   reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    ID              reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    FOR_LOOP_KEYWORD reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    WHILE_LOOP_KEYWORD reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    IF_STATEMENT    reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    PRINT_KEYWORD   reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    PLOT_KEYWORD    reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    OPEN_PARENTHESES reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    PLUSOP          reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    MINUSOP         reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    CONS_INT        reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+    CONS_FLOAT      reduce using rule 59 (PLOT -> PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON .)
+
+
+state 206
+
+    (10) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET . D
+    (11) D -> . COMMA C
+    (12) D -> . TWO_POINTS E
+
+    COMMA           shift and go to state 84
+    TWO_POINTS      shift and go to state 83
+
+    D                              shift and go to state 208
+
+state 207
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON . ID EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    ID              shift and go to state 209
+
+
+state 208
+
+    (10) C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D .
+
+    ID              reduce using rule 10 (C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D .)
+    OPEN_BRACKET    reduce using rule 10 (C -> ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D .)
+
+
+state 209
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID . EQUALOP EXP CLOSE_PARENTHESES BLOCK
+
+    EQUALOP         shift and go to state 210
+
+
+state 210
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP . EXP CLOSE_PARENTHESES BLOCK
+    (76) EXP -> . ATTRIBUTE P
+    (77) EXP -> . TERM P
+    (97) ATTRIBUTE -> . ID POINT ATTR
+    (81) TERM -> . ATTRIBUTE Q
+    (82) TERM -> . FACTOR Q
+    (90) FACTOR -> . OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    (91) FACTOR -> . PLUSOP VAR_CONS
+    (92) FACTOR -> . MINUSOP VAR_CONS
+    (93) FACTOR -> . VAR_CONS
+    (99) VAR_CONS -> . ID
+    (100) VAR_CONS -> . ID S
+    (101) VAR_CONS -> . CONS_INT
+    (102) VAR_CONS -> . CONS_FLOAT
+
+    ID              shift and go to state 58
+    OPEN_PARENTHESES shift and go to state 28
+    PLUSOP          shift and go to state 17
+    MINUSOP         shift and go to state 15
+    CONS_INT        shift and go to state 41
+    CONS_FLOAT      shift and go to state 33
+
+    TERM                           shift and go to state 31
+    ATTRIBUTE                      shift and go to state 40
+    VAR_CONS                       shift and go to state 18
+    EXP                            shift and go to state 211
+    FACTOR                         shift and go to state 42
+
+state 211
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP . CLOSE_PARENTHESES BLOCK
+
+    CLOSE_PARENTHESES shift and go to state 212
+
+
+state 212
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES . BLOCK
+    (17) BLOCK -> . OPEN_BRACKET G
+
+    OPEN_BRACKET    shift and go to state 8
+
+    BLOCK                          shift and go to state 213
+
+state 213
+
+    (31) FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .
+
+    CLOSE_BRACKET   reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    ID              reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    FOR_LOOP_KEYWORD reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    WHILE_LOOP_KEYWORD reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    IF_STATEMENT    reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    PRINT_KEYWORD   reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    PLOT_KEYWORD    reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    OPEN_PARENTHESES reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    PLUSOP          reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    MINUSOP         reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    CONS_INT        reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+    CONS_FLOAT      reduce using rule 31 (FOR_LOOP -> FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for PLUSOP in state 31 resolved as shift
+WARNING: shift/reduce conflict for MINUSOP in state 31 resolved as shift
+WARNING: shift/reduce conflict for OPEN_PARENTHESES in state 37 resolved as shift
+WARNING: shift/reduce conflict for PLUSOP in state 40 resolved as shift
+WARNING: shift/reduce conflict for MINUSOP in state 40 resolved as shift
+WARNING: shift/reduce conflict for OPEN_PARENTHESES in state 50 resolved as shift
+WARNING: shift/reduce conflict for OPEN_PARENTHESES in state 58 resolved as shift
+WARNING: shift/reduce conflict for ID in state 156 resolved as shift
+WARNING: reduce/reduce conflict in state 45 resolved using rule (B -> MODULE BLOCK)
+WARNING: rejected rule (B -> BLOCK) in state 45
+WARNING: reduce/reduce conflict in state 63 resolved using rule (G -> STATEMENT CLOSE_BRACKET)
+WARNING: rejected rule (G -> CLOSE_BRACKET) in state 63
+WARNING: reduce/reduce conflict in state 78 resolved using rule (P -> empty)
+WARNING: rejected rule (Q -> empty) in state 78

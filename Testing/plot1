@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+
+a=[]
+b=[]
+# y=0
+# x=-50
+
+fig= plt.figure()
+axes=fig.add_subplot(111)
+
+def addParabola(size):
+    for x in range(-50,50,1):
+        y=(x**2+2*x+2)*size
+        a.append(x)
+        b.append(y)
+    #axes=fig.add_subplot(111)
+
+addParabola(1)
+addParabola(2)
+
+
+axes.plot(a,b)
+plt.show()

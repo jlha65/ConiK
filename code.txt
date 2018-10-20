@@ -1,0 +1,21 @@
+program prueba;
+var p1: parabola;
+    c2: circle;
+    e3: ellipse;
+    h4: hyperbola;
+{
+    c2 ~ x^2 + y^2 = 1;
+    e3 ~ x^2 / 3 + y^2 / 5 = 1;
+    h4 ~ x^2 / 3 - y^2 / 5 = 1;
+ 
+    print(p1.focus);
+    print(c2.radius);
+    print(e3.exc);
+    print(h4.vertex);
+ 
+    plot(p1);
+    plot(c2);
+    plot(e3);
+    plot(h4);
+}
+
