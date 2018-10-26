@@ -1,10 +1,9 @@
 program prueba;
-var p1: parabola;
-    c2: circle;
-    e3: ellipse;
-    h4: hyperbola;
+var parabola p1;
+    circle c2;
+    ellipse e3;
+    hyperbola h4;
 {
-    c2 ~ x^2 + y^2 = 1;
  
     print(p1.focus);
     print(c2.radius);

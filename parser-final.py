@@ -49,10 +49,10 @@ tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRI
         'ARROW','TWO_POINTS', 'SEMICOLON', 'EQUALOP', 'CTE_I', 'CTE_F', 'STRING'] + list(reserved.values())
 #New tokens:
 #t_ID = r'[a-zA-Z_][a-zA-Z0-9]*' #Not needed since it's already been made below for LittleDuck
-t_EQPARABOLA = r'\s*\y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
-t_EQCIRCLE = r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*'
-t_EQELLIPSE = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
-t_EQHYPERBOLA = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
+#t_EQPARABOLA = r'\s*\y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
+#t_EQCIRCLE = r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*'
+#t_EQELLIPSE = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
+#t_EQHYPERBOLA = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
 t_CONS_STRING = r'\".*\"'
 t_CONS_INT = r'[0-9]+'
 t_CONS_FLOAT = r'[0-9]+\.[0-9]+'
@@ -106,9 +106,16 @@ lexer = lex.lex()
 
 
 #Grammar and parsing
+import symbol_table as symtab
+from global_variables import gv
 
 def p_PROGRAM(t):
-    'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A' 
+    'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A'
+    gv.currentId = t[2] # guarda nombre del programa
+    gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
+    #print("program name: " + gv.currentId)
+    #print("data type: " + gv.currentType)
+    print(symtab.SYM_TABLE)
                                              
 def p_A(t): 
     '''A : VARS B
@@ -116,35 +123,44 @@ def p_A(t):
 
 def p_B(t):
     '''B : MODULE B
-            | MODULE BLOCK
             | BLOCK'''
     
+# def p_VARS(t):
+#     'VARS : VAR_KEYWORD C'
+
 def p_VARS(t):
-    'VARS : VAR_KEYWORD C'
+    '''VARS : VAR_KEYWORD V'''
+
+def p_V(t):
+    '''V : TYPE_P C
+            | TYPE_S C '''
 
 def p_C(t):  
     '''C : ID D
             | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
 			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D'''
+    gv.currentId = t[1]#guarda nombre de variable
+    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    #print("var name: " + gv.currentId)
 			
 def p_D(t):
     '''D : COMMA C
-            | TWO_POINTS E'''
-			
-def p_E(t):
-    '''E : TYPE_P F
-            | TYPE_S F'''
-			
-def p_F(t):
-    '''F : SEMICOLON C
+            | SEMICOLON V
             | SEMICOLON'''
+			
+# def p_E(t):
+#     '''E : TYPE_P F
+#             | TYPE_S F'''
+			
+# def p_F(t):
+#     '''F : SEMICOLON C
+#             | SEMICOLON'''
 
 def p_BLOCK(t):
     'BLOCK : OPEN_BRACKET G'
 	
 def p_G(t):
-    '''G : STATEMENT CLOSE_BRACKET
-            | STATEMENT G
+    '''G : STATEMENT G
             | CLOSE_BRACKET'''
 			
 def p_STATEMENT(t):
@@ -198,11 +214,15 @@ def p_TYPE_S(t):
             | ELLIPSE_KEYWORD
 			| HYPERBOLA_KEYWORD
 			| CIRCLE_KEYWORD'''
+    gv.currentType = t[1] # tipo de dato
+    #print("data type: " + gv.currentType)
 			
 def p_TYPE_P(t):
     '''TYPE_P : INT_KEYWORD
             | FLOAT_KEYWORD
 			| BOOL_KEYWORD'''
+    gv.currentType = t[1] # tipo de dato
+    #print("data type: " + gv.currentType)
 			
 def p_WRITE(t):
     '''WRITE : PRINT
@@ -232,11 +252,11 @@ def p_F_CALL(t):
     'F_CALL : ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON'
 	
 def p_CONDITION(t):
-    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK N'
+    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES N'
 	
 def p_N(t):
     '''N : ELSE_STATEMENT BLOCK
-            | empty'''
+            | BLOCK'''
 			
 def p_EXPRESSION_OP(t):
     '''EXPRESSION_OP : EXPRESSION
@@ -248,29 +268,28 @@ def p_ATTR_2(t):
 			| VERTEX_KEYWORD'''
 			
 def p_EXPRESSION(t):
-    'EXPRESSION : EXP O'
+    '''EXPRESSION : EXP RELOP EXP
+            | EXP'''
 	
-def p_O(t):
-    '''O : RELOP EXP
-            | empty'''
+# def p_O(t):
+#     '''O : RELOP EXP
+#             | empty'''
 			
 def p_EXP(t):
-    '''EXP : ATTRIBUTE P
-            | TERM P'''
+    '''EXP : TERM P
+            | TERM'''
 			
 def p_P(t):
     '''P : PLUSOP EXP
-			| MINUSOP EXP
-            | empty'''
+			| MINUSOP EXP'''
 			
 def p_TERM(t):
-    '''TERM : ATTRIBUTE Q
-            | FACTOR Q'''
+    '''TERM : FACTOR Q
+            | FACTOR'''
 			
 def p_Q(t):
     '''Q : TIMESOP TERM
-			| DIVIDEOP TERM
-            | empty'''
+			| DIVIDEOP TERM'''
 			
 def p_ATTR(t):
     '''ATTR : AREA_KEYWORD
@@ -280,9 +299,8 @@ def p_ATTR(t):
 			
 def p_FACTOR(t):
     '''FACTOR : OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
-			| PLUSOP VAR_CONS
-			| MINUSOP VAR_CONS
-            | VAR_CONS'''
+            | VAR_CONS
+            | ATTRIBUTE'''
 			
 def p_EQUATION(t):
     '''EQUATION : EQPARABOLA
@@ -290,9 +308,9 @@ def p_EQUATION(t):
 			| EQELLIPSE
             | EQHYPERBOLA'''
 	
-def p_R(t):
-    '''R : PLUSOP
-			| MINUSOP'''
+# def p_R(t):
+#     '''R : PLUSOP
+# 			| MINUSOP'''
 			
 def p_ATTRIBUTE(t):
     'ATTRIBUTE : ID POINT ATTR'
@@ -307,20 +325,22 @@ def p_VAR_CONS(t):
             | CONS_FLOAT'''
 			
 def p_S(t):
-    '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET T
-			| OPEN_PARENTHESES EXP U'''
+    '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
+            | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
+			| OPEN_PARENTHESES EXP CLOSE_PARENTHESES
+            | OPEN_PARENTHESES EXP COMMA EXP CLOSE_PARENTHESES'''
 			
-def p_T(t):
-    '''T : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
-			| empty'''
+# def p_T(t):
+#     '''T : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
+# 			| empty'''
 			
-def p_U(t):
-    '''U : COMMA EXP U
-			| CLOSE_PARENTHESES'''
+# def p_U(t):
+#     '''U : COMMA EXP U
+# 			| CLOSE_PARENTHESES'''
 			
-def p_EMPTY(t):
-    'empty :'
-    pass
+# def p_EMPTY(t):
+#     'empty :'
+#     pass
 
 def p_error(p):
     if p:
