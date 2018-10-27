@@ -14,5 +14,14 @@ SYM_TABLE["GLOBAL"] = GLOBAL
 #print(SYM_TABLE["global"])
 
 def add_variable(scope, id, data_type):
-    SYM_TABLE[scope][id] = dict()
-    SYM_TABLE[scope][id]["type"] = data_type
+
+	if SYM_TABLE[scope]:
+		#print(SYM_TABLE[scope])
+		if id in SYM_TABLE[scope]:
+			print("variable already declared in scope:: " + id)
+		else:
+			SYM_TABLE[scope][id] = dict()
+			SYM_TABLE[scope][id]["type"] = data_type
+	else:
+		SYM_TABLE[scope][id] = dict()
+		SYM_TABLE[scope][id]["type"] = data_type
