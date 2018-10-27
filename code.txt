@@ -6,6 +6,11 @@ var parabola p1;
     parabola p5;
     #int x2[4+2][3/5];
     ellipse e6;
+
+a1 (parabola p1, hyperbola h2) {
+    print("abc");
+}
+
 {
 
     #e6 ~ "circle";
@@ -18,7 +23,15 @@ var parabola p1;
     if(p1.area > c2.radius) {
         print("holy shit this works \n");
     } else {
+        if(3>3.2) {
+            p1.translate(4*2);
+        }
         plot(e3);
+    }
+    for(i = 0; i < p1.area; i=i+1) {
+        for(j = 0; i < p1.area; j=j+1) {
+            print("aaaa");
+        }
     }
  
     plot(p1);

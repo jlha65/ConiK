@@ -33,7 +33,7 @@ reserved = {
 	'blue' : 'BLUE_KEYWORD',
 	'purple' : 'PURPLE_KEYWORD',
 	'reflection' : 'REFLECTION_KEYWORD',
-	'trans' : 'TRANS_KEYWORD',
+	'translate' : 'TRANS_KEYWORD',
 	'rotation' : 'ROTATION_KEYWORD',
 	'stretch' : 'STRETCH_KEYWORD',
     #Not in the official document (yet) :
@@ -166,7 +166,7 @@ def p_V(t):
     '''V : TYPE_P C
             | TYPE_S C '''
     #gv.currentType = t[1] # tipo de dato
-    print(t[1])
+    #print(t[1])
 
 def p_C(t):  
     '''C : ID D
@@ -220,19 +220,19 @@ def p_MODULE(t):
     'MODULE : ID OPEN_PARENTHESES I'
 	
 def p_I(t):
-    '''I : ID TWO_POINTS J
-            | L'''
+    '''I : TYPE_P ID J
+            | TYPE_S ID J'''
 			
 def p_J(t):
-    '''J : TYPE_P K
-			| TYPE_S K'''
-
-def p_L(t):
-    'L : CLOSE_PARENTHESES BLOCK'
-
-def p_K(t):
-    '''K : COMMA I
+    '''J : COMMA I
 			| CLOSE_PARENTHESES BLOCK'''
+
+# def p_L(t):
+#     'L : CLOSE_PARENTHESES BLOCK'
+
+# def p_K(t):
+#     '''K : COMMA I
+# 			| CLOSE_PARENTHESES BLOCK'''
 	
 	
 def p_COLOR(t):
