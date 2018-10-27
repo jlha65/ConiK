@@ -4,12 +4,22 @@ var parabola p1;
     ellipse e3;
     hyperbola h4;
     parabola p5;
+    #int x2[4+2][3/5];
+    ellipse e6;
 {
+
+    #e6 ~ "circle";
  
     print(p1.focus);
     print(c2.radius);
     print(e3.exc);
     print(h4.vertex);
+
+    if(p1.area > c2.radius) {
+        print("holy shit this works \n");
+    } else {
+        plot(e3);
+    }
  
     plot(p1);
     plot(c2);
