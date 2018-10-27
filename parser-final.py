@@ -87,6 +87,9 @@ def t_ID(t):
     r'[A-Za-z]([A-Za-z]|[0-9])*'
     t.type = reserved.get(t.value, 'ID')
     return t
+#def t_PARABOLA_KEYWORD(t):
+    #r'parabola'
+    #return t
 
 
 #Counter for lines
@@ -109,14 +112,39 @@ lexer = lex.lex()
 import symbol_table as symtab
 from global_variables import gv
 
+#from collections import deque
+#queue = deque([])
+
+typeStack = []
+
 def p_PROGRAM(t):
     'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A'
     gv.currentId = t[2] # guarda nombre del programa
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
+    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
     print(symtab.SYM_TABLE)
-                                             
+
+def p_TYPE_S(t):
+    '''TYPE_S : PARABOLA_KEYWORD
+            | ELLIPSE_KEYWORD
+			| HYPERBOLA_KEYWORD
+			| CIRCLE_KEYWORD'''
+    #gv.currentType = t[1] # tipo de dato
+    #print("data type: " + gv.currentType)
+    print("data type: " + t[1])
+    typeStack.append(t[1])
+    return t[1]
+			
+def p_TYPE_P(t):
+    '''TYPE_P : INT_KEYWORD
+            | FLOAT_KEYWORD
+			| BOOL_KEYWORD'''
+    #return t[1]
+    #gv.currentType = t[1] # tipo de dato
+    #print("data type: " + gv.currentType)
+
 def p_A(t): 
     '''A : VARS B
             | B'''
@@ -134,11 +162,14 @@ def p_VARS(t):
 def p_V(t):
     '''V : TYPE_P C
             | TYPE_S C '''
+    #gv.currentType = t[1] # tipo de dato
+    print(t[1])
 
 def p_C(t):  
     '''C : ID D
             | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
 			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D'''
+    gv.currentType = typeStack.pop() # tipo de dato
     gv.currentId = t[1]#guarda nombre de variable
     symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
     #print("var name: " + gv.currentId)
@@ -208,21 +239,6 @@ def p_COLOR(t):
 			| GREEN_KEYWORD
 			| BLUE_KEYWORD
 			| PURPLE_KEYWORD'''
-			
-def p_TYPE_S(t):
-    '''TYPE_S : PARABOLA_KEYWORD
-            | ELLIPSE_KEYWORD
-			| HYPERBOLA_KEYWORD
-			| CIRCLE_KEYWORD'''
-    gv.currentType = t[1] # tipo de dato
-    #print("data type: " + gv.currentType)
-			
-def p_TYPE_P(t):
-    '''TYPE_P : INT_KEYWORD
-            | FLOAT_KEYWORD
-			| BOOL_KEYWORD'''
-    gv.currentType = t[1] # tipo de dato
-    #print("data type: " + gv.currentType)
 			
 def p_WRITE(t):
     '''WRITE : PRINT
