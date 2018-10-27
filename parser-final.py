@@ -49,9 +49,9 @@ tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRI
         'ARROW','TWO_POINTS', 'SEMICOLON', 'EQUALOP', 'CTE_I', 'CTE_F', 'STRING'] + list(reserved.values())
 #New tokens:
 #t_ID = r'[a-zA-Z_][a-zA-Z0-9]*' #Not needed since it's already been made below for LittleDuck
-t_EQPARABOLA = r'\s*\y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
-#t_EQCIRCLE = r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*'
-t_EQCIRCLE = r'\".*\"'
+t_EQPARABOLA = r'\s*y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
+t_EQCIRCLE = r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*'
+#t_EQCIRCLE = r'\".*\"'
 t_EQELLIPSE = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
 t_EQHYPERBOLA = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
 t_CONS_STRING = r'\".*\"'
@@ -89,6 +89,11 @@ t_ignore_COMMENT = r'\#.*' #Ignore comments
 def t_ID(t):
     r'[A-Za-z]([A-Za-z]|[0-9])*'
     t.type = reserved.get(t.value, 'ID')
+    #print(t)
+    if t.type == 'ID':
+        gv.currentId = t.value
+    else:
+        gv.currentId = ''
     return t
 #def t_PARABOLA_KEYWORD(t):
     #r'parabola'
@@ -119,12 +124,14 @@ from global_variables import gv
 #queue = deque([])
 
 typeStack = []
+scopeStack = []
+#cuScope = "GLOBAL"
 
 def p_PROGRAM(t):
     'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A'
     gv.currentId = t[2] # guarda nombre del programa
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
-    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    symtab.add_variable("GLOBAL",gv.currentId,gv.currentType)
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
     print(symtab.SYM_TABLE)
@@ -136,7 +143,7 @@ def p_TYPE_S(t):
 			| CIRCLE_KEYWORD'''
     #gv.currentType = t[1] # tipo de dato
     #print("data type: " + gv.currentType)
-    print("data type: " + t[1])
+    #print("data type: " + t[1])
     typeStack.append(t[1])
     return t[1]
 			
@@ -144,9 +151,9 @@ def p_TYPE_P(t):
     '''TYPE_P : INT_KEYWORD
             | FLOAT_KEYWORD
 			| BOOL_KEYWORD'''
-    #return t[1]
-    #gv.currentType = t[1] # tipo de dato
-    #print("data type: " + gv.currentType)
+    #print("data type: " + t[1])
+    typeStack.append(t[1])
+    return t[1]
 
 def p_A(t): 
     '''A : VARS B
@@ -169,13 +176,24 @@ def p_V(t):
     #print(t[1])
 
 def p_C(t):  
-    '''C : ID D
-            | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
-			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D'''
-    gv.currentType = typeStack.pop() # tipo de dato
-    gv.currentId = t[1]#guarda nombre de variable
-    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    '''C : ID add_variable D
+            | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variable D
+			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variable D'''
+    #gv.currentType = typeStack.pop() # tipo de dato
+    #gv.currentId = t[1]#guarda nombre de variable
+    #symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    #####symtab.add_variable(cuScope,gv.currentId,gv.currentType)
     #print("var name: " + gv.currentId)
+    #print("scope   : " + gv.currentScope)
+			
+def p_add_variable(t):
+    'add_variable :'
+    gv.currentType = typeStack.pop() # tipo de dato
+    #gv.currentId = t[1]#guarda nombre de variable
+    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    #symtab.add_variable(cuScope,gv.currentId,gv.currentType)
+    print("var name: " + gv.currentId)
+    print("scope   : " + gv.currentScope)
 			
 def p_D(t):
     '''D : COMMA C
@@ -217,15 +235,30 @@ def p_FOR_LOOP(t):
     'FOR_LOOP : FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK'
 	
 def p_MODULE(t):
+    #'''MODULE : TYPE_P ID OPEN_PARENTHESES I
+    #			| TYPE_S ID OPEN_PARENTHESES I'''
     'MODULE : ID OPEN_PARENTHESES I'
+    #print("type: " + t[1])
+    #print("id: " + t[2])
+    print("module id: " + t[1])
+    gv.currentScope = t[1]
+    #symtab.cuScope = t[1]
+    #print("module scope: " + cuScope)
+    print("module scope: " + gv.currentScope)
+    symtab.add_module(t[1],"void")
 	
 def p_I(t):
     '''I : TYPE_P ID J
             | TYPE_S ID J'''
+    
 			
 def p_J(t):
     '''J : COMMA I
-			| CLOSE_PARENTHESES BLOCK'''
+	    | CLOSE_PARENTHESES BLOCK
+	    | CLOSE_PARENTHESES VARS BLOCK'''
+    print(gv.currentScope)
+    #print(cuScope)
+    #gv.currentScope = 'GLOBAL'
 
 # def p_L(t):
 #     'L : CLOSE_PARENTHESES BLOCK'

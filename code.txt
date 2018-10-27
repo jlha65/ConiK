@@ -7,7 +7,11 @@ var parabola p1;
     #int x2[4+2][3/5];
     ellipse e6;
 
-a1 (parabola p1, hyperbola h2) {
+papa (int p1, hyperbola h2)
+var parabola i1;
+    int i2;
+    int i3;
+{
     print("abc");
 }
 
