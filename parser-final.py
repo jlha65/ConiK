@@ -83,6 +83,8 @@ t_RELOP = r'<(>)? | >'
 
 t_ignore = " \t" #Ignore whitespace
 
+t_ignore_COMMENT = r'\#.*' #Ignore comments
+
 def t_ID(t):
     r'[A-Za-z]([A-Za-z]|[0-9])*'
     t.type = reserved.get(t.value, 'ID')
