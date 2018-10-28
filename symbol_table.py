@@ -17,20 +17,21 @@ SYM_TABLE["GLOBAL"] = GLOBAL
 
 def add_variable(scope, id, data_type):
 
-	if SYM_TABLE[scope]:
-	#if SYM_TABLE[cuScope]:
-		#print(SYM_TABLE[scope])
-		if id in SYM_TABLE[scope]:
-		#if id in SYM_TABLE[cuScope]:
-			print("variable already declared in scope:: " + id)
+    #if scope in SYM_TABLE:
+		if SYM_TABLE[scope]:
+		#if SYM_TABLE[cuScope]:
+			#print(SYM_TABLE[scope])
+			if id in SYM_TABLE[scope]:
+			#if id in SYM_TABLE[cuScope]:
+				print("variable already declared in scope:: " + id)
+			else:
+				SYM_TABLE[scope][id] = dict()
+				#SYM_TABLE[cuScope][id] = dict()
+				SYM_TABLE[scope][id]["type"] = data_type
+				#SYM_TABLE[cuScope][id]["type"] = data_type
 		else:
 			SYM_TABLE[scope][id] = dict()
-			#SYM_TABLE[cuScope][id] = dict()
 			SYM_TABLE[scope][id]["type"] = data_type
-			#SYM_TABLE[cuScope][id]["type"] = data_type
-	else:
-		SYM_TABLE[scope][id] = dict()
-		SYM_TABLE[scope][id]["type"] = data_type
 		
 def add_module(id,return_type):
 

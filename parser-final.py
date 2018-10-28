@@ -134,6 +134,7 @@ def p_PROGRAM(t):
     symtab.add_variable("GLOBAL",gv.currentId,gv.currentType)
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
+    print("current scope: " + gv.currentScope)
     print(symtab.SYM_TABLE)
 
 def p_TYPE_S(t):
@@ -145,15 +146,21 @@ def p_TYPE_S(t):
     #print("data type: " + gv.currentType)
     #print("data type: " + t[1])
     typeStack.append(t[1])
+    gv.currentType = t[1]
     return t[1]
 			
 def p_TYPE_P(t):
     '''TYPE_P : INT_KEYWORD
             | FLOAT_KEYWORD
-			| BOOL_KEYWORD'''
+    		| BOOL_KEYWORD'''
     #print("data type: " + t[1])
     typeStack.append(t[1])
+    gv.currentType = t[1]
     return t[1]
+	
+# def p_set_type(t):
+    # 'set_type : '
+	# gv.currentType = t[-1]
 
 def p_A(t): 
     '''A : VARS B
@@ -188,7 +195,7 @@ def p_C(t):
 			
 def p_add_variable(t):
     'add_variable :'
-    gv.currentType = typeStack.pop() # tipo de dato
+    #gv.currentType = typeStack.pop() # tipo de dato
     #gv.currentId = t[1]#guarda nombre de variable
     symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
     #symtab.add_variable(cuScope,gv.currentId,gv.currentType)
@@ -235,17 +242,23 @@ def p_FOR_LOOP(t):
     'FOR_LOOP : FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK'
 	
 def p_MODULE(t):
-    #'''MODULE : TYPE_P ID OPEN_PARENTHESES I
-    #			| TYPE_S ID OPEN_PARENTHESES I'''
-    'MODULE : ID OPEN_PARENTHESES I'
+    #'''MODULE : TYPE_P ID set_scope OPEN_PARENTHESES I
+    #			| TYPE_S ID set_scope OPEN_PARENTHESES I'''
+    'MODULE : ID set_scope OPEN_PARENTHESES I'
     #print("type: " + t[1])
     #print("id: " + t[2])
     print("module id: " + t[1])
-    gv.currentScope = t[1]
+    #gv.currentScope = t[1]
     #symtab.cuScope = t[1]
     #print("module scope: " + cuScope)
     print("module scope: " + gv.currentScope)
-    symtab.add_module(t[1],"void")
+    #symtab.add_module(t[1],"void")
+
+def p_set_scope(t):
+    'set_scope :'
+    gv.currentScope = t[-1]
+    symtab.add_module(gv.currentId,"void")
+    print("prueba del modulo: " + gv.currentId)
 	
 def p_I(t):
     '''I : TYPE_P ID J
