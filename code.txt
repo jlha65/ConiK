@@ -4,6 +4,7 @@ var parabola p1;
     ellipse e3;
     hyperbola h4;
     parabola p5;
+    bool b1;
     #int x2[4+2][3/5];
     ellipse e6;
 
@@ -17,7 +18,7 @@ var parabola i1;
 
 {
 
-    #e6 ~ "circle";
+    #e6 ~ x&2+y&2=4;
  
     print(p1.focus);
     print(c2.radius);

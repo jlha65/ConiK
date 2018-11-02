@@ -1,3 +1,5 @@
+from ply.lex import TOKEN
+
 reserved = {
     'int' : 'INT_KEYWORD',
     'float' : 'FLOAT_KEYWORD',
@@ -31,6 +33,7 @@ reserved = {
 	'yellow' : 'YELLOW_KEYWORD',
 	'green' : 'GREEN_KEYWORD',
 	'blue' : 'BLUE_KEYWORD',
+    'return' : 'RETURN_KEYWORD',
 	'purple' : 'PURPLE_KEYWORD',
 	'reflection' : 'REFLECTION_KEYWORD',
 	'translate' : 'TRANS_KEYWORD',
@@ -38,10 +41,7 @@ reserved = {
 	'stretch' : 'STRETCH_KEYWORD',
     #Not in the official document (yet) :
     'print' : 'PRINT_KEYWORD',
-    'program' : 'PROGRAM_KEYWORD',
-    'x' : 'X_KEYWORD',
-    'y' : 'Y_KEYWORD',
-    '&' : 'POWER'
+    'program' : 'PROGRAM_KEYWORD'
 }
         #New tokens:
 tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRING', 'CONS_INT', 
@@ -51,19 +51,26 @@ tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRI
         'TIMESOP', 'DIVIDEOP', 'OPEN_PARENTHESES', 'CLOSE_PARENTHESES',
         'ARROW','TWO_POINTS', 'SEMICOLON', 'EQUALOP', 'CTE_I', 'CTE_F', 'STRING'] + list(reserved.values())
 #New tokens:
-#t_ID = r'[a-zA-Z_][a-zA-Z0-9]*' #Not needed since it's already been made below for LittleDuck
-# t_EQPARABOLA = r'\s*y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
-# def t_EQCIRCLE(t):
-#     r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*\;'
-#t_EQCIRCLE = r'\".*\"'
-# t_EQELLIPSE = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
-# t_EQHYPERBOLA = r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
-t_CONS_STRING = r'\".*\"'
-t_CONS_INT = r'[0-9]+'
-t_CONS_FLOAT = r'[0-9]+\.[0-9]+'
-t_CONS_BOOL = r'true | false'
-#t_RELOP = r'' #Not needed since it's already been made below for LittleDuck
-
+def t_EQPARABOLA(t):
+    r'\s*\y\s*\=\s*[\-]?[0-9]+(\.[0-9]+)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?\s*)x\s*[-+]\s*([0-9]+(\.[0-9]+)?\s*)'
+    print(t)
+def t_EQCIRCLE(t):
+    r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*'
+    print(t)
+def t_EQELLIPSE(t):
+    r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
+    print(t)
+def t_EQHYPERBOLA(t):
+    r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\-\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*'
+    print(t)
+def t_CONS_STRING(t):
+    r'\".*\"'
+def t_CONS_FLOAT(t):
+    r'[0-9]+\.[0-9]+'
+def t_CONS_INT(t):
+    r'[0-9]+'
+def t_CONS_BOOL(t):
+    r'true | false'
 #Old tokens:
 t_OPEN_BRACKET = r'\{'
 t_CLOSE_BRACKET = r'\}'
@@ -77,14 +84,11 @@ t_TIMESOP = r'\*'
 t_DIVIDEOP = r'/'
 t_OPEN_PARENTHESES = r'\('
 t_CLOSE_PARENTHESES = r'\)'
-t_ARROW = r'\~'#flechita
 t_TWO_POINTS = r':'
 t_SEMICOLON = r';'
 t_EQUALOP = r'='
 t_RELOP = r'<(>)? | >'
-#t_CTE_I = r'[0-9]+' #This was commented out since it is replaced by CONS_INT
-#t_CTE_F = r'[0-9]+\.[0-9]+' #This was commented out since it is replaced by CONS_FLOAT
-#t_STRING = r'\".*\"' #This was commented out since it is replaced by CONS_STRING
+t_ARROW = r'\~'
 
 t_ignore = " \t" #Ignore whitespace
 
@@ -94,15 +98,7 @@ def t_ID(t):
     r'[A-Za-z]([A-Za-z]|[0-9])*'
     t.type = reserved.get(t.value, 'ID')
     #print(t)
-    if t.type == 'ID':
-        gv.currentId = t.value
-    else:
-        gv.currentId = ''
     return t
-#def t_PARABOLA_KEYWORD(t):
-    #r'parabola'
-    #return t
-
 
 #Counter for lines
 def t_newline(t):
@@ -114,9 +110,15 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
+
+def track_tokens_filter(lexer, tokens):
+    for token in tokens:
+        print(token)
+        print("\n")
+
 # Build the lexer
 import ply.lex as lex
-lexer = lex.lex()
+lexer = lex.lex(debug=0)
 
 
 
@@ -128,17 +130,14 @@ from global_variables import gv
 #queue = deque([])
 
 typeStack = []
-scopeStack = []
-#cuScope = "GLOBAL"
 
 def p_PROGRAM(t):
     'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A'
     gv.currentId = t[2] # guarda nombre del programa
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
-    symtab.add_variable("GLOBAL",gv.currentId,gv.currentType)
+    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
-    print("current scope: " + gv.currentScope)
     print(symtab.SYM_TABLE)
 
 def p_TYPE_S(t):
@@ -148,23 +147,17 @@ def p_TYPE_S(t):
 			| CIRCLE_KEYWORD'''
     #gv.currentType = t[1] # tipo de dato
     #print("data type: " + gv.currentType)
-    #print("data type: " + t[1])
+    print("data type: " + t[1])
     typeStack.append(t[1])
-    gv.currentType = t[1]
     return t[1]
 			
 def p_TYPE_P(t):
     '''TYPE_P : INT_KEYWORD
             | FLOAT_KEYWORD
-    		| BOOL_KEYWORD'''
-    #print("data type: " + t[1])
-    typeStack.append(t[1])
-    gv.currentType = t[1]
-    return t[1]
-	
-# def p_set_type(t):
-    # 'set_type : '
-	# gv.currentType = t[-1]
+			| BOOL_KEYWORD'''
+    #return t[1]
+    #gv.currentType = t[1] # tipo de dato
+    #print("data type: " + gv.currentType)
 
 def p_A(t): 
     '''A : VARS B
@@ -187,24 +180,13 @@ def p_V(t):
     #print(t[1])
 
 def p_C(t):  
-    '''C : ID add_variable D
-            | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variable D
-			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variable D'''
-    #gv.currentType = typeStack.pop() # tipo de dato
-    #gv.currentId = t[1]#guarda nombre de variable
-    #symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
-    #####symtab.add_variable(cuScope,gv.currentId,gv.currentType)
-    #print("var name: " + gv.currentId)
-    #print("scope   : " + gv.currentScope)
-			
-def p_add_variable(t):
-    'add_variable :'
-    #gv.currentType = typeStack.pop() # tipo de dato
-    #gv.currentId = t[1]#guarda nombre de variable
+    '''C : ID D
+            | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D
+			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET D'''
+    gv.currentType = typeStack.pop() # tipo de dato
+    gv.currentId = t[1]#guarda nombre de variable
     symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
-    #symtab.add_variable(cuScope,gv.currentId,gv.currentType)
-    print("var name: " + gv.currentId)
-    print("scope   : " + gv.currentScope)
+    #print("var name: " + gv.currentId)
 			
 def p_D(t):
     '''D : COMMA C
@@ -236,53 +218,25 @@ def p_STATEMENT(t):
             | F_CALL'''
 			
 def p_ASSIGN(t):
-    '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON'''
-    # ID ARROW EQUATION
-
-def p_EQUATION(t):
-    '''EQUATION : EQPARABOLA
-			| X_KEYWORD EQUATION_N1 POWER CONS_INT PLUSOP Y_KEYWORD POWER CONS_INT EQUALOP CONS_FLOAT SEMICOLON
-			| EQELLIPSE
-            | EQHYPERBOLA'''
-
-def p_EQUATION_N1(t):
-    '''EQUATION_N1 : '''
-    print("Read until here")
+    'ASSIGN : ID H'
+	
+def p_H(t):
+    '''H : ARROW EQUATION SEMICOLON
+            | EQUALOP EXPRESSION SEMICOLON'''
 
 def p_FOR_LOOP(t):
     'FOR_LOOP : FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK'
 	
 def p_MODULE(t):
-    #'''MODULE : TYPE_P ID set_scope OPEN_PARENTHESES I
-    #			| TYPE_S ID set_scope OPEN_PARENTHESES I'''
-    'MODULE : ID set_scope OPEN_PARENTHESES I'
-    #print("type: " + t[1])
-    #print("id: " + t[2])
-    print("module id: " + t[1])
-    #gv.currentScope = t[1]
-    #symtab.cuScope = t[1]
-    #print("module scope: " + cuScope)
-    print("module scope: " + gv.currentScope)
-    #symtab.add_module(t[1],"void")
-
-def p_set_scope(t):
-    'set_scope :'
-    gv.currentScope = t[-1]
-    symtab.add_module(gv.currentId,"void")
-    print("prueba del modulo: " + gv.currentId)
+    'MODULE : ID OPEN_PARENTHESES I'
 	
 def p_I(t):
     '''I : TYPE_P ID J
             | TYPE_S ID J'''
-    
 			
 def p_J(t):
     '''J : COMMA I
-	    | CLOSE_PARENTHESES BLOCK
-	    | CLOSE_PARENTHESES VARS BLOCK'''
-    print(gv.currentScope)
-    #print(cuScope)
-    #gv.currentScope = 'GLOBAL'
+			| CLOSE_PARENTHESES BLOCK'''
 
 # def p_L(t):
 #     'L : CLOSE_PARENTHESES BLOCK'
@@ -377,6 +331,12 @@ def p_FACTOR(t):
     '''FACTOR : OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
             | VAR_CONS
             | ATTRIBUTE'''
+			
+def p_EQUATION(t):
+    '''EQUATION : EQPARABOLA
+			| EQCIRCLE
+			| EQELLIPSE
+            | EQHYPERBOLA'''
 	
 # def p_R(t):
 #     '''R : PLUSOP
@@ -421,6 +381,8 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
+if __name__ == '__main__':
+     lex.runmain()
 file = open("code.txt", "r")
 code = ""
 #Add all lines to one string for parsing
