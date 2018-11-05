@@ -66,7 +66,7 @@ sem_cube = np.array([[[ 0,  1,  -1],
 
 # Var types will be as follows:
 
-var_types = {
+var_types_dict = {
     "int" : 0,
     "float" : 1,
     "bool" : 2
@@ -76,23 +76,32 @@ var_types = {
 
 # +   -   *   /   and   or   not   =   ==   ~   <   >   <>
 
-operators = {
-    "PLUSOP" : 0,
-    "MINUSOP" : 1,
-    "TIMESOP" : 2,
-    "DIVIDEOP" : 3,
-    "AND" : 4,
-    "OR" : 5,
-    "NOT" : 6,
-    "EQUALOP" : 7,
-    "EQUALSOP" : 8,
-    "LESSOP" : 9,
-    "MOREOP" : 10,
-    "DIFFOP" : 11
+operators_dict = {
+    #"PLUSOP" : 0,
+	"+" : 0,
+    #"MINUSOP" : 1,
+	"-" : 1,
+    #"TIMESOP" : 2,
+	"*" : 2,
+    #"DIVIDEOP" : 3,
+	"/" : 3,
+	"and" : 4,
+	"or" : 5,
+	"not" : 6,
+    #"EQUALOP" : 7,
+	"=" : 7,
+    #"EQUALSOP" : 8,
+	"==" : 8,
+    #"LESSOP" : 9,
+	"<" : 9,
+    #"MOREOP" : 10,
+	">" : 10,
+    #"DIFFOP" : 11
+	"<>" : 11
 }
 
 #For '+'
 # sem_cube[var_types["int"]][var_types["int"]][operators["PLUSOP"]] = var_types["int"]
 
 
-print(sem_cube)
+#print(sem_cube)

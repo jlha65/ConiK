@@ -6,7 +6,8 @@ var parabola p1;
     parabola p5;
     bool b1;
     #int x2[4+2][3/5];
-    ellipse e6;
+    int i;
+    int j;
 
 papa (int p1, hyperbola h2)
 var parabola i1;
@@ -14,6 +15,10 @@ var parabola i1;
     int i3;
 {
     print("abc");
+    i1 =2*5+4/5-7*2;
+    i1 = 2*5;
+    i2 = 4/5;
+    i1 = 7 + 5;
 }
 
 {
@@ -25,7 +30,8 @@ var parabola i1;
     print(e3.exc);
     print(h4.vertex);
 
-    if(p1.area > c2.radius) {
+    #if(p1.area > c2.radius) {
+    if(7 > 3) {
         print("holy shit this works \n");
     } else {
         if(3>3.2) {
@@ -33,12 +39,12 @@ var parabola i1;
         }
         plot(e3);
     }
-    for(i = 0; i < p1.area; i=i+1) {
-        for(j = 0; i < p1.area; j=j+1) {
+    for(i = 0; i < j; i=i+1) {
+        for(j = 0; i < j; j=j+1) {
             print("aaaa");
         }
     }
- 
+    print("FIN");
     plot(p1);
     plot(c2);
     plot(e3);

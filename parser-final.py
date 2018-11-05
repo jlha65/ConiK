@@ -123,12 +123,20 @@ lexer = lex.lex()
 #Grammar and parsing
 import symbol_table as symtab
 from global_variables import gv
+from semantics_cube import sem_cube
+from semantics_cube import operators_dict
+from semantics_cube import var_types_dict
 
 #from collections import deque
 #queue = deque([])
 
 typeStack = []
 scopeStack = []
+PilaOp = []#Pila de operandos
+PTypes = []#Pila de tipos
+POper = []#Pila de operadores
+PJumps = []#Pila de saltos
+temporal_mem = []
 #cuScope = "GLOBAL"
 
 def p_PROGRAM(t):
@@ -140,6 +148,17 @@ def p_PROGRAM(t):
     #print("data type: " + gv.currentType)
     print("current scope: " + gv.currentScope)
     print(symtab.SYM_TABLE)
+    print (PilaOp)
+    print (PTypes)
+    print (POper)
+    #print (gv.quadList)
+    cont=1
+    for x in gv.quadList:
+        print(str(cont) + ".- " + str(x))
+        cont = cont + 1
+    #print (gv.quadList[0])
+    print (gv.quadCount)
+    print (len(gv.quadList))
 
 def p_TYPE_S(t):
     '''TYPE_S : PARABOLA_KEYWORD
@@ -200,16 +219,20 @@ def p_C(t):
 def p_add_variable(t):
     'add_variable :'
     #gv.currentType = typeStack.pop() # tipo de dato
-    #gv.currentId = t[1]#guarda nombre de variable
     symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
     #symtab.add_variable(cuScope,gv.currentId,gv.currentType)
-    print("var name: " + gv.currentId)
-    print("scope   : " + gv.currentScope)
+    #####print("var name: " + gv.currentId)
+    #####print("scope   : " + gv.currentScope)
 			
 def p_D(t):
     '''D : COMMA C
             | SEMICOLON V
-            | SEMICOLON'''
+            | SEMICOLON termina_sym'''
+			
+def p_termina_sym(t):
+    'termina_sym :'
+    #print("termina sym")
+    #print(symtab.SYM_TABLE)
 			
 # def p_E(t):
 #     '''E : TYPE_P F
@@ -238,6 +261,9 @@ def p_STATEMENT(t):
 def p_ASSIGN(t):
     '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
+    quad = ["=",PilaOp.pop(),[],t[1]]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1;
 
 def p_EQUATION(t):
     '''EQUATION : EQPARABOLA
@@ -250,19 +276,43 @@ def p_EQUATION_N1(t):
     print("Read until here")
 
 def p_FOR_LOOP(t):
-    'FOR_LOOP : FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK'
+    'FOR_LOOP : FOR_LOOP_KEYWORD forJump OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK forBack'
+
+def p_forExpression(t):
+    'forExpression :'
+    exp_type = PTypes.pop()
+    if exp_type != "bool":
+        print("ERROR: Type Mismatch!!! paso1, gotoF")
+    else:
+        result = PilaOp.pop()
+        quad = ["GOTOF",result,[],-1]#genera cuadruplo
+        gv.quadList.append(quad)#agrega cuadruplo
+        gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+        PJumps.append(gv.quadCount - 1)
+
+def p_forBack(t):
+    'forBack :'
+    print("FORBACK")
+    end = PJumps.pop()
+    ret = PJumps.pop()
+    quad = ["GOTO",[],[],ret+1]#genera cuadruplo
+    gv.quadList.append(quad)#agrega cuadruplo
+    gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+    gv.quadList[end][3] = gv.quadCount + 1
+
+def p_forJump(t):
+    'forJump :'
+    PJumps.append(gv.quadCount)
 	
 def p_MODULE(t):
     #'''MODULE : TYPE_P ID set_scope OPEN_PARENTHESES I
     #			| TYPE_S ID set_scope OPEN_PARENTHESES I'''
     'MODULE : ID set_scope OPEN_PARENTHESES I'
-    #print("type: " + t[1])
-    #print("id: " + t[2])
-    print("module id: " + t[1])
+    #########print("module id: " + t[1])
     #gv.currentScope = t[1]
     #symtab.cuScope = t[1]
     #print("module scope: " + cuScope)
-    print("module scope: " + gv.currentScope)
+    #########print("module scope: " + gv.currentScope)
     #symtab.add_module(t[1],"void")
 
 def p_set_scope(t):
@@ -278,11 +328,15 @@ def p_I(t):
 			
 def p_J(t):
     '''J : COMMA I
-	    | CLOSE_PARENTHESES BLOCK
-	    | CLOSE_PARENTHESES VARS BLOCK'''
+	    | CLOSE_PARENTHESES BLOCK ret_glob
+	    | CLOSE_PARENTHESES VARS BLOCK ret_glob'''
     print(gv.currentScope)
     #print(cuScope)
     #gv.currentScope = 'GLOBAL'
+
+def p_ret_glob(t):
+    'ret_glob :'
+    gv.currentScope = "GLOBAL"
 
 # def p_L(t):
 #     'L : CLOSE_PARENTHESES BLOCK'
@@ -310,6 +364,9 @@ def p_PRINT(t):
 def p_M(t):
     '''M : EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON
             | CONS_STRING CLOSE_PARENTHESES SEMICOLON'''
+    quad = ["PRINT",[],[],t[1]]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1;
 			
 def p_WHILE_LOOP(t):
     'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK'
@@ -328,11 +385,38 @@ def p_F_CALL(t):
     'F_CALL : ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON'
 	
 def p_CONDITION(t):
-    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES N'
+    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES gotoFcond N'
+
+def p_gotoFcond(t):
+    'gotoFcond :'
+    exp_type = PTypes.pop()
+    if exp_type != "bool":
+        print("ERROR: Type Mismatch!!! paso1, gotoF")
+    else:
+        result = PilaOp.pop()
+        quad = ["GOTOF",result,[],-1]#genera cuadruplo
+        gv.quadList.append(quad)#agrega cuadruplo
+        gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+        PJumps.append(gv.quadCount - 1)
 	
 def p_N(t):
-    '''N : BLOCK ELSE_STATEMENT BLOCK
-            | BLOCK'''
+    '''N : BLOCK ELSE_STATEMENT gotoElse BLOCK endif
+            | BLOCK endif'''
+
+def p_gotoElse(t):
+    'gotoElse :'
+    quad = ["GOTO",[],[],-1]#genera cuadruplo
+    gv.quadList.append(quad)#agrega cuadruplo
+    gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+    falso = PJumps.pop()
+    PJumps.append(gv.quadCount - 1)
+    gv.quadList[falso][3] = gv.quadCount + 1
+
+def p_endif(t):
+    'endif :'
+    end = PJumps.pop()
+    #PJumps.append(gv.quadCount - 1)
+    gv.quadList[end][3] = gv.quadCount + 1
 			
 def p_EXPRESSION_OP(t):
     '''EXPRESSION_OP : EXPRESSION
@@ -344,28 +428,154 @@ def p_ATTR_2(t):
 			| VERTEX_KEYWORD'''
 			
 def p_EXPRESSION(t):
-    '''EXPRESSION : EXP RELOP EXP
+    '''EXPRESSION : EXP RELOP paso8 EXP paso9
             | EXP'''
+
+def p_paso8(t):
+    'paso8 :'
+    POper.append(t[-1])
+	
+def p_paso9(t):
+    'paso9 :'
+    if POper:
+        temp = POper.pop()
+        POper.append(temp)
+        if temp == ">" or temp == "<" or temp == "<>" or temp == "==" :
+            right_op = PilaOp.pop()
+            right_type = PTypes.pop()
+            left_op = PilaOp.pop()
+            left_type = PTypes.pop()
+            operator = POper.pop()
+            #result_Type = sem_cube[left_op][right_op][operator]
+            #print(var_types_dict[left_type])
+            #print(var_types_dict[right_type])
+            #print(operators_dict[operator])
+            #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
+            result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
+            if result_Type != -1 :
+                #result = next_memory()
+                result = 420
+                quad = [operator,left_op,right_op,result]#genera cuadruplo
+                gv.quadList.append(quad)#agrega cuadruplo
+                gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+                PilaOp.append(result)
+                #PTypes.append(result_Type)
+                if result_Type == 0:
+                    PTypes.append("int")
+                elif result_Type == 1:
+                    PTypes.append("float")
+                elif result_Type == 2:
+                    PTypes.append("bool")
+                #if any operand were a temporal space, return it to AVAIL
+            else:
+                print("ERROR: Type Mismatch!!! paso4")
 	
 # def p_O(t):
 #     '''O : RELOP EXP
 #             | empty'''
 			
 def p_EXP(t):
-    '''EXP : TERM P
-            | TERM'''
+    '''EXP : TERM paso4 P
+            | TERM paso4'''
 			
+def p_paso4(t):
+    'paso4 :'
+    if POper:
+        temp = POper.pop()
+        POper.append(temp)
+        print(temp)
+
+        if temp == "+" or temp == "-" :
+            right_op = PilaOp.pop()
+            right_type = PTypes.pop()
+            left_op = PilaOp.pop()
+            left_type = PTypes.pop()
+            operator = POper.pop()
+            #result_Type = sem_cube[left_op][right_op][operator]
+            #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
+            result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
+            if result_Type != -1 :
+                #result = next_memory()
+                result = 420
+                quad = [operator,left_op,right_op,result]
+                gv.quadList.append(quad)
+                gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+                PilaOp.append(result)
+                #PTypes.append(result_Type)
+                if result_Type == 0:
+                    PTypes.append("int")
+                elif result_Type == 1:
+                    PTypes.append("float")
+                elif result_Type == 2:
+                    PTypes.append("bool")
+                #if any operand were a temporal space, return it to AVAIL
+            else:
+                print("ERROR: Type Mismatch!!! paso4")
+				
 def p_P(t):
-    '''P : PLUSOP EXP
-			| MINUSOP EXP'''
+    '''P : PLUSOP paso2a EXP
+			| MINUSOP paso2b EXP'''
+
+def p_paso2a(t):
+    'paso2a :'
+    POper.append("+")
+
+def p_paso2b(t):
+    'paso2b :'
+    POper.append("-")
+			
+#def p_P(t):
+    #'''P : PLUSOP EXP
+			#| MINUSOP EXP'''
 			
 def p_TERM(t):
-    '''TERM : FACTOR Q
-            | FACTOR'''
+    '''TERM : FACTOR paso5 Q
+            | FACTOR paso5'''
+			
+def p_paso5(t):
+    'paso5 :'
+    if POper:
+        temp = POper.pop()
+        POper.append(temp)
+
+        if temp == "*" or temp == "/" :
+            right_op = PilaOp.pop()
+            right_type = PTypes.pop()
+            left_op = PilaOp.pop()
+            left_type = PTypes.pop()
+            operator = POper.pop()
+            #result_Type = sem_cube[left_op][right_op][operator]
+            #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
+            result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
+            if result_Type != -1 :
+                #result = next_memory()
+                result = 42
+                quad = [operator,left_op,right_op,result]
+                gv.quadList.append(quad)
+                gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+                PilaOp.append(result)
+                #PTypes.append(result_Type)
+                if result_Type == 0:
+                    PTypes.append("int")
+                elif result_Type == 1:
+                    PTypes.append("float")
+                elif result_Type == 2:
+                    PTypes.append("bool")
+                #if any operand were a temporal space, return it to AVAIL
+            else:
+                print("ERROR: Type Mismatch!!! paso4")
 			
 def p_Q(t):
-    '''Q : TIMESOP TERM
-			| DIVIDEOP TERM'''
+    '''Q : TIMESOP paso3a TERM
+			| DIVIDEOP paso3b TERM'''
+
+def p_paso3a(t):
+    'paso3a :'
+    POper.append("*")
+
+def p_paso3b(t):
+    'paso3b :'
+    POper.append("/")
 			
 def p_ATTR(t):
     '''ATTR : AREA_KEYWORD
@@ -374,9 +584,17 @@ def p_ATTR(t):
             | RADIUS_KEYWORD'''
 			
 def p_FACTOR(t):
-    '''FACTOR : OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES
+    '''FACTOR : OPEN_PARENTHESES paso6 EXPRESSION CLOSE_PARENTHESES paso7
             | VAR_CONS
             | ATTRIBUTE'''
+			
+def p_paso6(t):
+    'paso6 :'
+    POper.append("(")
+
+def p_paso7(t):
+    'paso7 :'
+    POper.pop()
 	
 # def p_R(t):
 #     '''R : PLUSOP
@@ -389,10 +607,31 @@ def p_ATTRIBUTE_2(t):
     'ATTRIBUTE_2 : ID POINT ATTR_2'
 	
 def p_VAR_CONS(t):
-    '''VAR_CONS : ID
-			| ID S
-			| CONS_INT
-            | CONS_FLOAT'''
+    '''VAR_CONS : ID paso1a
+			| ID paso1a S
+			| CONS_INT paso1b
+            | CONS_FLOAT paso1c'''
+
+def p_paso1a(t):
+    'paso1a :'
+    #print("la variable del paso 1 es: " + t[-1])
+    #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
+    PilaOp.append(t[-1])
+    PTypes.append(symtab.SYM_TABLE[gv.currentScope][t[-1]]["type"])
+	
+def p_paso1b(t):
+    'paso1b :'
+    #print("la variable del paso 1 es: " + t[-1])
+    #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
+    PilaOp.append(t[-1])
+    PTypes.append("int")
+
+def p_paso1c(t):
+    'paso1c :'
+    #print("la variable del paso 1 es: " + t[-1])
+    #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
+    PilaOp.append(t[-1])
+    PTypes.append("float")
 			
 def p_S(t):
     '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET

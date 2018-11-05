@@ -6,4 +6,6 @@ class global_variables:
         self.currentScope = "GLOBAL"
         self.currentSize = 1
         self.currentVarsTable = None
+        self.quadList = []
+        self.quadCount = 0#contador de cuadruplos
 gv = global_variables()
