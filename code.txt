@@ -42,6 +42,16 @@ var parabola i1;
     for(i = 0; i < j; i=i+1) {
         for(j = 0; i < j; j=j+1) {
             print("aaaa");
+            if(j <> i) {
+                print("lmao");
+            } else {
+                if(5 == 4){
+                    print("5 equals 4");
+                } else {
+                    print("a");
+                    papa(i, h4);
+                }
+            }
         }
     }
     print("FIN");

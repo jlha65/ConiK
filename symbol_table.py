@@ -40,3 +40,15 @@ def add_module(id,return_type):
 	else:
 		SYM_TABLE[id] = dict()
 		SYM_TABLE[id]["return"] = return_type
+
+def add_num_param(scope):
+	SYM_TABLE[scope]["#params"] = len(SYM_TABLE[scope]) - 1
+
+def add_num_vars(scope):
+	SYM_TABLE[scope]["#vars"] = len(SYM_TABLE[scope]) - SYM_TABLE[scope]["#params"] - 1
+
+def add_num_quad(scope, quadCount):
+	SYM_TABLE[scope]["#quad"] = quadCount
+
+def add_param_type_list(scope, tlist):
+	SYM_TABLE[scope]["#typeList"] = tlist

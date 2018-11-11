@@ -7,5 +7,6 @@ class global_variables:
         self.currentSize = 1
         self.currentVarsTable = None
         self.quadList = []
-        self.quadCount = 0#contador de cuadruplos
+        self.quadCount = 0 #contador de cuadruplos
+        self.paramCount = 0 #contador de parametros
 gv = global_variables()

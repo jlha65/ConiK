@@ -64,6 +64,9 @@ t_CONS_FLOAT = r'[0-9]+\.[0-9]+'
 t_CONS_BOOL = r'true | false'
 #t_RELOP = r'' #Not needed since it's already been made below for LittleDuck
 
+# def t_EQUALS(t):
+#     r'=='
+
 #Old tokens:
 t_OPEN_BRACKET = r'\{'
 t_CLOSE_BRACKET = r'\}'
@@ -81,7 +84,7 @@ t_ARROW = r'\~'#flechita
 t_TWO_POINTS = r':'
 t_SEMICOLON = r';'
 t_EQUALOP = r'='
-t_RELOP = r'<(>)? | >'
+t_RELOP = r'<(>)? | > | =='
 #t_CTE_I = r'[0-9]+' #This was commented out since it is replaced by CONS_INT
 #t_CTE_F = r'[0-9]+\.[0-9]+' #This was commented out since it is replaced by CONS_FLOAT
 #t_STRING = r'\".*\"' #This was commented out since it is replaced by CONS_STRING
@@ -122,6 +125,7 @@ lexer = lex.lex()
 
 #Grammar and parsing
 import symbol_table as symtab
+#import vm
 from global_variables import gv
 from semantics_cube import sem_cube
 from semantics_cube import operators_dict
@@ -136,6 +140,7 @@ PilaOp = []#Pila de operandos
 PTypes = []#Pila de tipos
 POper = []#Pila de operadores
 PJumps = []#Pila de saltos
+PModDataTypes = [] #pila de tipos de dato de declaraciones de modulos
 temporal_mem = []
 #cuScope = "GLOBAL"
 
@@ -159,6 +164,7 @@ def p_PROGRAM(t):
     #print (gv.quadList[0])
     print (gv.quadCount)
     print (len(gv.quadList))
+    #vm.run(gv.quadList, symtab)
 
 def p_TYPE_S(t):
     '''TYPE_S : PARABOLA_KEYWORD
@@ -256,14 +262,27 @@ def p_STATEMENT(t):
 			| FOR_LOOP
 			| WHILE_LOOP
 			| CONDITION
+            | PROC_CALL
             | F_CALL'''
+
+def p_PROC_CALL(t):
+    '''PROC_CALL : ID OPEN_PARENTHESES V1 '''
+
+def p_V1(t):
+    '''V1 : EXP W1
+            | EXP COMMA V1
+            | W1'''
+
+def p_W1(t):
+    '''W1 : CLOSE_PARENTHESES SEMICOLON'''
+
 			
 def p_ASSIGN(t):
     '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
     quad = ["=",PilaOp.pop(),[],t[1]]
     gv.quadList.append(quad)
-    gv.quadCount = gv.quadCount + 1;
+    gv.quadCount = gv.quadCount + 1
 
 def p_EQUATION(t):
     '''EQUATION : EQPARABOLA
@@ -307,32 +326,57 @@ def p_forJump(t):
 def p_MODULE(t):
     #'''MODULE : TYPE_P ID set_scope OPEN_PARENTHESES I
     #			| TYPE_S ID set_scope OPEN_PARENTHESES I'''
-    'MODULE : ID set_scope OPEN_PARENTHESES I'
-    #########print("module id: " + t[1])
+    'MODULE : ID modDef_paso1 OPEN_PARENTHESES I'
     #gv.currentScope = t[1]
     #symtab.cuScope = t[1]
     #print("module scope: " + cuScope)
-    #########print("module scope: " + gv.currentScope)
     #symtab.add_module(t[1],"void")
 
-def p_set_scope(t):
-    'set_scope :'
-    gv.currentScope = t[-1]
+def p_modDef_paso1(t):
+    'modDef_paso1 :'
     symtab.add_module(gv.currentId,"void")
-    print("prueba del modulo: " + gv.currentId)
+    gv.currentScope = t[-1]
+
+#def p_set_scope(t):
+#    'set_scope :'
+#    gv.currentScope = t[-1]
+#    symtab.add_module(gv.currentId,"void")
+#   print("prueba del modulo: " + gv.currentId)
 	
 def p_I(t):
-    '''I : TYPE_P ID J
-            | TYPE_S ID J'''
-    
+    '''I : TYPE_P ID modDef_paso2 J
+            | TYPE_S ID modDef_paso2 J'''
+
+def p_modDef_paso2(t):
+    'modDef_paso2 :'
+    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    PModDataTypes.append(gv.currentType)
 			
 def p_J(t):
     '''J : COMMA I
-	    | CLOSE_PARENTHESES BLOCK ret_glob
-	    | CLOSE_PARENTHESES VARS BLOCK ret_glob'''
+	    | CLOSE_PARENTHESES modDef_paso4 modDef_paso5 modDef_paso6 BLOCK ret_glob modDef_paso7
+	    | CLOSE_PARENTHESES modDef_paso4 VARS modDef_paso5 modDef_paso6 BLOCK ret_glob modDef_paso7'''
     print(gv.currentScope)
     #print(cuScope)
     #gv.currentScope = 'GLOBAL'
+
+def p_modDef_paso4(t):
+    'modDef_paso4 :'
+    symtab.add_num_param(gv.currentScope)
+    symtab.add_param_type_list(gv.currentScope,PModDataTypes)
+
+def p_modDef_paso5(t):
+    'modDef_paso5 :'
+    symtab.add_num_vars(gv.currentScope)
+
+def p_modDef_paso6(t):
+    'modDef_paso6 :'
+    symtab.add_num_quad(gv.currentScope, gv.quadCount)
+
+def p_modDef_paso7(t):
+    'modDef_paso7 :'
+    quad = ["ENDPROC",[],[],[]]
+    gv.quadList.append(quad)
 
 def p_ret_glob(t):
     'ret_glob :'
@@ -608,7 +652,7 @@ def p_ATTRIBUTE_2(t):
 	
 def p_VAR_CONS(t):
     '''VAR_CONS : ID paso1a
-			| ID paso1a S
+			| ID S
 			| CONS_INT paso1b
             | CONS_FLOAT paso1c'''
 
@@ -617,6 +661,7 @@ def p_paso1a(t):
     #print("la variable del paso 1 es: " + t[-1])
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
     PilaOp.append(t[-1])
+    #print(symtab.SYM_TABLE)
     PTypes.append(symtab.SYM_TABLE[gv.currentScope][t[-1]]["type"])
 	
 def p_paso1b(t):
@@ -636,8 +681,21 @@ def p_paso1c(t):
 def p_S(t):
     '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
             | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
-			| OPEN_PARENTHESES EXP CLOSE_PARENTHESES
-            | OPEN_PARENTHESES EXP COMMA EXP CLOSE_PARENTHESES'''
+			| modCall_paso2 OPEN_PARENTHESES SS'''
+
+def p_SS(t):
+    '''SS : EXP SSS
+            | EXP COMMA SSS
+			| SSS'''
+
+def p_SSS(t):
+    '''SSS : CLOSE_PARENTHESES'''
+
+def p_modCall_paso2(t):
+    'modCall_paso2 :'
+    quad = ["ERA", t[-1], [], []]
+    gv.paramCount = 1
+    gv.quadList.append(quad)
 			
 # def p_T(t):
 #     '''T : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
