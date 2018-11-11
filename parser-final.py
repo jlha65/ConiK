@@ -61,7 +61,7 @@ tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRI
 t_CONS_STRING = r'\".*\"'
 t_CONS_INT = r'[0-9]+'
 t_CONS_FLOAT = r'[0-9]+\.[0-9]+'
-t_CONS_BOOL = r'true | false'
+#t_CONS_BOOL = r'true | false'
 #t_RELOP = r'' #Not needed since it's already been made below for LittleDuck
 
 # def t_EQUALS(t):
@@ -125,6 +125,7 @@ lexer = lex.lex()
 
 #Grammar and parsing
 import symbol_table as symtab
+from mem import mem #memory
 #import vm
 from global_variables import gv
 from semantics_cube import sem_cube
@@ -148,7 +149,7 @@ def p_PROGRAM(t):
     'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A'
     gv.currentId = t[2] # guarda nombre del programa
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
-    symtab.add_variable("GLOBAL",gv.currentId,gv.currentType)
+    symtab.add_variable("GLOBAL",gv.currentId,gv.currentType,None,None)
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
     print("current scope: " + gv.currentScope)
@@ -213,8 +214,8 @@ def p_V(t):
 
 def p_C(t):  
     '''C : ID add_variable D
-            | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variable D
-			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variable D'''
+            | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variableArr D
+			| ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET add_variableArr2 D'''
     #gv.currentType = typeStack.pop() # tipo de dato
     #gv.currentId = t[1]#guarda nombre de variable
     #symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
@@ -225,11 +226,35 @@ def p_C(t):
 def p_add_variable(t):
     'add_variable :'
     #gv.currentType = typeStack.pop() # tipo de dato
-    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
+    size = 1
+    if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
+        memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
     #symtab.add_variable(cuScope,gv.currentId,gv.currentType)
     #####print("var name: " + gv.currentId)
     #####print("scope   : " + gv.currentScope)
-			
+
+def p_add_variableArr(t):
+    'add_variableArr :'
+    size = int(t[-2])
+    if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
+        memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)    
+        symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
+    else :
+        raise Exception("Memory size exceeded in variables declaration (1D ARRAY SIZE)")
+    
+def p_add_variableArr2(t):
+    'add_variableArr2 :'
+    size = int(t[-2]) * int(t[-5])
+    if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
+        memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
+    else :
+        raise Exception("Memory size exceeded in variables declaration (2D ARRAY SIZE)")
+
+
 def p_D(t):
     '''D : COMMA C
             | SEMICOLON V
@@ -280,9 +305,17 @@ def p_W1(t):
 def p_ASSIGN(t):
     '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
-    quad = ["=",PilaOp.pop(),[],t[1]]
-    gv.quadList.append(quad)
-    gv.quadCount = gv.quadCount + 1
+    #result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
+    print(t[1])
+    lastType = PTypes.pop() #Get the type of the id (on the left side of the assign)
+    result_Type = sem_cube[operators_dict["="]][var_types_dict[symtab.get_return_type(gv.currentScope,t[1])]][var_types_dict[lastType]] #Check if the assign is valid
+    if result_Type != -1 :
+        quad = ["=",PilaOp.pop(),[],t[1]]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    else:
+        #print("Incompatible types for assign")
+        raise Exception("Incompatible types " + lastType + " assigned to " + symtab.get_return_type(gv.currentScope,t[1]))
 
 def p_EQUATION(t):
     '''EQUATION : EQPARABOLA
@@ -292,7 +325,7 @@ def p_EQUATION(t):
 
 def p_EQUATION_N1(t):
     '''EQUATION_N1 : '''
-    print("Read until here")
+    #print("Read until here")
 
 def p_FOR_LOOP(t):
     'FOR_LOOP : FOR_LOOP_KEYWORD forJump OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK forBack'
@@ -301,12 +334,12 @@ def p_forExpression(t):
     'forExpression :'
     exp_type = PTypes.pop()
     if exp_type != "bool":
-        print("ERROR: Type Mismatch!!! paso1, gotoF")
+        raise Exception("ERROR: Type Mismatch!!! paso1, gotoF")
     else:
         result = PilaOp.pop()
         quad = ["GOTOF",result,[],-1]#genera cuadruplo
         gv.quadList.append(quad)#agrega cuadruplo
-        gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+        gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
         PJumps.append(gv.quadCount - 1)
 
 def p_forBack(t):
@@ -349,14 +382,19 @@ def p_I(t):
 
 def p_modDef_paso2(t):
     'modDef_paso2 :'
-    symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType)
-    PModDataTypes.append(gv.currentType)
+    size = 1
+    if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
+        memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)    
+        symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
+        PModDataTypes.append(gv.currentType)
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
 			
 def p_J(t):
     '''J : COMMA I
 	    | CLOSE_PARENTHESES modDef_paso4 modDef_paso5 modDef_paso6 BLOCK ret_glob modDef_paso7
 	    | CLOSE_PARENTHESES modDef_paso4 VARS modDef_paso5 modDef_paso6 BLOCK ret_glob modDef_paso7'''
-    print(gv.currentScope)
+    #print(gv.currentScope)
     #print(cuScope)
     #gv.currentScope = 'GLOBAL'
 
@@ -410,7 +448,7 @@ def p_M(t):
             | CONS_STRING CLOSE_PARENTHESES SEMICOLON'''
     quad = ["PRINT",[],[],t[1]]
     gv.quadList.append(quad)
-    gv.quadCount = gv.quadCount + 1;
+    gv.quadCount = gv.quadCount + 1
 			
 def p_WHILE_LOOP(t):
     'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK'
@@ -435,7 +473,7 @@ def p_gotoFcond(t):
     'gotoFcond :'
     exp_type = PTypes.pop()
     if exp_type != "bool":
-        print("ERROR: Type Mismatch!!! paso1, gotoF")
+        raise Exception("ERROR: Type Mismatch!!! paso1, gotoF")
     else:
         result = PilaOp.pop()
         quad = ["GOTOF",result,[],-1]#genera cuadruplo
@@ -512,7 +550,7 @@ def p_paso9(t):
                     PTypes.append("bool")
                 #if any operand were a temporal space, return it to AVAIL
             else:
-                print("ERROR: Type Mismatch!!! paso4")
+                raise Exception("ERROR: Type Mismatch!!! paso4")
 	
 # def p_O(t):
 #     '''O : RELOP EXP
@@ -554,7 +592,7 @@ def p_paso4(t):
                     PTypes.append("bool")
                 #if any operand were a temporal space, return it to AVAIL
             else:
-                print("ERROR: Type Mismatch!!! paso4")
+                raise Exception("ERROR: Type Mismatch!!! paso4")
 				
 def p_P(t):
     '''P : PLUSOP paso2a EXP
@@ -607,7 +645,7 @@ def p_paso5(t):
                     PTypes.append("bool")
                 #if any operand were a temporal space, return it to AVAIL
             else:
-                print("ERROR: Type Mismatch!!! paso4")
+                raise Exception("ERROR: Type Mismatch!!! paso4")
 			
 def p_Q(t):
     '''Q : TIMESOP paso3a TERM
@@ -654,7 +692,9 @@ def p_VAR_CONS(t):
     '''VAR_CONS : ID paso1a
 			| ID S
 			| CONS_INT paso1b
-            | CONS_FLOAT paso1c'''
+            | CONS_FLOAT paso1c
+            | TRUE_KEYWORD paso1d
+            | FALSE_KEYWORD paso1d'''
 
 def p_paso1a(t):
     'paso1a :'
@@ -662,7 +702,7 @@ def p_paso1a(t):
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
     PilaOp.append(t[-1])
     #print(symtab.SYM_TABLE)
-    PTypes.append(symtab.SYM_TABLE[gv.currentScope][t[-1]]["type"])
+    PTypes.append(symtab.SYM_TABLE[gv.currentScope][t[-1]]["#type"])
 	
 def p_paso1b(t):
     'paso1b :'
@@ -677,6 +717,13 @@ def p_paso1c(t):
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
     PilaOp.append(t[-1])
     PTypes.append("float")
+
+def p_paso1d(t):
+    'paso1d :'
+    #print("la variable del paso 1 es: " + t[-1])
+    #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
+    PilaOp.append(t[-1])
+    PTypes.append("bool")
 			
 def p_S(t):
     '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET

@@ -10,15 +10,17 @@ var parabola p1;
     int j;
 
 papa (int p1, hyperbola h2)
-var parabola i1;
+var int i1;
     int i2;
     int i3;
+    bool b1;
 {
     print("abc");
-    i1 =2*5+4/5-7*2;
+    i1 = 2*5+4/5-7*2;
     i1 = 2*5;
-    i2 = 4/5;
+    i2 = 3;
     i1 = 7 + 5;
+    b1 = true;
 }
 
 {
