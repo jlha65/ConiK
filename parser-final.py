@@ -152,19 +152,20 @@ def p_PROGRAM(t):
     symtab.add_variable("GLOBAL",gv.currentId,gv.currentType,None,None)
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
-    print("current scope: " + gv.currentScope)
-    print(symtab.SYM_TABLE)
-    print (PilaOp)
-    print (PTypes)
-    print (POper)
+    # print("current scope: " + gv.currentScope)
+    # print(symtab.SYM_TABLE)
+    # print (PilaOp)
+    # print (PTypes)
+    # print (POper)
     #print (gv.quadList)
-    cont=1
+    cont=0
     for x in gv.quadList:
         print(str(cont) + ".- " + str(x))
         cont = cont + 1
-    #print (gv.quadList[0])
-    print (gv.quadCount)
-    print (len(gv.quadList))
+    #print(mem.globalInt)
+    # print (gv.quadList[0])
+    # print (gv.quadCount)
+    # print (len(gv.quadList))
     #vm.run(gv.quadList, symtab)
 
 def p_TYPE_S(t):
@@ -227,6 +228,7 @@ def p_add_variable(t):
     'add_variable :'
     #gv.currentType = typeStack.pop() # tipo de dato
     size = 1
+    print(gv.currentType)
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
@@ -340,12 +342,13 @@ def p_forExpression(t):
         quad = ["GOTOF",result,[],-1]#genera cuadruplo
         gv.quadList.append(quad)#agrega cuadruplo
         gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
-        PJumps.append(gv.quadCount - 1)
+        PJumps.append(gv.quadCount)
 
 def p_forBack(t):
     'forBack :'
     print("FORBACK")
     end = PJumps.pop()
+    print("Hello there " + str(end))
     ret = PJumps.pop()
     quad = ["GOTO",[],[],ret+1]#genera cuadruplo
     gv.quadList.append(quad)#agrega cuadruplo
@@ -479,7 +482,7 @@ def p_gotoFcond(t):
         quad = ["GOTOF",result,[],-1]#genera cuadruplo
         gv.quadList.append(quad)#agrega cuadruplo
         gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
-        PJumps.append(gv.quadCount - 1)
+        PJumps.append(gv.quadCount)
 	
 def p_N(t):
     '''N : BLOCK ELSE_STATEMENT gotoElse BLOCK endif
@@ -491,12 +494,13 @@ def p_gotoElse(t):
     gv.quadList.append(quad)#agrega cuadruplo
     gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
     falso = PJumps.pop()
-    PJumps.append(gv.quadCount - 1)
+    PJumps.append(gv.quadCount)
     gv.quadList[falso][3] = gv.quadCount + 1
 
 def p_endif(t):
     'endif :'
     end = PJumps.pop()
+    print("General kenobi" + str(end))
     #PJumps.append(gv.quadCount - 1)
     gv.quadList[end][3] = gv.quadCount + 1
 			
@@ -535,8 +539,11 @@ def p_paso9(t):
             #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
             result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
             if result_Type != -1 :
-                #result = next_memory()
-                result = 420
+                if mem.checkSizeAvail(1, result_Type, "TEMP"):
+                    result = mem.nextAvail(result_Type)
+                    #print("simon wey " + str(result))
+                else:
+                    raise Exception("Ran out of memory")
                 quad = [operator,left_op,right_op,result]#genera cuadruplo
                 gv.quadList.append(quad)#agrega cuadruplo
                 gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
@@ -578,10 +585,14 @@ def p_paso4(t):
             result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
             if result_Type != -1 :
                 #result = next_memory()
-                result = 420
+                if mem.checkSizeAvail(1, result_Type, "TEMP"):
+                    result = mem.nextAvail(result_Type)
+                    #print("simon wey " + str(result))
+                else:
+                    raise Exception("Ran out of memory")
                 quad = [operator,left_op,right_op,result]
                 gv.quadList.append(quad)
-                gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+                gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
                 PilaOp.append(result)
                 #PTypes.append(result_Type)
                 if result_Type == 0:
@@ -630,8 +641,12 @@ def p_paso5(t):
             #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
             result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
             if result_Type != -1 :
-                #result = next_memory()
-                result = 42
+                print("zag" + str(result_Type))
+                if mem.checkSizeAvail(1, result_Type, "TEMP"):
+                    result = mem.nextAvail(result_Type)
+                    #print("simon wey " + str(result))
+                else:
+                    raise Exception("Ran out of memory")
                 quad = [operator,left_op,right_op,result]
                 gv.quadList.append(quad)
                 gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
