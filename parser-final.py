@@ -141,12 +141,14 @@ PilaOp = []#Pila de operandos
 PTypes = []#Pila de tipos
 POper = []#Pila de operadores
 PJumps = []#Pila de saltos
+listPendingQuads = [] #lista de listas de cuadruplos que faltan
 PModDataTypes = [] #pila de tipos de dato de declaraciones de modulos
 temporal_mem = []
+
 #cuScope = "GLOBAL"
 
 def p_PROGRAM(t):
-    'PROGRAM : PROGRAM_KEYWORD ID SEMICOLON A'
+    'PROGRAM : goto_main PROGRAM_KEYWORD ID SEMICOLON A'
     gv.currentId = t[2] # guarda nombre del programa
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
     symtab.add_variable("GLOBAL",gv.currentId,gv.currentType,None,None)
@@ -166,7 +168,7 @@ def p_PROGRAM(t):
     # print (gv.quadList[0])
     # print (gv.quadCount)
     # print (len(gv.quadList))
-    #vm.run(gv.quadList, symtab)
+    #vm.run(gv.quadList, symtab)    
 
 def p_TYPE_S(t):
     '''TYPE_S : PARABOLA_KEYWORD
@@ -199,7 +201,18 @@ def p_A(t):
 
 def p_B(t):
     '''B : MODULE B
-            | BLOCK'''
+            | fill_main BLOCK'''
+
+
+def p_goto_main(t):
+    'goto_main : '
+    quad = ['GOTO', [], [], -1]
+    gv.quadList.append(quad)
+    gv.quadCount += 1
+
+def p_fill_main(t):
+    'fill_main :'
+    gv.quadList[0][3] = gv.quadCount
     
 # def p_VARS(t):
 #     'VARS : VAR_KEYWORD C'
@@ -330,7 +343,23 @@ def p_EQUATION_N1(t):
     #print("Read until here")
 
 def p_FOR_LOOP(t):
-    'FOR_LOOP : FOR_LOOP_KEYWORD forJump OPEN_PARENTHESES ID EQUALOP EXP SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP CLOSE_PARENTHESES BLOCK forBack'
+    'FOR_LOOP : FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP VAR_CONS forJump SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
+
+def p_pop_exp(t):
+    'pop_exp :'
+    list_quad_aux = []
+    quad_aux = gv.quadList.pop()
+    gv.quadCount = gv.quadCount - 1
+    while quad_aux[0] != "GOTOF": #quitamos quads hasta el GOTOF para agragarlos al rato
+        list_quad_aux.append(quad_aux)
+        print(quad_aux)
+        print(gv.quadCount)
+        quad_aux = gv.quadList.pop()
+        gv.quadCount = gv.quadCount - 1
+    gv.quadList.append(quad_aux)
+    gv.quadCount = gv.quadCount + 1
+    #list_quad_aux.reverse()
+    listPendingQuads.append(list_quad_aux)
 
 def p_forExpression(t):
     'forExpression :'
@@ -342,7 +371,7 @@ def p_forExpression(t):
         quad = ["GOTOF",result,[],-1]#genera cuadruplo
         gv.quadList.append(quad)#agrega cuadruplo
         gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
-        PJumps.append(gv.quadCount)
+        PJumps.append(gv.quadCount - 1)
 
 def p_forBack(t):
     'forBack :'
@@ -350,14 +379,26 @@ def p_forBack(t):
     end = PJumps.pop()
     print("Hello there " + str(end))
     ret = PJumps.pop()
-    quad = ["GOTO",[],[],ret+1]#genera cuadruplo
-    gv.quadList.append(quad)#agrega cuadruplo
-    gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
-    gv.quadList[end][3] = gv.quadCount + 1
+    list_quad_aux = listPendingQuads.pop()
+    while list_quad_aux: #agrega quads del incremento que quitamos hace rato
+        quad = list_quad_aux.pop()
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    quad2 = ["=",quad[3],[],t[-6]]
+    gv.quadList.append(quad2)
+    gv.quadCount = gv.quadCount + 1
+    ###############################
+    quad = ["GOTO",[],[],ret+1] #genera cuadruplo
+    gv.quadList.append(quad) #agrega cuadruplo
+    gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
+    gv.quadList[end][3] = gv.quadCount
 
 def p_forJump(t):
     'forJump :'
-    PJumps.append(gv.quadCount)
+    quad = ["=",t[-3],[],t[-1]]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
+    PJumps.append(gv.quadCount - 1)
 	
 def p_MODULE(t):
     #'''MODULE : TYPE_P ID set_scope OPEN_PARENTHESES I
@@ -418,6 +459,7 @@ def p_modDef_paso7(t):
     'modDef_paso7 :'
     quad = ["ENDPROC",[],[],[]]
     gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1
 
 def p_ret_glob(t):
     'ret_glob :'
@@ -481,8 +523,8 @@ def p_gotoFcond(t):
         result = PilaOp.pop()
         quad = ["GOTOF",result,[],-1]#genera cuadruplo
         gv.quadList.append(quad)#agrega cuadruplo
-        gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
-        PJumps.append(gv.quadCount)
+        gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
+        PJumps.append(gv.quadCount - 1)
 	
 def p_N(t):
     '''N : BLOCK ELSE_STATEMENT gotoElse BLOCK endif
@@ -490,19 +532,21 @@ def p_N(t):
 
 def p_gotoElse(t):
     'gotoElse :'
-    quad = ["GOTO",[],[],-1]#genera cuadruplo
-    gv.quadList.append(quad)#agrega cuadruplo
-    gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+    quad = ["GOTO",[],[],-1] #genera cuadruplo
+    gv.quadList.append(quad) #agrega cuadruplo
+    gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
     falso = PJumps.pop()
-    PJumps.append(gv.quadCount)
-    gv.quadList[falso][3] = gv.quadCount + 1
+    PJumps.append(gv.quadCount - 1)
+    gv.quadList[falso][3] = gv.quadCount
 
 def p_endif(t):
     'endif :'
     end = PJumps.pop()
-    print("General kenobi" + str(end))
+    print("General kenobi" + " " + str(end) + "  " + str(gv.quadCount))
     #PJumps.append(gv.quadCount - 1)
-    gv.quadList[end][3] = gv.quadCount + 1
+    print("Length" + str(len(gv.quadList)))
+    print("endif" + str(gv.quadList[end]))
+    gv.quadList[end][3] = gv.quadCount
 			
 def p_EXPRESSION_OP(t):
     '''EXPRESSION_OP : EXPRESSION
@@ -649,7 +693,7 @@ def p_paso5(t):
                     raise Exception("Ran out of memory")
                 quad = [operator,left_op,right_op,result]
                 gv.quadList.append(quad)
-                gv.quadCount = gv.quadCount + 1;#incrmenta cuenta de cuadruplos
+                gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
                 PilaOp.append(result)
                 #PTypes.append(result_Type)
                 if result_Type == 0:
@@ -758,6 +802,7 @@ def p_modCall_paso2(t):
     quad = ["ERA", t[-1], [], []]
     gv.paramCount = 1
     gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1    
 			
 # def p_T(t):
 #     '''T : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
