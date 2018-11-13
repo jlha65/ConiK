@@ -5,11 +5,7 @@ GLOBAL = dict()
 
 #lista de informacion de la variable
 #   name|type|params|scope|table
-a = ["example","int",[],2,[]]
-b = ["joseLuis","float",[],2,a]
 
-#GLOBAL["example"] = a
-#GLOBAL["jl"] = b
 
 SYM_TABLE["GLOBAL"] = GLOBAL
 
@@ -52,12 +48,23 @@ def add_num_vars(scope):
 #add to a function the number of quad where it starts
 def add_num_quad(scope, quadCount):
 	SYM_TABLE[scope]["#quad"] = quadCount
+#get from a function the number of quad where it starts
+def get_num_quad(scope):
+	return SYM_TABLE[scope]["#quad"]
 
 def add_param_type_list(scope, tlist):
 	SYM_TABLE[scope]["#typeList"] = tlist
+def get_param_type_list(scope):
+	return SYM_TABLE[scope]["#typeList"]
 
 def get_return_type(scope, id):
 	return SYM_TABLE[scope][id]["#type"]
 
 def get_size(scope, id):
 	return SYM_TABLE[scope][id]["#size"]
+
+def mod_exist(scope):
+	return SYM_TABLE[scope]
+
+def get_var_address(scope,id):
+	return SYM_TABLE[scope][id]["#address"]

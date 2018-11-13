@@ -11,6 +11,7 @@ reserved = {
     'plot' : 'PLOT_KEYWORD',
     'if' : 'IF_STATEMENT',
     'else' : 'ELSE_STATEMENT',
+    'proc' : 'PROC_KEYWORD',
     'perimeter' : 'PERIMETER_KEYWORD',
     'true' : 'TRUE_KEYWORD',
     'focus' : 'FOCUS_KEYWORD',
@@ -241,7 +242,7 @@ def p_add_variable(t):
     'add_variable :'
     #gv.currentType = typeStack.pop() # tipo de dato
     size = 1
-    print(gv.currentType)
+    #print(gv.currentType)
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
@@ -306,26 +307,28 @@ def p_STATEMENT(t):
             | F_CALL'''
 
 def p_PROC_CALL(t):
-    '''PROC_CALL : ID OPEN_PARENTHESES V1 '''
+    '''PROC_CALL : PROC_KEYWORD ID modCall_paso1 modCall_paso2 OPEN_PARENTHESES V1 '''
 
 def p_V1(t):
-    '''V1 : EXP W1
-            | EXP COMMA V1
+    '''V1 : EXP modCall_paso3 W1
+            | EXP modCall_paso3 COMMA modCall_paso4 V1
             | W1'''
 
 def p_W1(t):
-    '''W1 : CLOSE_PARENTHESES SEMICOLON'''
+    '''W1 : modCall_paso5 CLOSE_PARENTHESES SEMICOLON modCall_paso6'''
 
 			
 def p_ASSIGN(t):
     '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
     #result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
-    print(t[1])
+    #print(t[1])
     lastType = PTypes.pop() #Get the type of the id (on the left side of the assign)
     result_Type = sem_cube[operators_dict["="]][var_types_dict[symtab.get_return_type(gv.currentScope,t[1])]][var_types_dict[lastType]] #Check if the assign is valid
     if result_Type != -1 :
-        quad = ["=",PilaOp.pop(),[],t[1]]
+        address = symtab.get_var_address(gv.currentScope,t[1])
+        quad = ["=",PilaOp.pop(),[],address]
+        #quad = ["=",PilaOp.pop(),[],t[1]]
         gv.quadList.append(quad)
         gv.quadCount = gv.quadCount + 1
     else:
@@ -343,7 +346,12 @@ def p_EQUATION_N1(t):
     #print("Read until here")
 
 def p_FOR_LOOP(t):
-    'FOR_LOOP : FOR_LOOP_KEYWORD OPEN_PARENTHESES ID EQUALOP VAR_CONS forJump SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
+    #'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ID EQUALOP EXP forJump SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
+    'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ASSIGN forJump EXPRESSION forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
+
+def p_saveCount(t):
+    'saveCount :'
+    gv.saveCount = gv.quadCount
 
 def p_pop_exp(t):
     'pop_exp :'
@@ -352,8 +360,8 @@ def p_pop_exp(t):
     gv.quadCount = gv.quadCount - 1
     while quad_aux[0] != "GOTOF": #quitamos quads hasta el GOTOF para agragarlos al rato
         list_quad_aux.append(quad_aux)
-        print(quad_aux)
-        print(gv.quadCount)
+        #print(quad_aux)
+        #print(gv.quadCount)
         quad_aux = gv.quadList.pop()
         gv.quadCount = gv.quadCount - 1
     gv.quadList.append(quad_aux)
@@ -375,16 +383,18 @@ def p_forExpression(t):
 
 def p_forBack(t):
     'forBack :'
-    print("FORBACK")
+    #print("FORBACK")
     end = PJumps.pop()
-    print("Hello there " + str(end))
+    #print("Hello there " + str(end))
     ret = PJumps.pop()
     list_quad_aux = listPendingQuads.pop()
     while list_quad_aux: #agrega quads del incremento que quitamos hace rato
         quad = list_quad_aux.pop()
         gv.quadList.append(quad)
         gv.quadCount = gv.quadCount + 1
-    quad2 = ["=",quad[3],[],t[-6]]
+    address = symtab.get_var_address(gv.currentScope,t[-6])
+    quad2 = ["=",quad[3],[],address]
+    #quad2 = ["=",quad[3],[],t[-6]]
     gv.quadList.append(quad2)
     gv.quadCount = gv.quadCount + 1
     ###############################
@@ -395,9 +405,13 @@ def p_forBack(t):
 
 def p_forJump(t):
     'forJump :'
-    quad = ["=",t[-3],[],t[-1]]
-    gv.quadList.append(quad)
-    gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
+    print(t[-1])
+    print(t[-2])
+    print(t[-3])
+    #address = symtab.get_var_address(gv.currentScope,t[-3])
+    #quad = ["=",t[-1],[],address]
+    #gv.quadList.append(quad)
+    #gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
     PJumps.append(gv.quadCount - 1)
 	
 def p_MODULE(t):
@@ -542,10 +556,10 @@ def p_gotoElse(t):
 def p_endif(t):
     'endif :'
     end = PJumps.pop()
-    print("General kenobi" + " " + str(end) + "  " + str(gv.quadCount))
+    #print("General kenobi" + " " + str(end) + "  " + str(gv.quadCount))
     #PJumps.append(gv.quadCount - 1)
-    print("Length" + str(len(gv.quadList)))
-    print("endif" + str(gv.quadList[end]))
+    #print("Length" + str(len(gv.quadList)))
+    #print("endif" + str(gv.quadList[end]))
     gv.quadList[end][3] = gv.quadCount
 			
 def p_EXPRESSION_OP(t):
@@ -616,7 +630,7 @@ def p_paso4(t):
     if POper:
         temp = POper.pop()
         POper.append(temp)
-        print(temp)
+        #print(temp)
 
         if temp == "+" or temp == "-" :
             right_op = PilaOp.pop()
@@ -634,6 +648,7 @@ def p_paso4(t):
                     #print("simon wey " + str(result))
                 else:
                     raise Exception("Ran out of memory")
+                #address1 
                 quad = [operator,left_op,right_op,result]
                 gv.quadList.append(quad)
                 gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
@@ -685,7 +700,7 @@ def p_paso5(t):
             #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
             result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
             if result_Type != -1 :
-                print("zag" + str(result_Type))
+                #print("zag" + str(result_Type))
                 if mem.checkSizeAvail(1, result_Type, "TEMP"):
                     result = mem.nextAvail(result_Type)
                     #print("simon wey " + str(result))
@@ -759,7 +774,9 @@ def p_paso1a(t):
     'paso1a :'
     #print("la variable del paso 1 es: " + t[-1])
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
-    PilaOp.append(t[-1])
+    address = symtab.get_var_address(gv.currentScope,t[-1])
+    PilaOp.append(address)
+    #PilaOp.append(t[-1])
     #print(symtab.SYM_TABLE)
     PTypes.append(symtab.SYM_TABLE[gv.currentScope][t[-1]]["#type"])
 	
@@ -787,22 +804,66 @@ def p_paso1d(t):
 def p_S(t):
     '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
             | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
-			| modCall_paso2 OPEN_PARENTHESES SS'''
+			| modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
+    print("HOLIIIIIIIIIIIII"+t[-1])
 
 def p_SS(t):
-    '''SS : EXP SSS
-            | EXP COMMA SSS
+    '''SS : EXP modCall_paso3 SSS
+            | EXP modCall_paso3 COMMA modCall_paso4 SS
 			| SSS'''
 
 def p_SSS(t):
-    '''SSS : CLOSE_PARENTHESES'''
+    '''SSS : modCall_paso5 CLOSE_PARENTHESES modCall_paso6'''
+
+def p_modCall_paso1(t):
+    'modCall_paso1 :'
+    #print(t[-1])
+    if symtab.mod_exist(t[-1]) :
+        gv.currentModCall = t[-1]
+    else :
+        raise Exception("ERROR: Calling inexistent module!! paso1")
 
 def p_modCall_paso2(t):
     'modCall_paso2 :'
     quad = ["ERA", t[-1], [], []]
     gv.paramCount = 1
     gv.quadList.append(quad)
-    gv.quadCount = gv.quadCount + 1    
+    gv.quadCount = gv.quadCount + 1
+
+def p_modCall_paso3(t):
+    'modCall_paso3 :'
+    Argument = PilaOp.pop()
+    ArgumentType = PTypes.pop()
+    TL = symtab.get_param_type_list(gv.currentModCall)#jala lista de tipos de ese modulo
+    if ArgumentType == TL[gv.paramCount-1] :
+        quad = ["PARAM",Argument,[],gv.paramCount]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    else :
+        raise Exception("ERROR: Incorrect parameter type!! paso3")
+
+def p_modCall_paso4(t):
+    'modCall_paso4 :'
+    TL = symtab.get_param_type_list(gv.currentModCall)#jala lista de tipos de ese modulo
+    if(gv.paramCount == len(TL)) :
+        raise Exception("ERROR: Number of parameters is inconsistent!! paso1")
+    else :
+        gv.paramCount = gv.paramCount + 1
+
+def p_modCall_paso5(t):
+    'modCall_paso5 :'
+    #verify last parameter points to null
+    TL = symtab.get_param_type_list(gv.currentModCall)#jala lista de tipos de ese modulo
+    if len(TL) == gv.paramCount :
+        gv.paramCount = 0 #limpia para siguiente llamada
+    else :
+        raise Exception("ERROR: Number of parameters is inconsistent!! paso1")
+
+def p_modCall_paso6(t):
+    'modCall_paso6 :'
+    quad = ["GOSUB",gv.currentModCall,[],symtab.get_num_quad(gv.currentModCall)]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1
 			
 # def p_T(t):
 #     '''T : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
