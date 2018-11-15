@@ -6,7 +6,7 @@ class global_variables:
         self.currentScope = "GLOBAL"
         self.currentSize = 1
         self.currentVarsTable = None
-        self.currentModCall = "" #module call que se está haciendo
+        self.currentModCall = "" #module call que se esta haciendo
         self.quadList = []
         self.quadCount = 0 #contador de cuadruplos
         self.paramCount = 0 #contador de parametros

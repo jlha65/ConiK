@@ -520,8 +520,7 @@ def p_MM(t):
         quad = ["PRINT",[],[],PilaOp.pop()]
         gv.quadList.append(quad)
         gv.quadCount = gv.quadCount + 1
-    else :
-        print("PilaOp está vacia we jeje xd")
+        #print("PilaOp esta vacia we jeje xd")
 			
 def p_WHILE_LOOP(t):
     'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK'
@@ -907,7 +906,7 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
-file = open("code.txt", "r")
+file = open("fibo.txt", "r")
 code = ""
 #Add all lines to one string for parsing
 for line in file:

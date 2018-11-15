@@ -1,0 +1,14 @@
+program fibo;
+var int a;
+    int b;
+    int cont;
+
+{
+    print("1st step");
+    b = 10;
+    cont = 0;
+    for(a = 1; cont < b; cont = cont + 1){
+        print(cont);
+    }
+}
+

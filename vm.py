@@ -13,11 +13,13 @@ def run(quadList, symtab, mem) :
     #print(quadList)
     finished = False
     while not finished:
-        print(str(gv.counterVm) + quadList[gv.counterVm][0])
+        # print(str(gv.counterVm) + quadList[gv.counterVm][0])
         if quadList[gv.counterVm][0] == 'GOTO':
             GOTO(quadList[gv.counterVm][3])
+            # print(" Counter: " + str(gv.counterVm))
         elif quadList[gv.counterVm][0] == 'GOTOF':
             GOTOF(quadList[gv.counterVm][1], quadList[gv.counterVm][3])
+            # print("Gotof goes to " + str(quadList[gv.counterVm][3]))
         elif quadList[gv.counterVm][0] == 'GOTOV':
             GOTOV(quadList[gv.counterVm][1], quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'PRINT':
@@ -35,7 +37,7 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == '>':
             memory.save(MORETHAN(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '<':
-            print(quadList[gv.counterVm])
+            # print(quadList[gv.counterVm])
             memory.save(LESSTHAN(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '<>':
             memory.save(NOTEQUAL(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
@@ -45,43 +47,17 @@ def run(quadList, symtab, mem) :
             finished = True
         gv.counterVm = gv.counterVm + 1
 
-    # for x in quadList :
-    #     if x[0] == 'GOTO':
-    #         GOTO(x[3])
-    #     elif x[0] == 'GOTOF':
-    #         GOTOF(x[1], x[3])
-    #     elif x[0] == 'GOTOV':
-    #         GOTOV(x[1], x[3])
-    #     elif x[0] == 'PRINT':
-    #         PRINT(x[3])
-    #     elif x[0] == '=':
-    #         EQUAL(x[1], x[3])
-    #     elif x[0] == '+': #TO DO: REPLACE TEMPS AND x[X] WITH THE MEMORY VALUES
-    #         memory.save(ADD(x[1], x[2]), x[3])
-    #     elif x[0] == '-':
-    #         memory.save(SUBSTRACT(x[1], x[2]), x[3])
-    #     elif x[0] == '*':
-    #         memory.save(MULTIPLY(x[1], x[2]), x[3])
-    #     elif x[0] == '/':
-    #         memory.save(DIVIDE(x[1], x[2]), x[3])
-    #     elif x[0] == '>':
-    #         temp = MORETHAN(x[1], x[2])
-    #     elif x[0] == '<':
-    #         temp = LESSTHAN(x[1], x[2])
-    #     elif x[0] == '<>':
-    #         temp = NOTEQUAL(x[1], x[2])
-    #     elif x[0] == '==':
-    #         temp = EQUALS(x[1], x[2])
-
-
 def GOTO(dir):
     gv.counterVm = dir - 1
 
 def GOTOF(condition, dir):
+    condition = memory.access(condition)
     if(not condition):
+        # print(" GOTOF Goes to: " + str(gv.counterVm))
         gv.counterVm = dir - 1
 
 def GOTOV(condition, dir):
+    condition = memory.access(condition)
     if(condition):
         gv.counterVm = dir - 1
 
@@ -97,7 +73,7 @@ def EQUAL(a, b):
             a = getCons(a[1:])
     else:
         a = memory.access(a)
-    print("Er " + str(b) + " = " + str(a))
+    # print("Er " + str(b) + " = " + str(a))
     memory.save(a,b)
     #print(str(b) + " = " + str(a))
 
@@ -194,8 +170,10 @@ def LESSTHAN(a, b):
             b = getCons(b[1:])
     else:
         b = memory.access(b)
-    print(str(a) + " < " + str(b))
-    return a < b
+    #print(str(a) + " < " + str(b))
+    # print(a<b)
+    
+    return a<b
 
 def NOTEQUAL(a, b):
     if isinstance(a,str):
