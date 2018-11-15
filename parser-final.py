@@ -127,7 +127,7 @@ lexer = lex.lex()
 #Grammar and parsing
 import symbol_table as symtab
 from mem import mem #memory
-#import vm
+import vm
 from global_variables import gv
 from semantics_cube import sem_cube
 from semantics_cube import operators_dict
@@ -169,7 +169,7 @@ def p_PROGRAM(t):
     # print (gv.quadList[0])
     # print (gv.quadCount)
     # print (len(gv.quadList))
-    #vm.run(gv.quadList, symtab)    
+    vm.run(gv.quadList, symtab, mem)    
 
 def p_TYPE_S(t):
     '''TYPE_S : PARABOLA_KEYWORD
@@ -500,14 +500,25 @@ def p_WRITE(t):
             | PLOT'''
 			
 def p_PRINT(t):
-    'PRINT : PRINT_KEYWORD OPEN_PARENTHESES M'
+    '''PRINT : PRINT_KEYWORD OPEN_PARENTHESES M
+                | PRINT_KEYWORD OPEN_PARENTHESES MM'''
 	
 def p_M(t):
-    '''M : EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON
-            | CONS_STRING CLOSE_PARENTHESES SEMICOLON'''
-    quad = ["PRINT",[],[],t[1]]
+    '''M : CONS_STRING CLOSE_PARENTHESES SEMICOLON'''
+    string = t[1][1:-1] #quitar comillas al inicio y al final
+    quad = ["PRINT",[],[],string]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1
+
+def p_MM(t):
+    '''MM : EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON'''
+    if len(PTypes) > 0 :
+        PTypes.pop()
+        quad = ["PRINT",[],[],PilaOp.pop()]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    else :
+        print("PilaOp está vacia we jeje xd")
 			
 def p_WHILE_LOOP(t):
     'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK'
@@ -515,6 +526,9 @@ def p_WHILE_LOOP(t):
 def p_PLOT(t):
     '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
             | PLOT_KEYWORD OPEN_PARENTHESES ID CLOSE_PARENTHESES SEMICOLON'''
+    quad = ["PLOT",[],t[3],t[5]]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1
 	
 def p_TRANSFORM(t):
     '''TRANSFORM : REFLECTION_KEYWORD
@@ -784,14 +798,18 @@ def p_paso1b(t):
     'paso1b :'
     #print("la variable del paso 1 es: " + t[-1])
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
-    PilaOp.append(t[-1])
+    op = "%" + t[-1]
+    #PilaOp.append(t[-1])
+    PilaOp.append(op)
     PTypes.append("int")
 
 def p_paso1c(t):
     'paso1c :'
     #print("la variable del paso 1 es: " + t[-1])
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
-    PilaOp.append(t[-1])
+    op = "%" + t[-1]
+    #PilaOp.append(t[-1])
+    PilaOp.append(op)
     PTypes.append("float")
 
 def p_paso1d(t):

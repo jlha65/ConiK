@@ -13,7 +13,7 @@ papa (int p1, hyperbola h2)
 var int i1;
     int i2;
     int i3;
-    bool b1;
+    bool bp1;
 {
     print("abc");
     i1 = 2*5+4/5-7*2;
@@ -31,6 +31,10 @@ var int i1;
     print(c2.radius);
     print(e3.exc);
     print(h4.vertex);
+    print(0);
+    print(j);
+    print(4+3);
+    print(b1);
 
     #if(p1.area > c2.radius) {
     if(7 > 3) {
@@ -51,7 +55,8 @@ var int i1;
                     print("5 equals 4");
                 } else {
                     print("a");
-                    proc papa(i, h4);
+                    #proc papa(i, h4);
+                    #proc loco(1);
                 }
             }
         }

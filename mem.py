@@ -21,17 +21,17 @@ class mem:
 
         self.memory = [None] * self.memorySize * 24
 
-        self.giCont = 0
-        self.gfCont = self.memorySize
-        self.gbCont = self.memorySize*2
-        self.liCont = self.memorySize*3
-        self.lfCont = self.memorySize*4
-        self.lbCont = self.memorySize*5
-        self.tiCont = self.memorySize*6
-        self.tfCont = self.memorySize*7
-        self.tbCont = self.memorySize*8
-        self.ciCont = self.memorySize*9
-        self.cfCont = self.memorySize*10
+        self.giCont = 0                 #Global int
+        self.gfCont = self.memorySize   #Global float
+        self.gbCont = self.memorySize*2 #Global bool
+        self.liCont = self.memorySize*3 #local int
+        self.lfCont = self.memorySize*4 #local float
+        self.lbCont = self.memorySize*5 #local bool
+        self.tiCont = self.memorySize*6 #temporal int
+        self.tfCont = self.memorySize*7 #temporal float
+        self.tbCont = self.memorySize*8 #temporal bool
+        self.ciCont = self.memorySize*9 #constant int jeje xd
+        self.cfCont = self.memorySize*10 #constant float jeje xc
 
         self.gpCont = self.memorySize*11
         self.geCont = self.memorySize*12
@@ -218,5 +218,14 @@ class mem:
         elif data_type == 2:
             self.tbCont += 1
             return self.tbCont - 1
+
+    def save(self,value,address):
+        #print("value: " + str(value))
+        #print("address: " + str(address))
+        self.memory[address] = value
+
+    def access(self,address):
+        #print("access address: " + str(address))
+        return self.memory[address]
 
 mem = mem()

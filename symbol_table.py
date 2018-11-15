@@ -58,13 +58,26 @@ def get_param_type_list(scope):
 	return SYM_TABLE[scope]["#typeList"]
 
 def get_return_type(scope, id):
-	return SYM_TABLE[scope][id]["#type"]
+	if id in SYM_TABLE[scope]:
+		return SYM_TABLE[scope][id]["#type"]
+	elif id in SYM_TABLE["GLOBAL"]:
+		return SYM_TABLE["GLOBAL"][id]["#type"]
+	else:
+		raise Exception("There is no \"" + id + "\" variable in this scope")
 
 def get_size(scope, id):
 	return SYM_TABLE[scope][id]["#size"]
 
 def mod_exist(scope):
-	return SYM_TABLE[scope]
+	if scope in SYM_TABLE:
+		return SYM_TABLE[scope]
+	else:
+		raise Exception("There is no \"" + scope + "\" scope")
 
 def get_var_address(scope,id):
-	return SYM_TABLE[scope][id]["#address"]
+	if id in SYM_TABLE[scope]:
+		return SYM_TABLE[scope][id]["#address"]
+	elif id in SYM_TABLE["GLOBAL"]:
+		return SYM_TABLE["GLOBAL"][id]["#address"]
+	else:
+		raise Exception("There is no \"" + id + "\" variable in this scope")
