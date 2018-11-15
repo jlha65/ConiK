@@ -153,6 +153,9 @@ def p_PROGRAM(t):
     gv.currentId = t[2] # guarda nombre del programa
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
     symtab.add_variable("GLOBAL",gv.currentId,gv.currentType,None,None)
+    quad = ["END",[],[],[]]
+    gv.quadList.append(quad)
+    gv.quadCount += 1
     #print("program name: " + gv.currentId)
     #print("data type: " + gv.currentType)
     # print("current scope: " + gv.currentScope)
@@ -405,9 +408,9 @@ def p_forBack(t):
 
 def p_forJump(t):
     'forJump :'
-    print(t[-1])
-    print(t[-2])
-    print(t[-3])
+    # print(t[-1])
+    # print(t[-2])
+    # print(t[-3])
     #address = symtab.get_var_address(gv.currentScope,t[-3])
     #quad = ["=",t[-1],[],address]
     #gv.quadList.append(quad)

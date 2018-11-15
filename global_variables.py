@@ -11,4 +11,5 @@ class global_variables:
         self.quadCount = 0 #contador de cuadruplos
         self.paramCount = 0 #contador de parametros
         self.saveCount = 0 #usado en el loop para guardar cuantos quads van
+        self.counterVm = 0 #apuntador de cuadruplos de VM
 gv = global_variables()

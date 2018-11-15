@@ -209,13 +209,13 @@ class mem:
             print("jeje equis de")
     
     def nextAvail(self, data_type):
-        if data_type == 0:
+        if data_type == 0: #Int
             self.tiCont += 1
             return self.tiCont - 1
-        elif data_type == 1:
+        elif data_type == 1: #Float
             self.tfCont += 1
             return self.tfCont - 1   
-        elif data_type == 2:
+        elif data_type == 2: #Bool
             self.tbCont += 1
             return self.tbCont - 1
 
