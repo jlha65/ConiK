@@ -245,10 +245,14 @@ def p_add_variable(t):
     'add_variable :'
     #gv.currentType = typeStack.pop() # tipo de dato
     size = 1
-    #print(gv.currentType)
+    # print("Adding var to symtab")
+    #print(gv.currentType, gv.currentScope)
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
+        # print("Added var to memory")
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
+        print("Linked var memory to var table, its memory is: ")
+        print(memAddress)
     else :
         raise Exception("Memory size exceeded in variables declaration")
     #symtab.add_variable(cuScope,gv.currentId,gv.currentType)

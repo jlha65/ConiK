@@ -12,24 +12,37 @@ SYM_TABLE["GLOBAL"] = GLOBAL
 #print(SYM_TABLE["global"])
 
 def add_variable(scope, id, data_type, size, address):
+	print("Adding variable to var table: ")
+	print("Scope: " + str(scope))
+	print("Id: " + str(id))
+	print("data_type: " + str(data_type))
+	print("size: " + str(size))
+	print("address: " + str(address))
 
+	if not SYM_TABLE["GLOBAL"]: #First variable
+		SYM_TABLE[scope][id] = dict()
+		#SYM_TABLE[cuScope][id] = dict()
+		SYM_TABLE[scope][id]["#type"] = data_type
+		SYM_TABLE[scope][id]["#size"] = size
+		SYM_TABLE[scope][id]["#address"] = address
+		#SYM_TABLE[cuScope][id]["type"] = data_type
     #if scope in SYM_TABLE:
-		if SYM_TABLE[scope]:
-		#if SYM_TABLE[cuScope]:
-			#print(SYM_TABLE[scope])
-			if id in SYM_TABLE[scope]:
-			#if id in SYM_TABLE[cuScope]:
-				raise Exception("variable already declared in scope: " + id)
-			else:
-				SYM_TABLE[scope][id] = dict()
-				#SYM_TABLE[cuScope][id] = dict()
-				SYM_TABLE[scope][id]["#type"] = data_type
-				SYM_TABLE[scope][id]["#size"] = size
-				SYM_TABLE[scope][id]["#address"] = address
-				#SYM_TABLE[cuScope][id]["type"] = data_type
+	elif SYM_TABLE[scope]:
+	#if SYM_TABLE[cuScope]:
+		#print(SYM_TABLE[scope])
+		if id in SYM_TABLE[scope]:
+		#if id in SYM_TABLE[cuScope]:
+			raise Exception("variable already declared in scope: " + id)
 		else:
 			SYM_TABLE[scope][id] = dict()
+			#SYM_TABLE[cuScope][id] = dict()
 			SYM_TABLE[scope][id]["#type"] = data_type
+			SYM_TABLE[scope][id]["#size"] = size
+			SYM_TABLE[scope][id]["#address"] = address
+			#SYM_TABLE[cuScope][id]["type"] = data_type
+	else:
+		SYM_TABLE[scope][id] = dict()
+		SYM_TABLE[scope][id]["#type"] = data_type
 		
 def add_module(id,return_type):
 
@@ -75,6 +88,7 @@ def mod_exist(scope):
 		raise Exception("There is no \"" + scope + "\" scope")
 
 def get_var_address(scope,id):
+	print(SYM_TABLE)
 	if id in SYM_TABLE[scope]:
 		return SYM_TABLE[scope][id]["#address"]
 	elif id in SYM_TABLE["GLOBAL"]:
