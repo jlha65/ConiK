@@ -172,7 +172,7 @@ def p_PROGRAM(t):
     # print (gv.quadList[0])
     # print (gv.quadCount)
     # print (len(gv.quadList))
-    vm.run(gv.quadList, symtab, mem)    
+    vm.run(gv.quadList, symtab, mem)
 
 def p_TYPE_S(t):
     '''TYPE_S : PARABOLA_KEYWORD
@@ -251,8 +251,8 @@ def p_add_variable(t):
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
         # print("Added var to memory")
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
-        print("Linked var memory to var table, its memory is: ")
-        print(memAddress)
+        #print("Linked var memory to var table, its memory is: ")
+        #print(memAddress)
     else :
         raise Exception("Memory size exceeded in variables declaration")
     #symtab.add_variable(cuScope,gv.currentId,gv.currentType)
@@ -315,6 +315,7 @@ def p_STATEMENT(t):
 
 def p_PROC_CALL(t):
     '''PROC_CALL : PROC_KEYWORD ID modCall_paso1 modCall_paso2 OPEN_PARENTHESES V1 '''
+    print("PROC_CALL")
 
 def p_V1(t):
     '''V1 : EXP modCall_paso3 W1
@@ -323,6 +324,7 @@ def p_V1(t):
 
 def p_W1(t):
     '''W1 : modCall_paso5 CLOSE_PARENTHESES SEMICOLON modCall_paso6'''
+    print("CACA")
 
 			
 def p_ASSIGN(t):
@@ -452,6 +454,7 @@ def p_modDef_paso2(t):
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)    
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
         PModDataTypes.append(gv.currentType)
+        symtab.add_param_num(gv.currentScope,gv.currentId,len(PModDataTypes))#add param number for PARAM OpCode
     else :
         raise Exception("Memory size exceeded in variables declaration")
 			
@@ -720,10 +723,8 @@ def p_paso5(t):
             #result_Type = sem_cube[var_types_dict[left_type]][var_types_dict[right_type]][operators_dict[operator]]
             result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
             if result_Type != -1 :
-                #print("zag" + str(result_Type))
                 if mem.checkSizeAvail(1, result_Type, "TEMP"):
                     result = mem.nextAvail(result_Type)
-                    #print("simon wey " + str(result))
                 else:
                     raise Exception("Ran out of memory")
                 quad = [operator,left_op,right_op,result]
@@ -811,8 +812,6 @@ def p_paso1b(t):
 
 def p_paso1c(t):
     'paso1c :'
-    #print("la variable del paso 1 es: " + t[-1])
-    #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
     op = "%" + t[-1]
     #PilaOp.append(t[-1])
     PilaOp.append(op)
@@ -820,8 +819,6 @@ def p_paso1c(t):
 
 def p_paso1d(t):
     'paso1d :'
-    #print("la variable del paso 1 es: " + t[-1])
-    #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
     PilaOp.append(t[-1])
     PTypes.append("bool")
 			
@@ -849,7 +846,7 @@ def p_modCall_paso1(t):
 
 def p_modCall_paso2(t):
     'modCall_paso2 :'
-    quad = ["ERA", t[-1], [], []]
+    quad = ["ERA", t[-2], [], []]
     gv.paramCount = 1
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1
@@ -885,6 +882,7 @@ def p_modCall_paso5(t):
 
 def p_modCall_paso6(t):
     'modCall_paso6 :'
+    print("YA LLEGUE AL MODCALL DEL GOSUB")
     quad = ["GOSUB",gv.currentModCall,[],symtab.get_num_quad(gv.currentModCall)]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1
@@ -910,7 +908,7 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
-file = open("fibo.txt", "r")
+file = open("fiboR.txt", "r")
 code = ""
 #Add all lines to one string for parsing
 for line in file:

@@ -12,12 +12,12 @@ SYM_TABLE["GLOBAL"] = GLOBAL
 #print(SYM_TABLE["global"])
 
 def add_variable(scope, id, data_type, size, address):
-	print("Adding variable to var table: ")
-	print("Scope: " + str(scope))
-	print("Id: " + str(id))
-	print("data_type: " + str(data_type))
-	print("size: " + str(size))
-	print("address: " + str(address))
+	#print("Adding variable to var table: ")
+	#print("Scope: " + str(scope))
+	#print("Id: " + str(id))
+	#print("data_type: " + str(data_type))
+	#print("size: " + str(size))
+	#print("address: " + str(address))
 
 	if not SYM_TABLE["GLOBAL"]: #First variable
 		SYM_TABLE[scope][id] = dict()
@@ -88,10 +88,13 @@ def mod_exist(scope):
 		raise Exception("There is no \"" + scope + "\" scope")
 
 def get_var_address(scope,id):
-	print(SYM_TABLE)
+	#print(SYM_TABLE)
 	if id in SYM_TABLE[scope]:
 		return SYM_TABLE[scope][id]["#address"]
 	elif id in SYM_TABLE["GLOBAL"]:
 		return SYM_TABLE["GLOBAL"][id]["#address"]
 	else:
 		raise Exception("There is no \"" + id + "\" variable in this scope")
+
+def add_param_num(scope,id,num):
+	SYM_TABLE[scope][id]["#paramNum"] = num

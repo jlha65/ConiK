@@ -55,7 +55,7 @@ var int i1;
                     print("5 equals 4");
                 } else {
                     print("a");
-                    #proc papa(i, h4);
+                    proc papa(i, h4);
                     #proc loco(1);
                 }
             }

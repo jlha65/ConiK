@@ -13,7 +13,7 @@ def run(quadList, symtab, mem) :
     #print(quadList)
     finished = False
     while not finished:
-        # print(str(gv.counterVm) + quadList[gv.counterVm][0])
+        #print(str(gv.counterVm) + quadList[gv.counterVm][0])
         if quadList[gv.counterVm][0] == 'GOTO':
             GOTO(quadList[gv.counterVm][3])
             # print(" Counter: " + str(gv.counterVm))
@@ -24,6 +24,15 @@ def run(quadList, symtab, mem) :
             GOTOV(quadList[gv.counterVm][1], quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'PRINT':
             PRINT(quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'ERA':
+            ERA(quadList[gv.counterVm][1])
+        elif quadList[gv.counterVm][0] == 'PARAM':
+            PARAM(quadList[gv.counterVm][1],quadList[gv.counterVm][3],symtab)
+        elif quadList[gv.counterVm][0] == 'GOSUB':
+            #print(symtab.SYM_TABLE[quadList[gv.counterVm][1]])
+            GOSUB(quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'ENDPROC':
+            ENDPROC()
         elif quadList[gv.counterVm][0] == '=':
             EQUAL(quadList[gv.counterVm][1], quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '+': #TO DO: REPLACE TEMPS AND quadList[gv.counterVm][quadList[gv.counterVm]] WITH THE MEMORY VALUES
@@ -60,6 +69,34 @@ def GOTOV(condition, dir):
     condition = memory.access(condition)
     if(condition):
         gv.counterVm = dir - 1
+
+def ERA(mod):
+    gv.nextModule = mod
+    #print("jeje no hay ERA we xdXdxD")
+
+def PARAM(value, paramNum, symtab):
+    for x,y in symtab.SYM_TABLE[gv.nextModule].items():
+        #print(symtab.SYM_TABLE)
+        #print(symtab.SYM_TABLE[gv.nextModule])
+        #print(y)
+        if y != "void":
+            if y["#paramNum"] == paramNum:
+                if isinstance(value,str):
+                    if value[0] == '%':
+                        value = getCons(value[1:])
+                        print("value: " + str(value))
+                else:
+                    value = memory.access(value)
+                memory.save(value,y["#address"])
+                return
+                #return y["#address"]
+
+def GOSUB(dir):
+    gv.currentQuad.append(gv.counterVm)
+    gv.counterVm = dir - 1
+
+def ENDPROC():
+    gv.counterVm = gv.currentQuad.pop()
 
 def PRINT(a):
     if type(a) == str:

@@ -12,4 +12,6 @@ class global_variables:
         self.paramCount = 0 #contador de parametros
         self.saveCount = 0 #usado en el loop para guardar cuantos quads van
         self.counterVm = 0 #apuntador de cuadruplos de VM
+        self.currentQuad = [] #list of quads for the ENDPROC to return to
+        self.nextModule = "" #next module to be visited, used for PARAM OpCode
 gv = global_variables()
