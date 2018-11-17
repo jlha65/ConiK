@@ -13,7 +13,7 @@ def run(quadList, symtab, mem) :
     #print(quadList)
     finished = False
     while not finished:
-        #print(str(gv.counterVm) + quadList[gv.counterVm][0])
+        #print(str(gv.counterVm) + " " + quadList[gv.counterVm][0])
         if quadList[gv.counterVm][0] == 'GOTO':
             GOTO(quadList[gv.counterVm][3])
             # print(" Counter: " + str(gv.counterVm))

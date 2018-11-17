@@ -259,9 +259,23 @@ def p_add_variable(t):
     #####print("var name: " + gv.currentId)
     #####print("scope   : " + gv.currentScope)
 
+def getCons(x):
+    if "." in x:
+        return float(x)
+    else:
+        return int(x)
+
 def p_add_variableArr(t):
     'add_variableArr :'
-    size = int(t[-2])
+    #size = int(t[-2])
+    size = PilaOp.pop()
+    if isinstance(size,str):
+        if size[0] == '%':
+            size = getCons(size[1:])
+            print("size: " + str(size))
+
+    #print(size)
+    PTypes.pop()
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)    
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
@@ -270,7 +284,23 @@ def p_add_variableArr(t):
     
 def p_add_variableArr2(t):
     'add_variableArr2 :'
-    size = int(t[-2]) * int(t[-5])
+    a = PilaOp.pop()
+    b = PilaOp.pop()
+
+    PTypes.pop()
+    PTypes.pop()
+
+    if isinstance(a,str):
+        if a[0] == '%':
+            a = getCons(a[1:])
+            print("a: " + str(a))
+    if isinstance(b,str):
+        if b[0] == '%':
+            b = getCons(b[1:])
+            print("b: " + str(b))
+
+    size = a * b
+
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
@@ -328,7 +358,9 @@ def p_W1(t):
 
 			
 def p_ASSIGN(t):
-    '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON'''
+    '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON
+                | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET EQUALOP EXPRESSION SEMICOLON
+                | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
     #result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
     #print(t[1])
@@ -823,10 +855,26 @@ def p_paso1d(t):
     PTypes.append("bool")
 			
 def p_S(t):
-    '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
+    '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall1
             | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
 			| modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
     print("HOLIIIIIIIIIIIII"+t[-1])
+
+def p_arrCall1(t):
+    'arrCall1 :'
+    print("el id es: " + t[-4])
+    pos = PilaOp.pop()
+    if isinstance(pos,str):
+        if pos[0] == '%':
+            pos = getCons(pos[1:])
+            print("pos: " + str(pos))
+    PTypes.pop()
+    quad = ["VER",pos,[],symtab.get_size(gv.currentScope,t[-4])]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    #quad = ["+",pos,symtab.get_var_address(gv.currentScope,t[-4]),symtab.get_size(gv.currentScope,t[-4])]
+
 
 def p_SS(t):
     '''SS : EXP modCall_paso3 SSS
@@ -882,7 +930,7 @@ def p_modCall_paso5(t):
 
 def p_modCall_paso6(t):
     'modCall_paso6 :'
-    print("YA LLEGUE AL MODCALL DEL GOSUB")
+    #print("YA LLEGUE AL MODCALL DEL GOSUB")
     quad = ["GOSUB",gv.currentModCall,[],symtab.get_num_quad(gv.currentModCall)]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1
