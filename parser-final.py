@@ -37,6 +37,9 @@ reserved = {
 	'translate' : 'TRANS_KEYWORD',
 	'rotation' : 'ROTATION_KEYWORD',
 	'stretch' : 'STRETCH_KEYWORD',
+    'and' : 'AND_KEYWORD',
+    'or' : 'OR_KEYWORD',
+    'not' : 'NOT_KEYWORD',
     #Not in the official document (yet) :
     'print' : 'PRINT_KEYWORD',
     'program' : 'PROGRAM_KEYWORD',
@@ -46,7 +49,7 @@ reserved = {
 }
         #New tokens:
 tokens = ['ID', 'EQPARABOLA', 'EQCIRCLE', 'EQELLIPSE', 'EQHYPERBOLA', 'CONS_STRING', 'CONS_INT', 
-        'CONS_FLOAT', 'CONS_BOOL', 'RELOP',
+        'CONS_FLOAT', 'CONS_BOOL', 'RELOP', 'AND', 'OR', 'NOT',
         #Old tokens:
         'OPEN_BRACKET','CLOSE_BRACKET','OPEN_SQUARE_BRACKET','CLOSE_SQUARE_BRACKET', 'COMMA', 'POINT', 'PLUSOP', 'MINUSOP',
         'TIMESOP', 'DIVIDEOP', 'OPEN_PARENTHESES', 'CLOSE_PARENTHESES',
@@ -86,6 +89,10 @@ t_TWO_POINTS = r':'
 t_SEMICOLON = r';'
 t_EQUALOP = r'='
 t_RELOP = r'<(>)? | > | =='
+t_NOT = r'\!'
+t_AND = r'\&\&'
+t_OR = r'\|\|'
+
 #t_CTE_I = r'[0-9]+' #This was commented out since it is replaced by CONS_INT
 #t_CTE_F = r'[0-9]+\.[0-9]+' #This was commented out since it is replaced by CONS_FLOAT
 #t_STRING = r'\".*\"' #This was commented out since it is replaced by CONS_STRING
@@ -763,13 +770,57 @@ def p_endif(t):
     gv.quadList[end][3] = gv.quadCount
 			
 def p_EXPRESSION_OP(t):
-    '''EXPRESSION_OP : EXPRESSION
+    '''EXPRESSION_OP : EXPRESSION_BOOL
             | ATTRIBUTE_2'''
 			
 def p_ATTR_2(t):
     '''ATTR_2 : CENTER_KEYWORD
             | FOCUS_KEYWORD
 			| VERTEX_KEYWORD'''
+
+def p_EXPRESSION_BOOL(t):
+    '''EXPRESSION_BOOL : EXPRESSION paso1bool AND EXPRESSION paso2bool
+            | EXPRESSION paso1bool OR EXPRESSION paso2bool
+            | NOT EXPRESSION pasoNotBool
+            | EXPRESSION'''
+
+def p_paso1bool(t):
+    'paso1bool :'
+    POper.append(t[-1]) # Append left side of expression between boolean operator
+
+def p_paso2bool(t):
+    'paso2bool :'
+    if POper:
+        temp = POper.pop()
+        POper.append(temp)
+        if temp == "and" or temp == "or":
+            right_op = PilaOp.pop()
+            right_type = PTypes.pop()
+            left_op = PilaOp.pop()
+            left_type = PTypes.pop()
+            operator = POper.pop()
+            result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
+            if result_Type != -1 :
+                if mem.checkSizeAvail(1, result_Type, "TEMP"):
+                    result = mem.nextAvail(result_Type)
+                else:
+                    raise Exception("Ran out of memory")
+                quad = [operator,left_op,right_op,result]# genera cuadruplo
+                gv.quadList.append(quad)# agrega cuadruplo
+                gv.quadCount = gv.quadCount + 1;# incrmenta cuenta de cuadruplos
+                PilaOp.append(result)
+                if result_Type == 0:
+                    PTypes.append("int")
+                elif result_Type == 1:
+                    PTypes.append("float")
+                elif result_Type == 2:
+                    PTypes.append("bool")
+                #if any operand were a temporal space, return it to AVAIL
+            else:
+                raise Exception("ERROR: Type Mismatch!!! Boolean operation invalid")                
+
+def p_pasoNotBool(t):
+    'pasoNotBool :'
 			
 def p_EXPRESSION(t):
     '''EXPRESSION : EXP RELOP paso8 EXP paso9
@@ -1147,7 +1198,7 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
-file = open("bubble.txt", "r")
+file = open("pruebaBool.txt", "r")
 code = ""
 #Add all lines to one string for parsing
 for line in file:

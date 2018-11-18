@@ -52,6 +52,12 @@ def run(quadList, symtab, mem) :
             memory.save(NOTEQUAL(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '==':
             memory.save(EQUALS(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'and':
+            memory.save(AND(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'or':
+            memory.save(OR(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'not':
+            memory.save(NOT(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'ACC':
             memory.save(ACC(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
@@ -290,6 +296,15 @@ def EQUALS(a, b):
         b = memory.access(b)
         
     return a == b
+
+def AND(a, b):
+    return a and b
+
+def OR(a, b):
+    return a or b
+
+def NOT(a):
+    return not a
 
 def ACC(a):
     #print(memory.access(memory.access(a)))
