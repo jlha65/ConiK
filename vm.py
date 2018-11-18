@@ -57,6 +57,7 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
         gv.counterVm = gv.counterVm + 1
+    print(memory.print())
 
 def GOTO(dir):
     gv.counterVm = dir - 1
@@ -112,29 +113,33 @@ def EQUAL(a, b):
     if isinstance(a,str):
         if a[0] == '%':
             a = getCons(a[1:])
+    else:
+        a = memory.access(a)
     if isinstance(b,str):
         if b[0] == '%':
             b = getCons(b[1:])
+    #else:
+        #b = memory.access(b)
     if memory.memorySize*6 <= b < memory.memorySize*9:
         #print("In equal left side, for arrays")
         memaux = memory.access(b)
         #print(memaux)
         if memory.memorySize*6 <= a < memory.memorySize*9:
             memory.save(memory.access(a),memaux)
-            print("saved "+str(memory.access(a))+" in "+str(memaux))
+            print("saved1 "+str(memory.access(a))+" in "+str(memaux))
         else :
             memory.save(a,memaux)
-            print("saved "+str(a)+" in "+str(memaux))
+            print("saved2 "+str(a)+" in "+str(memaux))
     if memory.memorySize*6 <= a < memory.memorySize*9:
         #print("In equal left side, for arrays")
         memaux = memory.access(a)
         #print(memaux)
         if memory.memorySize*6 <= b < memory.memorySize*9:
             memory.save(memaux,memory.access(b))
-            print("saved "+str(memaux)+" in "+str(memory.access(b)))
+            print("saved3 "+str(memaux)+" in "+str(memory.access(b)))
         else :
             memory.save(memaux,b)
-            print("saved "+str(a)+" in "+str(memaux))
+            print("saved4 "+str(memaux)+" in "+str(b))
     else:
         #if isinstance(a,str):
             #if a[0] == '%':

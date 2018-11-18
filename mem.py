@@ -228,4 +228,12 @@ class mem:
         #print("access address: " + str(address))
         return self.memory[address]
 
+    def print(self):
+        print("printing memory")
+        cont = 0
+        for x in self.memory:
+            if x != None:
+                print(str(cont) + ".- " + str(x))
+            cont = cont + 1
+
 mem = mem()

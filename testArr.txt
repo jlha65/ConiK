@@ -2,6 +2,8 @@ program bubble;
 var int i;
     int j;
     int temp;
+    int temp2;
+    int z;
     int a[10];
 
 {
@@ -21,8 +23,14 @@ var int i;
 
     temp = a[j];
     a[j] = a[j+1];
+    #z = j + 1;
+    #temp2 = a[j+1];
+    #temp2 = a[z];
+    #a[j] = temp2;
     a[j+1] = temp;
+    #a[z] = temp;
 
+    #print(a[0]);
     print(a[1]);
     print(temp);
     print(a[j+1]);

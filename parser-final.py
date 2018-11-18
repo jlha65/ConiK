@@ -421,6 +421,7 @@ def p_ASSIGN1D(t):
         raise Exception("Ran out of memory")
 
     #Create '+' quad for the BaseDir of Array + index of array
+    #quad = ["+","%" + str(gv.currentArrAddressL),pos,result]
     quad = ["+","%" + str(gv.currentArrAddressL),pos,result]
 
     #Add the '+' quad to quadlist
@@ -1028,7 +1029,11 @@ def p_arrCall1(t):
     #address1
     left_op = "%" + str(gv.currentArrAddress)
     # right_op = "%" + str(pos)
-    quad = ["+",left_op,pos,result]
+    ##############quad = ["+",left_op,pos,result]
+    if mem.memorySize*6 <= pos < mem.memorySize*9 or pos == symtab.get_var_address(gv.currentScope,gv.currentId):
+        quad = ["+",left_op,pos,result]
+    else:
+        quad = ["+",left_op,"%" + str(pos),result]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
     if mem.checkSizeAvail(1, result_Type, "TEMP"):
@@ -1142,7 +1147,7 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
-file = open("testArr.txt", "r")
+file = open("bubble.txt", "r")
 code = ""
 #Add all lines to one string for parsing
 for line in file:
