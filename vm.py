@@ -57,7 +57,7 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'or':
             memory.save(OR(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'not':
-            memory.save(NOT(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
+            memory.save(NOT(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'ACC':
             memory.save(ACC(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
@@ -304,12 +304,12 @@ def AND(a, b):
     if isinstance(b,str):
         b = b == "true"
 
-    # If they were not constant, then they are variables            
+    # If they were not constant, then they are variables 
     # So, we access the memory values for them.
     if not isinstance(a,bool):
         a = memory.access(a)
     if not isinstance(b,bool):
-        b = memory.access(b)                
+        b = memory.access(b)      
         
     return a and b
 
@@ -320,16 +320,24 @@ def OR(a, b):
     if isinstance(b,str):
         b = b == "true"
 
-    # If they were not constant, then they are variables            
+    # If they were not constant, then they are variables
     # So, we access the memory values for them.
     if not isinstance(a,bool):
         a = memory.access(a)
     if not isinstance(b,bool):
-        b = memory.access(b)                
+        b = memory.access(b)
         
     return a or b
 
 def NOT(a):
+    #checks if A is constant True or False value
+    if isinstance(a,str):
+        a = a == "true"
+    # If it wasn't a constant, then it is a variable
+    # So, we access the memory value for it.
+    if not isinstance(a,bool):
+        a = memory.access(a)
+
     return not a
 
 def ACC(a):

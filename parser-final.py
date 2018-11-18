@@ -787,7 +787,8 @@ def p_ATTR_2(t):
 def p_EXPRESSION_BOOL(t):
     '''EXPRESSION_BOOL : EXPRESSION paso2bool BBB
             | EXPRESSION paso2bool
-            | NOT_KEYWORD EXPRESSION pasoNotBool BBB'''
+            | NOT_KEYWORD paso1bool EXPRESSION_BOOL pasoNotBool
+            | NOT_KEYWORD paso1bool EXPRESSION_BOOL pasoNotBool BBB'''
 
 def p_BBB(t):
     '''BBB : AND_KEYWORD paso1bool EXPRESSION_BOOL
@@ -843,8 +844,41 @@ def p_paso2bool(t):
             else:
                 raise Exception("ERROR: Type Mismatch!!! Boolean operation invalid")                
 
+# def p_EXPRESSION_NOT(t):
+#     '''EXPRESSION_NOT : NOT_KEYWORD paso1bool EXPRESSION_BOOL pasoNotBool
+#             | NOT_KEYWORD paso1bool EXPRESSION_BOOL pasoNotBool BBB'''
+
 def p_pasoNotBool(t):
     'pasoNotBool :'
+    if POper:
+        temp = POper.pop()
+        POper.append(temp)
+        print("temp")
+        print(temp)
+        if temp == "not":
+            right_op = PilaOp.pop()
+            right_type = PTypes.pop()
+            #We don't require left operator, 'NOT' is unary            
+            operator = POper.pop()
+            result_Type = sem_cube[operators_dict[operator]][2][var_types_dict[right_type]]
+            if result_Type != -1 :
+                if mem.checkSizeAvail(1, result_Type, "TEMP"):
+                    result = mem.nextAvail(result_Type)
+                else:
+                    raise Exception("Ran out of memory")
+                quad = [operator, right_op, [], result]
+                gv.quadList.append(quad)# agrega cuadruplo
+                gv.quadCount = gv.quadCount + 1;# incrmenta cuenta de cuadruplos
+                PilaOp.append(result)
+                if result_Type == 0:
+                    PTypes.append("int")
+                elif result_Type == 1:
+                    PTypes.append("float")
+                elif result_Type == 2:
+                    PTypes.append("bool")
+                    #if any operand were a temporal space, return it to AVAIL            
+            else:
+                raise Exception("ERROR: Type Mismatch!!! Boolean operation invalid")      
 			
 def p_EXPRESSION(t):
     '''EXPRESSION : EXP RELOP paso8 EXP paso9
@@ -1235,7 +1269,8 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
-file = open("pruebaBool.txt", "r")
+fileName = input("Enter a file name \n")
+file = open(fileName, "r")
 code = ""
 #Add all lines to one string for parsing
 for line in file:

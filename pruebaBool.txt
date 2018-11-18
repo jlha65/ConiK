@@ -10,7 +10,7 @@ var int i;
     i = 1;
     j = 2;
     #a[2] = 1;
-    if(i < 2 and j == 4 or i > 0 and false){
+    if((not i < 2) or j == 2){
         print("jajaja asi es");
     }
     else
