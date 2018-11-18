@@ -89,9 +89,9 @@ t_TWO_POINTS = r':'
 t_SEMICOLON = r';'
 t_EQUALOP = r'='
 t_RELOP = r'<(>)? | > | =='
-t_NOT = r'\!'
-t_AND = r'\&\&'
-t_OR = r'\|\|'
+# t_NOT = r'\!'
+# t_AND = r'\&'
+# t_OR = r'\|'
 
 #t_CTE_I = r'[0-9]+' #This was commented out since it is replaced by CONS_INT
 #t_CTE_F = r'[0-9]+\.[0-9]+' #This was commented out since it is replaced by CONS_FLOAT
@@ -537,7 +537,7 @@ def p_EQUATION_N1(t):
 
 def p_FOR_LOOP(t):
     #'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ID EQUALOP EXP forJump SEMICOLON EXPRESSION forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
-    'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ASSIGN forJump EXPRESSION forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
+    'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ASSIGN forJump EXPRESSION_BOOL forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
 
 def p_saveCount(t):
     'saveCount :'
@@ -714,7 +714,7 @@ def p_MM(t):
         #print("PilaOp esta vacia we jeje xd")
 			
 def p_WHILE_LOOP(t):
-    'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES BLOCK'
+    'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION_BOOL CLOSE_PARENTHESES BLOCK'
 	
 def p_PLOT(t):
     '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
@@ -733,7 +733,7 @@ def p_F_CALL(t):
     'F_CALL : ID POINT TRANSFORM OPEN_PARENTHESES EXP CLOSE_PARENTHESES SEMICOLON'
 	
 def p_CONDITION(t):
-    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION CLOSE_PARENTHESES gotoFcond N'
+    'CONDITION : IF_STATEMENT OPEN_PARENTHESES EXPRESSION_BOOL CLOSE_PARENTHESES gotoFcond N'
 
 def p_gotoFcond(t):
     'gotoFcond :'
@@ -778,27 +778,51 @@ def p_ATTR_2(t):
             | FOCUS_KEYWORD
 			| VERTEX_KEYWORD'''
 
+# def p_EXPRESSION_BOOL(t):
+#     '''EXPRESSION_BOOL : EXPRESSION AND_KEYWORD paso1bool EXPRESSION paso2bool
+#             | EXPRESSION OR_KEYWORD paso1bool EXPRESSION paso2bool
+#             | NOT_KEYWORD EXPRESSION pasoNotBool
+#             | EXPRESSION'''
+
 def p_EXPRESSION_BOOL(t):
-    '''EXPRESSION_BOOL : EXPRESSION paso1bool AND EXPRESSION paso2bool
-            | EXPRESSION paso1bool OR EXPRESSION paso2bool
-            | NOT EXPRESSION pasoNotBool
-            | EXPRESSION'''
+    '''EXPRESSION_BOOL : EXPRESSION paso2bool BBB
+            | EXPRESSION paso2bool
+            | NOT_KEYWORD EXPRESSION pasoNotBool BBB'''
+
+def p_BBB(t):
+    '''BBB : AND_KEYWORD paso1bool EXPRESSION_BOOL
+            | OR_KEYWORD paso1bool EXPRESSION_BOOL'''
+
+# def p_EXPRESSION(t):
+#     '''EXPRESSION : EXP paso9 RRR
+#             | EXP paso9'''
+
+# def p_RRR(t):
+#     'RRR : RELOP paso8 EXPRESSION'
 
 def p_paso1bool(t):
     'paso1bool :'
+    print("saludos : "+t[-1])
     POper.append(t[-1]) # Append left side of expression between boolean operator
+    PTypes.append("bool")
 
 def p_paso2bool(t):
     'paso2bool :'
+    print("POpewr")
+    print(POper)
     if POper:
         temp = POper.pop()
         POper.append(temp)
+        print("temp")
+        print(temp)
         if temp == "and" or temp == "or":
             right_op = PilaOp.pop()
             right_type = PTypes.pop()
             left_op = PilaOp.pop()
             left_type = PTypes.pop()
             operator = POper.pop()
+            print(operator)
+            print("operator")
             result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
             if result_Type != -1 :
                 if mem.checkSizeAvail(1, result_Type, "TEMP"):
@@ -825,6 +849,12 @@ def p_pasoNotBool(t):
 def p_EXPRESSION(t):
     '''EXPRESSION : EXP RELOP paso8 EXP paso9
             | EXP'''
+# def p_EXPRESSION(t):
+#     '''EXPRESSION : EXP paso9 RRR
+#             | EXP paso9'''
+
+# def p_RRR(t):
+#     'RRR : RELOP paso8 EXPRESSION'
 
 def p_paso8(t):
     'paso8 :'
@@ -989,7 +1019,7 @@ def p_ATTR(t):
             | RADIUS_KEYWORD'''
 			
 def p_FACTOR(t):
-    '''FACTOR : OPEN_PARENTHESES paso6 EXPRESSION CLOSE_PARENTHESES paso7
+    '''FACTOR : OPEN_PARENTHESES paso6 EXPRESSION_BOOL CLOSE_PARENTHESES paso7
             | VAR_CONS
             | ATTRIBUTE'''
 			
@@ -1191,7 +1221,14 @@ def p_modCall_paso6(t):
 
 def p_error(p):
     if p:
-        print("On line '%i' " % p.lexer.lineno + "syntax error at '%s'" % p.value)
+        #print("On line '%i' " % p.lexer.lineno + "syntax error at '%s'" % p.value)
+        # get formatted representation of stack
+        stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
+
+        print('Syntax error in input! Parser State:{} {} . {}'
+            .format(parser.state,
+                stack_state_str,
+                p))
     else:
         print("Syntax error at EOF")
 

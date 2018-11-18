@@ -298,9 +298,35 @@ def EQUALS(a, b):
     return a == b
 
 def AND(a, b):
+    #checks if a and b are constant True or False values
+    if isinstance(a,str):
+        a = a == "true"
+    if isinstance(b,str):
+        b = b == "true"
+
+    # If they were not constant, then they are variables            
+    # So, we access the memory values for them.
+    if not isinstance(a,bool):
+        a = memory.access(a)
+    if not isinstance(b,bool):
+        b = memory.access(b)                
+        
     return a and b
 
 def OR(a, b):
+    #checks if a and b are constant True or False values
+    if isinstance(a,str):
+        a = a == "true"
+    if isinstance(b,str):
+        b = b == "true"
+
+    # If they were not constant, then they are variables            
+    # So, we access the memory values for them.
+    if not isinstance(a,bool):
+        a = memory.access(a)
+    if not isinstance(b,bool):
+        b = memory.access(b)                
+        
     return a or b
 
 def NOT(a):
