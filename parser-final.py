@@ -145,6 +145,7 @@ PJumps = []#Pila de saltos
 listPendingQuads = [] #lista de listas de cuadruplos que faltan
 PModDataTypes = [] #pila de tipos de dato de declaraciones de modulos
 temporal_mem = []
+PAssign = [] #pila donde se guarda lo de arreglos del lado izquierdo
 
 #cuScope = "GLOBAL"
 
@@ -304,6 +305,7 @@ def p_add_variableArr2(t):
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
         symtab.add_variable(gv.currentScope,gv.currentId,gv.currentType, size, memAddress)
+        symtab.add_dims(gv.currentScope,gv.currentId,b,a)
     else :
         raise Exception("Memory size exceeded in variables declaration (2D ARRAY SIZE)")
 
@@ -354,27 +356,166 @@ def p_V1(t):
 
 def p_W1(t):
     '''W1 : modCall_paso5 CLOSE_PARENTHESES SEMICOLON modCall_paso6'''
-    print("CACA")
+    #print("CACA")
 
 			
 def p_ASSIGN(t):
-    '''ASSIGN : ID EQUALOP EXPRESSION SEMICOLON
-                | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET EQUALOP EXPRESSION SEMICOLON
-                | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET EQUALOP EXPRESSION SEMICOLON'''
+    '''ASSIGN : ID ASSIGN0D EQUALOP EXPRESSION SEMICOLON
+                | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET ASSIGN1D EQUALOP EXPRESSION SEMICOLON
+                | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET ASSIGN2D EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
     #result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
     #print(t[1])
     lastType = PTypes.pop() #Get the type of the id (on the left side of the assign)
     result_Type = sem_cube[operators_dict["="]][var_types_dict[symtab.get_return_type(gv.currentScope,t[1])]][var_types_dict[lastType]] #Check if the assign is valid
     if result_Type != -1 :
-        address = symtab.get_var_address(gv.currentScope,t[1])
-        quad = ["=",PilaOp.pop(),[],address]
+        #address = symtab.get_var_address(gv.currentScope,t[1])
+        print("IDDDDDDDDD:")
+        print(gv.currentArrAddressL)
+        #quad = ["=",PilaOp.pop(),[],gv.currentArrAddressL]
+        if not PAssign:
+            quad = ["=",PilaOp.pop(),[],gv.currentArrAddressL]
+        else:
+            quad = ["=",PilaOp.pop(),[],PAssign.pop()]
         #quad = ["=",PilaOp.pop(),[],t[1]]
         gv.quadList.append(quad)
         gv.quadCount = gv.quadCount + 1
     else:
         #print("Incompatible types for assign")
         raise Exception("Incompatible types " + lastType + " assigned to " + symtab.get_return_type(gv.currentScope,t[1]))
+
+def p_ASSIGN0D(t):
+    'ASSIGN0D :'
+    gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,t[-1])
+
+def p_ASSIGN1D(t):
+    'ASSIGN1D :'
+    #print(t[-4])
+    gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,t[-4])
+    print("KYC VIEJO LESBIANO")
+    print(gv.currentArrAddressL)
+    #print(gv.currentArrAddress)
+    #symtab.get_var_address(gv.currentScope,t[-1])
+    #print("arr1d " + str(gv.currentArrAddress))
+    pos = PilaOp.pop()
+    posType = PTypes.pop()
+    print(pos)
+    #PTypes.append(tipo)#regresar el tipo a la pila
+    if posType == "int":
+        # if isinstance(pos,str):
+        #     if pos[0] == '%':
+        #         pos = getCons(pos[1:])
+        #         print("pos: " + str(pos))
+        print("pos: " + str(pos))
+        #gv.currentArrAddressL = gv.currentArrAddressL + pos
+        print("CurrentArrAddressL : ")
+        print(gv.currentArrAddressL)
+    else:
+        raise Exception("Array Index must be an integer")
+
+    result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    #Create a new temp variable for use in the '+' quad just below
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+
+    #Create '+' quad for the BaseDir of Array + index of array
+    quad = ["+","%" + str(gv.currentArrAddressL),pos,result]
+
+    #Add the '+' quad to quadlist
+    gv.quadList.append(quad)
+    gv.quadCount += 1
+
+    PAssign.append(result)
+
+    # #Create another temp variable for use in the 'ACC' quad
+    # if mem.checkSizeAvail(1, "int", "TEMP"):
+    #     result2 = mem.nextAvail("int")
+    # else:
+    #     raise Exception("Ran out of memory")
+    # #Now we generate the ACC quad, which will carry the result of the array access
+    # quad2 = ["ACC", result,[],result2]
+
+    # #Add the 'ACC' quad to quadlist
+    # gv.quadList.append(quad)
+    # gv.quadCount += 1
+
+    #Finally assign the temporal variable that has the array access
+    
+    ############################################################################
+    # result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    # if mem.checkSizeAvail(1, result_Type, "TEMP"):
+    #     result = mem.nextAvail(result_Type)
+    #     #print("simon wey " + str(result))
+    # else:
+    #     raise Exception("Ran out of memory")
+    # #address1
+    # left_op = "%" + str(gv.currentArrAddress)
+    # # right_op = "%" + str(pos)
+    # quad = ["+",left_op,pos,result]
+    # gv.quadList.append(quad)
+    # gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+    # # if mem.checkSizeAvail(1, result_Type, "TEMP"):
+    # #     result2 = mem.nextAvail(result_Type)
+    # #     #print("simon wey " + str(result))
+    # # else:
+    # #     raise Exception("Ran out of memory")
+    
+    # #quad = ["ACC",result,[],result2]#Acceso a valor en result (result es una direccion)
+    # #print(gv.currentArrAddress, mem.access(pos))
+    # print(gv.currentArrAddress)
+    # result2 = gv.currentArrAddress# + mem.access(pos)
+    # quad = ["ACC",result,[],result2] #Acceso a valor en result (result es una direccion)
+    # gv.quadList.append(quad)
+    # gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    # PilaOp.append(result2)
+    # #PTypes.append(result_Type)
+    # if result_Type == 0:
+    #     PTypes.append("int")
+    # elif result_Type == 1:
+    #     PTypes.append("float")
+    # elif result_Type == 2:
+    #     PTypes.append("bool")
+    # #print("appendeando en arrCall: "+str(gv.currentArrAddress+pos))
+    # #pos = mem.access(pos)
+    # #PilaOp.append(pos)
+    # #PilaOp.append(gv.currentArrAddress+pos)
+    # #PilaOp.append(pos)
+    # #PTypes.pop()
+    # quad = ["VER",pos,[],symtab.get_size(gv.currentScope,t[-4])]
+    # gv.quadList.append(quad)
+    # gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+    ############################################################################
+
+def p_ASSIGN2D(t):
+    'ASSIGN2D :'
+    gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,gv.currentId)
+    #symtab.get_var_address(gv.currentScope,t[-1])
+    #print("arr1d " + str(gv.currentArrAddress))
+    index2 = PilaOp.pop()
+    index1 = PilaOp.pop()
+    tipo2 = PTypes.pop()
+    tipo1 = PTypes.pop()
+    #PTypes.append(tipo)#regresar el tipo a la pila
+    if tipo1 == "int":
+        if isinstance(index1,str):
+            if index1[0] == '%':
+                index1 = getCons(index1[1:])
+                print("index1: " + str(index1))
+    else:
+        raise Exception("Array Index must be an integer")
+    if tipo2 == "int":
+        if isinstance(index2,str):
+            if index2[0] == '%':
+                index2 = getCons(index2[1:])
+                print("index2: " + str(index2))
+    else:
+        raise Exception("Array Index must be an integer")
+
+    gv.currentArrAddressL = gv.currentArrAddressL + index1*symtab.get_dims2(gv.currentScope,gv.currentId) + index2
+    print("address d2: " + str(gv.currentArrAddressL))
 
 def p_EQUATION(t):
     '''EQUATION : EQPARABOLA
@@ -556,7 +697,10 @@ def p_MM(t):
     '''MM : EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON'''
     if len(PTypes) > 0 :
         PTypes.pop()
-        quad = ["PRINT",[],[],PilaOp.pop()]
+        #quad = ["PRINT",[],[],PilaOp.pop()]
+        temp = PilaOp.pop()
+        print(temp)
+        quad = ["PRINT",[],[],temp]
         gv.quadList.append(quad)
         gv.quadCount = gv.quadCount + 1
         #print("PilaOp esta vacia we jeje xd")
@@ -858,17 +1002,59 @@ def p_S(t):
     '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall1
             | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
 			| modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
-    print("HOLIIIIIIIIIIIII"+t[-1])
+    #print("HOLIIIIIIIIIIIII"+t[-1])
+
+def p_arrAddress(t):
+    'arrAddress :'
+    print("en el arrAddress: "+str(gv.currentId))
+    gv.currentArrAddress = symtab.get_var_address(gv.currentScope,gv.currentId)
 
 def p_arrCall1(t):
     'arrCall1 :'
     print("el id es: " + t[-4])
+    gv.currentArrAddress = symtab.get_var_address(gv.currentScope,t[-4])
     pos = PilaOp.pop()
+    posType = PTypes.pop()
     if isinstance(pos,str):
         if pos[0] == '%':
             pos = getCons(pos[1:])
             print("pos: " + str(pos))
-    PTypes.pop()
+    result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result = mem.nextAvail(result_Type)
+        #print("simon wey " + str(result))
+    else:
+        raise Exception("Ran out of memory")
+    #address1
+    left_op = "%" + str(gv.currentArrAddress)
+    # right_op = "%" + str(pos)
+    quad = ["+",left_op,pos,result]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result2 = mem.nextAvail(result_Type)
+        #print("simon wey " + str(result))
+    else:
+        raise Exception("Ran out of memory")
+    
+    quad = ["ACC",result,[],result2]#Acceso a valor en result (result es una direccion)
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    PilaOp.append(result2)
+    #PTypes.append(result_Type)
+    if result_Type == 0:
+        PTypes.append("int")
+    elif result_Type == 1:
+        PTypes.append("float")
+    elif result_Type == 2:
+        PTypes.append("bool")
+    #print("appendeando en arrCall: "+str(gv.currentArrAddress+pos))
+    #pos = mem.access(pos)
+    #PilaOp.append(pos)
+    #PilaOp.append(gv.currentArrAddress+pos)
+    #PilaOp.append(pos)
+    #PTypes.pop()
     quad = ["VER",pos,[],symtab.get_size(gv.currentScope,t[-4])]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
@@ -956,7 +1142,7 @@ def p_error(p):
 import ply.yacc as yacc
 import os
 parser = yacc.yacc()
-file = open("fiboR.txt", "r")
+file = open("testArr.txt", "r")
 code = ""
 #Add all lines to one string for parsing
 for line in file:

@@ -7,7 +7,7 @@ from global_variables import gv
 memorySize = 15000
 memory = memx
 
-def run(quadList, symtab, mem) :
+def run(quadList, symtab, mem) :                              
     print("Now in the VM")
     memory = mem
     #print(quadList)
@@ -52,6 +52,8 @@ def run(quadList, symtab, mem) :
             memory.save(NOTEQUAL(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '==':
             memory.save(EQUALS(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'ACC':
+            memory.save(ACC(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
         gv.counterVm = gv.counterVm + 1
@@ -84,7 +86,6 @@ def PARAM(value, paramNum, symtab):
                 if isinstance(value,str):
                     if value[0] == '%':
                         value = getCons(value[1:])
-                        print("value: " + str(value))
                 else:
                     value = memory.access(value)
                 memory.save(value,y["#address"])
@@ -99,20 +100,63 @@ def ENDPROC():
     gv.counterVm = gv.currentQuad.pop()
 
 def PRINT(a):
+    #print(memory.access(90001))
     if type(a) == str:
         print(a)
     else:
         print(memory.access(a))
 
+# B = A    #if 10000 <= number <= 30000:
 def EQUAL(a, b):
+    #print(b)
     if isinstance(a,str):
         if a[0] == '%':
             a = getCons(a[1:])
+    if isinstance(b,str):
+        if b[0] == '%':
+            b = getCons(b[1:])
+    if memory.memorySize*6 <= b < memory.memorySize*9:
+        #print("In equal left side, for arrays")
+        memaux = memory.access(b)
+        #print(memaux)
+        if memory.memorySize*6 <= a < memory.memorySize*9:
+            memory.save(memory.access(a),memaux)
+            print("saved "+str(memory.access(a))+" in "+str(memaux))
+        else :
+            memory.save(a,memaux)
+            print("saved "+str(a)+" in "+str(memaux))
+    if memory.memorySize*6 <= a < memory.memorySize*9:
+        #print("In equal left side, for arrays")
+        memaux = memory.access(a)
+        #print(memaux)
+        if memory.memorySize*6 <= b < memory.memorySize*9:
+            memory.save(memaux,memory.access(b))
+            print("saved "+str(memaux)+" in "+str(memory.access(b)))
+        else :
+            memory.save(memaux,b)
+            print("saved "+str(a)+" in "+str(memaux))
     else:
-        a = memory.access(a)
-    # print("Er " + str(b) + " = " + str(a))
-    memory.save(a,b)
-    #print(str(b) + " = " + str(a))
+        #if isinstance(a,str):
+            #if a[0] == '%':
+                #a = getCons(a[1:])
+        #else:
+            #a = memory.access(a)
+        # print("Er " + str(b) + " = " + str(a))
+        memory.save(a,b)
+        #print("saved "+str(a)+" in "+str(b))
+        #print(str(b) + " = " + str(a))
+
+    # memauxa = a
+    # memauxb = b
+    # if isinstance(a,str):
+    #     if memauxa[0] == '%':
+    #         memauxa = getCons(memauxa[1:])
+    # else:
+    #     if memory.memorySize*6 <= b < memory.memorySize*9:
+    #         memauxb = memory.access(b)
+    #     if memory.memorySize*6 <= a < memory.memorySize*9:
+    #         memauxa = memory.access(a)
+    #     memory.save(memauxa,memauxb)
 
 def ADD(a, b):
     if isinstance(a,str):
@@ -241,6 +285,10 @@ def EQUALS(a, b):
         b = memory.access(b)
         
     return a == b
+
+def ACC(a):
+    #print(memory.access(memory.access(a)))
+    return memory.access(memory.access(a))
 
 def getCons(x):
     if "." in x:

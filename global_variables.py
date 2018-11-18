@@ -14,4 +14,6 @@ class global_variables:
         self.counterVm = 0 #apuntador de cuadruplos de VM
         self.currentQuad = [] #list of quads for the ENDPROC to return to
         self.nextModule = "" #next module to be visited, used for PARAM OpCode
+        self.currentArrAddress = 0
+        self.currentArrAddressL = 0
 gv = global_variables()

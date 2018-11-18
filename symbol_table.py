@@ -98,3 +98,12 @@ def get_var_address(scope,id):
 
 def add_param_num(scope,id,num):
 	SYM_TABLE[scope][id]["#paramNum"] = num
+
+def add_dims(scope,id,dim1,dim2):
+	SYM_TABLE[scope][id]["#dim1"] = dim1
+	SYM_TABLE[scope][id]["#dim2"] = dim2
+
+def get_dims1(scope,id):
+	return SYM_TABLE[scope][id]["#dim1"]
+def get_dims2(scope,id):
+	return SYM_TABLE[scope][id]["#dim2"]
