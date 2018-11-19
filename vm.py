@@ -127,48 +127,41 @@ def EQUAL(a, b):
             b = getCons(b[1:])
     #else:
         #b = memory.access(b)
-    if memory.memorySize*6 <= b < memory.memorySize*9:
-        #print("In equal left side, for arrays")
-        memaux = memory.access(b)
-        #print(memaux)
-        if memory.memorySize*6 <= a < memory.memorySize*9:
-            memory.save(memory.access(a),memaux)
-            #print("saved1 "+str(memory.access(a))+" in "+str(memaux))
-        else :
-            memory.save(a,memaux)
-            #print("saved2 "+str(a)+" in "+str(memaux))
-    if memory.memorySize*6 <= a < memory.memorySize*9:
-        #print("In equal left side, for arrays")
-        memaux = memory.access(a)
-        #print(memaux)
+    if isinstance(a,str):
         if memory.memorySize*6 <= b < memory.memorySize*9:
-            memory.save(memaux,memory.access(b))
-            #print("saved3 "+str(memaux)+" in "+str(memory.access(b)))
-        else :
-            memory.save(memaux,b)
-            #print("saved4 "+str(memaux)+" in "+str(b))
-    else:
-        #if isinstance(a,str):
-            #if a[0] == '%':
-                #a = getCons(a[1:])
-        #else:
-            #a = memory.access(a)
-        # print("Er " + str(b) + " = " + str(a))
+            b = memory.access(b)
         memory.save(a,b)
-        #print("saved "+str(a)+" in "+str(b))
-        #print(str(b) + " = " + str(a))
-
-    # memauxa = a
-    # memauxb = b
-    # if isinstance(a,str):
-    #     if memauxa[0] == '%':
-    #         memauxa = getCons(memauxa[1:])
-    # else:
-    #     if memory.memorySize*6 <= b < memory.memorySize*9:
-    #         memauxb = memory.access(b)
-    #     if memory.memorySize*6 <= a < memory.memorySize*9:
-    #         memauxa = memory.access(a)
-    #     memory.save(memauxa,memauxb)
+    else:    
+        if memory.memorySize*6 <= b < memory.memorySize*9:
+            #print("In equal left side, for arrays")
+            memaux = memory.access(b)
+            #print(memaux)
+            if memory.memorySize*6 <= a < memory.memorySize*9:
+                memory.save(memory.access(a),memaux)
+                #print("saved1 "+str(memory.access(a))+" in "+str(memaux))
+            else :
+                memory.save(a,memaux)
+                #print("saved2 "+str(a)+" in "+str(memaux))
+        elif memory.memorySize*6 <= a < memory.memorySize*9:
+            #print("In equal left side, for arrays")
+            memaux = memory.access(a)
+            #print(memaux)
+            if memory.memorySize*6 <= b < memory.memorySize*9:
+                memory.save(memaux,memory.access(b))
+                #print("saved3 "+str(memaux)+" in "+str(memory.access(b)))
+            else :
+                memory.save(memaux,b)
+                #print("saved4 "+str(memaux)+" in "+str(b))
+        else:
+            #if isinstance(a,str):
+                #if a[0] == '%':
+                    #a = getCons(a[1:])
+            #else:
+                #a = memory.access(a)
+            # print("Er " + str(b) + " = " + str(a))
+            memory.save(a,b)
+            #print("saved "+str(a)+" in "+str(b))
+            #print(str(b) + " = " + str(a))
 
 def ADD(a, b):
     if isinstance(a,str):

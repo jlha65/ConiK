@@ -1,0 +1,8 @@
+program circleTest;
+var int j;
+    circle c1;
+
+{
+    j = 1;
+    c1 ~ "x^2 + y^2 = 1";
+}

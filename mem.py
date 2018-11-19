@@ -47,6 +47,8 @@ class mem:
         self.tcCont = self.memorySize*22
 
     def add_var(self, data_type, value, size, scope) :
+        print("In memory")
+        print(data_type)
         if data_type == "int" or data_type == 0 :
             if scope == "GLOBAL":
                 self.memory[self.giCont] = value
@@ -104,6 +106,8 @@ class mem:
                 return self.lhCont - size
         elif data_type == "circle" :
             if scope == "GLOBAL":
+                print("guardando circle...")
+                print("dir: "+ str(self.gcCont))
                 self.memory[self.gcCont] = value
                 self.gcCont += size
                 return self.gcCont - size

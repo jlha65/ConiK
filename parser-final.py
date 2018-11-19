@@ -135,6 +135,7 @@ lexer = lex.lex()
 import symbol_table as symtab
 from mem import mem #memory
 import vm
+import re #Regular expressions
 from global_variables import gv
 from semantics_cube import sem_cube
 from semantics_cube import operators_dict
@@ -254,7 +255,7 @@ def p_add_variable(t):
     #gv.currentType = typeStack.pop() # tipo de dato
     size = 1
     # print("Adding var to symtab")
-    #print(gv.currentType, gv.currentScope)
+    # print(gv.currentType, gv.currentScope)
     if mem.checkSizeAvail(size, gv.currentType, gv.currentScope) :
         memAddress = mem.add_var(gv.currentType, None, size, gv.currentScope)
         # print("Added var to memory")
@@ -368,12 +369,13 @@ def p_W1(t):
 			
 def p_ASSIGN(t):
     '''ASSIGN : ID ASSIGN0D EQUALOP EXPRESSION SEMICOLON
+                | ID ASSIGNCS ARROW CONS_STRING ASSIGN_S SEMICOLON
                 | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET ASSIGN1D EQUALOP EXPRESSION SEMICOLON
                 | ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET ASSIGN2D EQUALOP EXPRESSION SEMICOLON'''
     # ID ARROW EQUATION
     #result_Type = sem_cube[operators_dict[operator]][var_types_dict[left_type]][var_types_dict[right_type]]
     #print(t[1])
-    lastType = PTypes.pop() #Get the type of the id (on the left side of the assign)
+    lastType = PTypes.pop() #Get the type of the id (on the right side of the assign)
     result_Type = sem_cube[operators_dict["="]][var_types_dict[symtab.get_return_type(gv.currentScope,t[1])]][var_types_dict[lastType]] #Check if the assign is valid
     if result_Type != -1 :
         #address = symtab.get_var_address(gv.currentScope,t[1])
@@ -390,6 +392,53 @@ def p_ASSIGN(t):
     else:
         #print("Incompatible types for assign")
         raise Exception("Incompatible types " + lastType + " assigned to " + symtab.get_return_type(gv.currentScope,t[1]))
+
+# def p_STRINGTYPE(t):
+#     'STRINGTYPE :'
+#     print(t[-1])
+#     PTypes.append("string")
+
+def p_ASSIGNCS(t):
+    'ASSIGNCS :'
+    PTypes.append(symtab.get_return_type(gv.currentScope,gv.currentId))
+    gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,t[-1])
+
+def p_ASSIGN_S(t):
+    'ASSIGN_S :'
+    #print(t[-1])
+    #Only for circles, in the future must check for other equations
+    if verifyEquationCircle(t[-1]):
+        PilaOp.append(t[-1])
+    else:
+        raise Exception("Error: invalid circle syntax")
+    
+def verifyEquationCircle(equation):
+    #equation = equation.replace(" ", "")
+    print(equation)
+    #A*X^2 + B*Y^2 = R
+    #Where A=B
+    equation = equation[1:-1]
+    print(equation)
+    if re.match(r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*', equation):
+        return True
+    else:
+        return False
+    # A=""
+    # B=""
+    # R=""
+    # i = 0
+    # j = 0
+    # flagA = False
+    # flagB = False
+    # for x in equation:
+    #     if x == "X" or x == "x" and not flagA:
+    #         A= equation[:i]
+    #         j = i+4 #save position for next substring (B)
+    #         flagA = True
+    #         if equation[i] != "^" or equation[i+1] != "2":
+    #             return False
+    #     elif if x == "Y" or x == "y" and not flagB:
+    #     i = i + 1
 
 def p_ASSIGN0D(t):
     'ASSIGN0D :'
