@@ -21,8 +21,11 @@ var int i;
     j=2;
     temp = 0;
 
+    z = a[4];
     temp = a[j];
     a[j] = a[j+1];
+    a[9] = 5;
+    print(a[-0]);
     #z = j + 1;
     #temp2 = a[j+1];
     #temp2 = a[z];

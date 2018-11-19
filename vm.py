@@ -60,6 +60,8 @@ def run(quadList, symtab, mem) :
             memory.save(NOT(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'ACC':
             memory.save(ACC(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'VER':
+            VER(quadList[gv.counterVm][1],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
         gv.counterVm = gv.counterVm + 1
@@ -107,7 +109,6 @@ def ENDPROC():
     gv.counterVm = gv.currentQuad.pop()
 
 def PRINT(a):
-    #print(memory.access(90001))
     if type(a) == str:
         print(a)
     else:
@@ -132,20 +133,20 @@ def EQUAL(a, b):
         #print(memaux)
         if memory.memorySize*6 <= a < memory.memorySize*9:
             memory.save(memory.access(a),memaux)
-            print("saved1 "+str(memory.access(a))+" in "+str(memaux))
+            #print("saved1 "+str(memory.access(a))+" in "+str(memaux))
         else :
             memory.save(a,memaux)
-            print("saved2 "+str(a)+" in "+str(memaux))
+            #print("saved2 "+str(a)+" in "+str(memaux))
     if memory.memorySize*6 <= a < memory.memorySize*9:
         #print("In equal left side, for arrays")
         memaux = memory.access(a)
         #print(memaux)
         if memory.memorySize*6 <= b < memory.memorySize*9:
             memory.save(memaux,memory.access(b))
-            print("saved3 "+str(memaux)+" in "+str(memory.access(b)))
+            #print("saved3 "+str(memaux)+" in "+str(memory.access(b)))
         else :
             memory.save(memaux,b)
-            print("saved4 "+str(memaux)+" in "+str(b))
+            #print("saved4 "+str(memaux)+" in "+str(b))
     else:
         #if isinstance(a,str):
             #if a[0] == '%':
@@ -341,8 +342,17 @@ def NOT(a):
     return not a
 
 def ACC(a):
+    #print("ACC"+str(a)+":")
     #print(memory.access(memory.access(a)))
     return memory.access(memory.access(a))
+
+def VER(a,b):
+    if memory.memorySize*6 <= a < memory.memorySize*9:
+        a = memory.access(a)
+    if a < 0:
+        raise Exception("ERROR: Negative array index")
+    if a >= b:
+        raise Exception("ERROR: Index out of bounds")
 
 def getCons(x):
     if "." in x:

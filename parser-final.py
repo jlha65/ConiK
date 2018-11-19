@@ -420,7 +420,13 @@ def p_ASSIGN1D(t):
     else:
         raise Exception("Array Index must be an integer")
 
-    result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    if gv.currentArrAddress < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddress < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddress < mem.memorySize*7:
+        rType = "int"
+    elif mem.memorySize <= gv.currentArrAddress < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddress < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddress < mem.memorySize*8:
+        rType = "float"
+    elif mem.memorySize*2 <= gv.currentArrAddress < mem.memorySize*3 or mem.memorySize*5 <= gv.currentArrAddress < mem.memorySize*6 or mem.memorySize*8 <= gv.currentArrAddress < mem.memorySize*9:
+        rType = "bool"
+    result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict[rType]]
     #Create a new temp variable for use in the '+' quad just below
     if mem.checkSizeAvail(1, result_Type, "TEMP"):
         result = mem.nextAvail(result_Type)
@@ -714,7 +720,34 @@ def p_MM(t):
         #print("PilaOp esta vacia we jeje xd")
 			
 def p_WHILE_LOOP(t):
-    'WHILE_LOOP : WHILE_LOOP_KEYWORD OPEN_PARENTHESES EXPRESSION_BOOL CLOSE_PARENTHESES BLOCK'
+    'WHILE_LOOP : WHILE_LOOP_KEYWORD WHILE_paso1 OPEN_PARENTHESES EXPRESSION_BOOL CLOSE_PARENTHESES WHILE_paso2 BLOCK WHILE_paso3'
+
+def p_WHILE_paso1(t):
+    'WHILE_paso1 :'
+    PJumps.append(gv.quadCount)
+
+def p_WHILE_paso2(t):
+    'WHILE_paso2 :'
+    exp_type = PTypes.pop()
+    if exp_type != "bool":
+        raise Exception("ERROR: Type Mismatch!!! paso1, gotoF")
+    else:
+        result = PilaOp.pop()
+        quad = ["GOTOF",result,[],-1] # Generate quad for gotof while
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1 # Increment the quad count
+        PJumps.append(gv.quadCount - 1)
+
+def p_WHILE_paso3(t):
+    'WHILE_paso3 :'
+    #Code here
+    end = PJumps.pop()
+    ret = PJumps.pop()
+    quad = ["GOTO",[],[],ret] #genera cuadruplo
+    gv.quadList.append(quad) #agrega cuadruplo
+    gv.quadCount = gv.quadCount + 1 #incrmenta cuenta de cuadruplos
+    gv.quadList[end][3] = gv.quadCount #fill
+        
 	
 def p_PLOT(t):
     '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
@@ -1080,8 +1113,14 @@ def p_VAR_CONS(t):
 			| ID S
 			| CONS_INT paso1b
             | CONS_FLOAT paso1c
+            | MINUSOP addminus CONS_INT paso1b
+            | MINUSOP addminus CONS_FLOAT paso1c
             | TRUE_KEYWORD paso1d
             | FALSE_KEYWORD paso1d'''
+
+def p_addminus(t):
+    'addminus :'
+    gv.minusFlag = True
 
 def p_paso1a(t):
     'paso1a :'
@@ -1097,14 +1136,23 @@ def p_paso1b(t):
     'paso1b :'
     #print("la variable del paso 1 es: " + t[-1])
     #print("El type es: " + symtab.SYM_TABLE["GLOBAL"]["iii"]["type"])
-    op = "%" + t[-1]
+    if gv.minusFlag:
+        op = "%-" + t[-1]
+        gv.minusFlag = False
+    else:
+        op = "%" + t[-1]
     #PilaOp.append(t[-1])
     PilaOp.append(op)
     PTypes.append("int")
 
 def p_paso1c(t):
     'paso1c :'
-    op = "%" + t[-1]
+    #op = "%" + t[-1]
+    if gv.minusFlag:
+        op = "%-" + t[-1]
+        gv.minusFlag = False
+    else:
+        op = "%" + t[-1]
     #PilaOp.append(t[-1])
     PilaOp.append(op)
     PTypes.append("float")

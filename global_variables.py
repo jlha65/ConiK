@@ -16,4 +16,5 @@ class global_variables:
         self.nextModule = "" #next module to be visited, used for PARAM OpCode
         self.currentArrAddress = 0
         self.currentArrAddressL = 0
+        self.minusFlag = False # Para numeros negativos
 gv = global_variables()
