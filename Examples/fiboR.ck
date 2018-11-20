@@ -1,6 +1,6 @@
 program fibo;
 var int a[7];
-    int b[5][7];
+    #int b[5][7];
     int c;
     int d;
 
@@ -42,6 +42,6 @@ var int n3;
 {
     proc papa(0,1,1,10);
     a[4] = 2;
-    b[3][4] = 5;
-    print(b[3][4]);
+    #b[3][4] = 5;
+    #print(b[3][4]);
 }

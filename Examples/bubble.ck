@@ -1,9 +1,7 @@
 program bubble;
 var int i;
     int j;
-    #int temp;
     float temp;
-    #int a[10];
     float a[10];
 
 {

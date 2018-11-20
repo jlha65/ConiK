@@ -27,10 +27,10 @@ var int i1;
 
     #e6 ~ x&2+y&2=4;
  
-    print(p1.focus);
-    print(c2.radius);
-    print(e3.exc);
-    print(h4.vertex);
+    # print(p1.focus);
+    # print(c2.radius);
+    # print(e3.exc);
+    # print(h4.vertex);
     print(i);
     print(j);
     print(4+3);
@@ -41,7 +41,7 @@ var int i1;
         print("holy shit this works \n");
     } else {
         if(3>3.2) {
-            p1.translate(4*2);
+            # p1.translate(4*2);
         }
         plot(e3);
     }
@@ -62,9 +62,9 @@ var int i1;
         }
     }
     print("FIN");
-    plot(p1);
-    plot(c2);
-    plot(e3);
-    plot(h4);
+    # plot(p1);
+    # plot(c2);
+    # plot(e3);
+    # plot(h4);
 }
 
