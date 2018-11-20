@@ -33,6 +33,7 @@ reserved = {
 	'green' : 'GREEN_KEYWORD',
 	'blue' : 'BLUE_KEYWORD',
 	'purple' : 'PURPLE_KEYWORD',
+    'black' : 'BLACK_KEYWORD',
 	'reflection' : 'REFLECTION_KEYWORD',
 	'translate' : 'TRANS_KEYWORD',
 	'rotation' : 'ROTATION_KEYWORD',
@@ -379,8 +380,8 @@ def p_ASSIGN(t):
     result_Type = sem_cube[operators_dict["="]][var_types_dict[symtab.get_return_type(gv.currentScope,t[1])]][var_types_dict[lastType]] #Check if the assign is valid
     if result_Type != -1 :
         #address = symtab.get_var_address(gv.currentScope,t[1])
-        print("IDDDDDDDDD:")
-        print(gv.currentArrAddressL)
+        # print("IDDDDDDDDD:")
+        # print(gv.currentArrAddressL)
         #quad = ["=",PilaOp.pop(),[],gv.currentArrAddressL]
         if not PAssign:
             quad = ["=",PilaOp.pop(),[],gv.currentArrAddressL]
@@ -407,38 +408,417 @@ def p_ASSIGN_S(t):
     'ASSIGN_S :'
     #print(t[-1])
     #Only for circles, in the future must check for other equations
-    if verifyEquationCircle(t[-1]):
-        PilaOp.append(t[-1])
+    if symtab.get_return_type(gv.currentScope, t[-4]) == "circle":
+        if verifyEquationCircle(t[-1]):
+            PilaOp.append(t[-1])
+            saveCircleEqValues(t[-1])
+        else:
+            raise Exception("Error: invalid circle syntax")
+    elif symtab.get_return_type(gv.currentScope, t[-4]) == "ellipse":
+        if verifyEquationEllipse(t[-1]):
+            PilaOp.append(t[-1])
+            saveEllipseEqValues(t[-1])
+        else:
+            raise Exception("Error: invalid ellipse syntax")
+    elif symtab.get_return_type(gv.currentScope, t[-4]) == "parabola":
+        if verifyEquationParabola(t[-1]):
+            PilaOp.append(t[-1])
+            saveParabolaEqValues(t[-1])
+        else:
+            raise Exception("Error: invalid ellipse syntax")
+    elif symtab.get_return_type(gv.currentScope, t[-4]) == "hyperbola":
+        if verifyEquationHyperbola(t[-1]):
+            PilaOp.append(t[-1])
+            saveHyperbolaEqValues(t[-1])
+        else:
+            raise Exception("Error: invalid hyperbola syntax")
+
+def saveCircleEqValues(circleEquation):
+    #Sanitize the input removing spaces and the string 
+    circleEquation = circleEquation.replace(" ", "")
+    circleEquation = circleEquation.replace("\"", "")
+    A=""
+    B=""
+    R=""
+    i = 0
+    j = 0
+    #A*X^2 + B*Y^2 = R
+    #Where A=B
+    for x in circleEquation:
+        if x == "X" or x == "x":
+            A= circleEquation[:i]
+            j = i+4
+        elif x == "Y" or x == "y":
+            B = circleEquation[j:i]
+            j = i + 4
+            R = circleEquation[j:]
+        i = i + 1
+    if A == "":
+        A = "1"
+    if B == "":
+        B = "1"
+    print(A)
+    print(B)
+    print(R)
+
+    size = 1
+
+    #Check type of A, B and R for adding in the symbol table
+    if "." in A:
+        AType = "float"
     else:
-        raise Exception("Error: invalid circle syntax")
+        AType = "int"
+    if "." in B:
+        BType = "float"
+    else:
+        BType = "int"
+    if "." in R:
+        RType = "float"
+    else:
+        RType = "int"
+
+    #For A value of circle equation
+    if mem.checkSizeAvail(size, "circle", "TEMP") :
+        result = mem.nextAvail(4) #4 = circle
+        #memAddress = mem.add_var("circle", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"A",AType, size, result)
+        quad = ["=", "%"+A , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
     
+    #For B value of circle equation
+    if mem.checkSizeAvail(size, "circle", "TEMP") :
+        result = mem.nextAvail(4) #4 = circle
+        #memAddress = mem.add_var("circle", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"B",BType, size, result)
+        quad = ["=", "%"+B , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+
+    #For R value of circle equation
+    if mem.checkSizeAvail(size, "circle", "TEMP") :
+        result = mem.nextAvail(4) #4 = circle
+        #memAddress = mem.add_var("circle", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"R",RType, size, result)
+        quad = ["=", "%"+R , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")      
+
 def verifyEquationCircle(equation):
     #equation = equation.replace(" ", "")
     print(equation)
-    #A*X^2 + B*Y^2 = R
-    #Where A=B
     equation = equation[1:-1]
     print(equation)
-    if re.match(r'\s*x\s*\^\s*2\s*\+\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*', equation):
+    if re.match(r'\s*([0-9]+(\.[0-9]+)?)?\s*\s*x\s*\^\s*2\s*\+\s*([0-9]+(\.[0-9]+)?)?\s*y\s*\^\s*2\s*\=\s*([0-9]+(\.[0-9]+)?\s*)\s*', equation):
         return True
     else:
         return False
-    # A=""
-    # B=""
+
+def saveParabolaEqValues(parabolaEquation):
+    #Sanitize the input removing spaces and the string 
+    parabolaEquation = parabolaEquation.replace(" ", "")
+    parabolaEquation = parabolaEquation.replace("\"", "")
+    print("parabolaaaaaaaaa: ")
+    print(parabolaEquation)
+    A=""
+    B=""
+    C=""
+    i = 0
+    j = 0
+    #Y = A*X^2 + B*x + C
+    flagCasita = False
+    for x in parabolaEquation:
+        if x == "=":
+            j = i + 1
+        elif x == "^":
+            A = parabolaEquation[j:i-1]
+            j = i + 3
+            flagCasita = True
+        elif (x == "X" or x == "x") and flagCasita:
+            if parabolaEquation[j-1] == "-":
+                B = B + "-"
+            B = B + parabolaEquation[j:i]
+            j = i + 1
+            C = parabolaEquation[j:]
+        i = i + 1
+    
+    if A == "":
+        A = "1"
+    if B == "":
+        B = "1"
+    if C == "":
+        C = "1"
+    print(A)
+    print(B)
+    print(C)
+
+    size = 1
+
+    #Check type of A, B and C for adding in the symbol table
+    if "." in A:
+        AType = "float"
+    else:
+        AType = "int"
+    if "." in B:
+        BType = "float"
+    else:
+        BType = "int"
+    if "." in C:
+        CType = "float"
+    else:
+        CType = "int"
+
+    #For A value of parabola equation
+    if mem.checkSizeAvail(size, "parabola", "TEMP") :
+        result = mem.nextAvail(3) #3 = parabola
+        #memAddress = mem.add_var("parabola", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"A",AType, size, result)
+        quad = ["=", "%"+A , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+    
+    #For B value of parabola equation
+    if mem.checkSizeAvail(size, "parabola", "TEMP") :
+        result = mem.nextAvail(3) #3 = parabola
+        #memAddress = mem.add_var("parabola", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"B",BType, size, result)
+        quad = ["=", "%"+B , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+
+    #For C value of parabola equation
+    if mem.checkSizeAvail(size, "parabola", "TEMP") :
+        result = mem.nextAvail(3) #3 = parabola
+        #memAddress = mem.add_var("parabola", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"C",CType, size, result)
+        quad = ["=", "%"+C , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")      
+
+def verifyEquationParabola(equation):
+    #equation = equation.replace(" ", "")
+    print(equation)
+    equation = equation[1:-1]
+    print(equation)
+    if re.match(r'\s*y\s*\=\s*[-+]?([0-9]+(\.[0-9]+)?)?\s*x\s*\^\s*2\s*[+-]\s*([0-9]+(\.[0-9]+)?)?\s*x\s*[-+]\s*([0-9]+(\.[0-9]+)?)?\s*', equation):
+        return True
+    else:
+        return False
+
+def saveEllipseEqValues(ellipseEquation):
+    #Sanitize the input removing spaces and the string 
+    ellipseEquation = ellipseEquation.replace(" ", "")
+    ellipseEquation = ellipseEquation.replace("\"", "")
+    A=""
+    B=""
+    R=""
+    i = 0
+    j = 0
+    #X^2/A^2 + Y^2/B^2 = R
+    #Where A=B
+    for x in ellipseEquation:
+        if x == "/":
+            j = i + 1
+        elif x == "+":
+            A= ellipseEquation[j:i]
+            j = i+5
+        elif x == "=":
+            B = ellipseEquation[j:i]
+            j = i + 1
+            R = ellipseEquation[j:]
+        i = i + 1
+    if A == "":
+        A = "1"
+    if B == "":
+        B = "1"
+    print(A)
+    print(B)
+    print(R)
+
+    size = 1
+
+    #Check type of A, B and R for adding in the symbol table
+    if "." in A:
+        AType = "float"
+    else:
+        AType = "int"
+    if "." in B:
+        BType = "float"
+    else:
+        BType = "int"
+    if "." in R:
+        RType = "float"
+    else:
+        RType = "int"
+
+    #For A value of circle equation
+    if mem.checkSizeAvail(size, "ellipse", "TEMP") :
+        result = mem.nextAvail(5) #5 = ellipse
+        #memAddress = mem.add_var("circle", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"A",AType, size, result)
+        quad = ["=", "%"+A , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+    
+    #For B value of circle equation
+    if mem.checkSizeAvail(size, "ellipse", "TEMP") :
+        result = mem.nextAvail(5) #5 = ellipse
+        #memAddress = mem.add_var("circle", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"B",BType, size, result)
+        quad = ["=", "%"+B , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+
+    #For R value of ellipse equation
+    if mem.checkSizeAvail(size, "ellipse", "TEMP") :
+        result = mem.nextAvail(5) #5 = ellipse
+        #memAddress = mem.add_var("circle", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"R",RType, size, result)
+        quad = ["=", "%"+R , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")        
+
+def verifyEquationEllipse(equation):
+    #equation = equation.replace(" ", "")
+    print(equation)
+    equation = equation[1:-1]
+    print(equation)
+    if re.match(r'\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*', equation):
+        return True
+    else:
+        return False
+
+def saveHyperbolaEqValues(hyperbolaEquation):
+    #Sanitize the input removing spaces and the string 
+    hyperbolaEquation = hyperbolaEquation.replace(" ", "")
+    hyperbolaEquation = hyperbolaEquation.replace("\"", "")
+    A=""
+    B=""
     # R=""
-    # i = 0
-    # j = 0
-    # flagA = False
-    # flagB = False
-    # for x in equation:
-    #     if x == "X" or x == "x" and not flagA:
-    #         A= equation[:i]
-    #         j = i+4 #save position for next substring (B)
-    #         flagA = True
-    #         if equation[i] != "^" or equation[i+1] != "2":
-    #             return False
-    #     elif if x == "Y" or x == "y" and not flagB:
-    #     i = i + 1
+    i = 0
+    j = 0
+    #X^2/A^2 - Y^2/B^2 = 1
+    # OR
+    #-X^2/A^2 + Y^2/B^2 = 1
+    print("before marranadas: "+hyperbolaEquation)
+    if hyperbolaEquation[0] == "+":
+        A = "+"
+    elif hyperbolaEquation[0] == "-":
+        A = "-"
+
+    for x in hyperbolaEquation:
+        if x == "/":
+            j = i + 1
+        elif x == "Y" or x == "y":
+            A = A + hyperbolaEquation[j:i-1]
+            #Take sign of B
+            #print(hyperbolaEquation[i-1])
+            if hyperbolaEquation[i-1] == "+":
+                B = "+"
+            elif hyperbolaEquation[i-1] == "-":
+                B = "-"
+            j = i + 4
+        elif x == "=":
+            B = B + hyperbolaEquation[j:i]
+            j = i + 1
+            # R = hyperbolaEquation[j:]
+        i = i + 1
+    print("Hyperbola A: "+A)
+    print("Hyperbola B: "+B)
+    if A == "" or A == "+":
+        A = "1"
+    elif A == "-":
+        A = "-1"
+    if B == "" or B == "+":
+        B = "1"
+    elif B == "-":
+        B = "-1"
+    print(A)
+    print(B)
+    # print(R)
+
+    size = 1
+
+    #Check type of A, B and R for adding in the symbol table
+    if "." in A:
+        AType = "float"
+    else:
+        AType = "int"
+    if "." in B:
+        BType = "float"
+    else:
+        BType = "int"
+    # if "." in R:
+    #     RType = "float"
+    # else:
+    #     RType = "int"
+
+    if (A[0] == "-" and B[0] == "-") or (A[0] != "-" and B[0] != "-"):
+        #checks that signs are opposite
+        #if (A > 0 and B > 0) or (A < 0 and B > 0):
+        raise Exception("Invalid Hyperbola Syntax")
+
+    #For A value of hyperbola equation
+    if mem.checkSizeAvail(size, "hyperbola", "TEMP") :
+        result = mem.nextAvail(6) #6 = hyperbola
+        #memAddress = mem.add_var("hyperbola", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"A",AType, size, result)
+        quad = ["=", "%"+A , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+    
+    #For B value of hyperbola equation
+    if mem.checkSizeAvail(size, "hyperbola", "TEMP") :
+        result = mem.nextAvail(6) #6 = hyperbola
+        #memAddress = mem.add_var("hyperbola", None, size, gv.currentScope)
+        symtab.add_variable(gv.currentScope,"#"+gv.currentId+"B",BType, size, result)
+        quad = ["=", "%"+B , [], result]
+        gv.quadList.append(quad)
+        gv.quadCount += 1
+    else :
+        raise Exception("Memory size exceeded in variables declaration")
+
+    # #For R value of hyperbola equation
+    # if mem.checkSizeAvail(size, "hyperbola", "TEMP") :
+    #     result = mem.nextAvail(6) #6 = hyperbola
+    #     #memAddress = mem.add_var("hyperbola", None, size, gv.currentScope)
+    #     symtab.add_variable(gv.currentScope,"#"+gv.currentId+"R",RType, size, result)
+    #     quad = ["=", "%"+R , [], result]
+    #     gv.quadList.append(quad)
+    #     gv.quadCount += 1
+    # else :
+    #     raise Exception("Memory size exceeded in variables declaration")  
+
+def verifyEquationHyperbola(equation):
+    #equation = equation.replace(" ", "")
+    print(equation)
+    equation = equation[1:-1]
+    print(equation)
+    #\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\+\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*
+    if re.match(r'\s*[+-]?\s*x\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)[+-]\s*y\s*\^\s*2\s*\/\s*([0-9]+(\.[0-9]+)?\s*)\=\s*1\s*', equation):
+        return True
+    else:
+        return False
 
 def p_ASSIGN0D(t):
     'ASSIGN0D :'
@@ -448,8 +828,7 @@ def p_ASSIGN1D(t):
     'ASSIGN1D :'
     #print(t[-4])
     gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,t[-4])
-    print("KYC VIEJO LESBIANO")
-    print(gv.currentArrAddressL)
+    # print(gv.currentArrAddressL)
     #print(gv.currentArrAddress)
     #symtab.get_var_address(gv.currentScope,t[-1])
     #print("arr1d " + str(gv.currentArrAddress))
@@ -469,13 +848,14 @@ def p_ASSIGN1D(t):
     else:
         raise Exception("Array Index must be an integer")
 
-    if gv.currentArrAddress < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddress < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddress < mem.memorySize*7:
+    if gv.currentArrAddressL < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddressL < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddressL < mem.memorySize*7:
         rType = "int"
-    elif mem.memorySize <= gv.currentArrAddress < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddress < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddress < mem.memorySize*8:
+    elif mem.memorySize <= gv.currentArrAddressL < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddressL < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddressL < mem.memorySize*8:
         rType = "float"
-    elif mem.memorySize*2 <= gv.currentArrAddress < mem.memorySize*3 or mem.memorySize*5 <= gv.currentArrAddress < mem.memorySize*6 or mem.memorySize*8 <= gv.currentArrAddress < mem.memorySize*9:
+    elif mem.memorySize*2 <= gv.currentArrAddressL < mem.memorySize*3 or mem.memorySize*5 <= gv.currentArrAddressL < mem.memorySize*6 or mem.memorySize*8 <= gv.currentArrAddressL < mem.memorySize*9:
         rType = "bool"
     result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict[rType]]
+    #print(result_Type)
     #Create a new temp variable for use in the '+' quad just below
     if mem.checkSizeAvail(1, result_Type, "TEMP"):
         result = mem.nextAvail(result_Type)
@@ -504,9 +884,9 @@ def p_ASSIGN1D(t):
     # gv.quadList.append(quad)
     # gv.quadCount += 1
 
-    #Finally assign the temporal variable that has the array access
+    # Finally assign the temporal variable that has the array access
     
-    ############################################################################
+    # ###########################################################################
     # result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
     # if mem.checkSizeAvail(1, result_Type, "TEMP"):
     #     result = mem.nextAvail(result_Type)
@@ -550,32 +930,39 @@ def p_ASSIGN1D(t):
     # quad = ["VER",pos,[],symtab.get_size(gv.currentScope,t[-4])]
     # gv.quadList.append(quad)
     # gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
-    ############################################################################
+    # ###########################################################################
 
 def p_ASSIGN2D(t):
     'ASSIGN2D :'
     gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,gv.currentId)
     #symtab.get_var_address(gv.currentScope,t[-1])
     #print("arr1d " + str(gv.currentArrAddress))
+    #ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET ASSIGN2D EQUALOP EXPRESSION SEMICOLON
+    gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,t[-7])
+    print(gv.currentArrAddressL)
     index2 = PilaOp.pop()
     index1 = PilaOp.pop()
     tipo2 = PTypes.pop()
     tipo1 = PTypes.pop()
     #PTypes.append(tipo)#regresar el tipo a la pila
     if tipo1 == "int":
-        if isinstance(index1,str):
-            if index1[0] == '%':
-                index1 = getCons(index1[1:])
-                print("index1: " + str(index1))
+        # if isinstance(index1,str):
+        #     if index1[0] == '%':
+        #         index1 = getCons(index1[1:])
+        #         print("index1: " + str(index1))
+        print("index1: " + str(index1))
     else:
         raise Exception("Array Index must be an integer")
     if tipo2 == "int":
-        if isinstance(index2,str):
-            if index2[0] == '%':
-                index2 = getCons(index2[1:])
-                print("index2: " + str(index2))
+        # if isinstance(index2,str):
+        #     if index2[0] == '%':
+        #         index2 = getCons(index2[1:])
+        #         print("index2: " + str(index2))
+        print("index2: " + str(index2))
     else:
         raise Exception("Array Index must be an integer")
+
+    
 
     gv.currentArrAddressL = gv.currentArrAddressL + index1*symtab.get_dims2(gv.currentScope,gv.currentId) + index2
     print("address d2: " + str(gv.currentArrAddressL))
@@ -739,7 +1126,10 @@ def p_COLOR(t):
 			| YELLOW_KEYWORD
 			| GREEN_KEYWORD
 			| BLUE_KEYWORD
-			| PURPLE_KEYWORD'''
+			| PURPLE_KEYWORD
+            | BLACK_KEYWORD'''
+    #print("color: ")
+    gv.plotColor = t[1]
 			
 def p_WRITE(t):
     '''WRITE : PRINT
@@ -799,11 +1189,29 @@ def p_WHILE_paso3(t):
         
 	
 def p_PLOT(t):
-    '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID COMMA COLOR CLOSE_PARENTHESES SEMICOLON
-            | PLOT_KEYWORD OPEN_PARENTHESES ID CLOSE_PARENTHESES SEMICOLON'''
-    quad = ["PLOT",[],t[3],t[5]]
-    gv.quadList.append(quad)
-    gv.quadCount = gv.quadCount + 1
+    '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID save_name COMMA COLOR flagColor CLOSE_PARENTHESES SEMICOLON
+            | PLOT_KEYWORD OPEN_PARENTHESES ID save_name CLOSE_PARENTHESES SEMICOLON'''
+    print("plot id: ")
+    #address = symtab.get_var_address(gv.currentScope,gv.currentId)
+    address = symtab.get_var_address(gv.currentScope,gv.plotName)
+    if mem.memorySize*11 <= address < mem.memorySize*19:
+        if gv.flagColor:
+            quad = ["PLOT",address,gv.plotColor,[]]
+            gv.flagColor = False
+        else:
+            quad = ["PLOT",address,[],[]]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    else:
+        raise Exception("ERROR: PLOT needs Parabola, Circle, Ellipse or Hyperbola input.")
+
+def p_save_name(t):
+    'save_name :'
+    gv.plotName = t[-1]
+
+def p_flagColor(t):
+    'flagColor :'
+    gv.flagColor = True
 	
 def p_TRANSFORM(t):
     '''TRANSFORM : REFLECTION_KEYWORD
@@ -1232,7 +1640,15 @@ def p_arrCall1(t):
         if pos[0] == '%':
             pos = getCons(pos[1:])
             print("pos: " + str(pos))
-    result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    if gv.currentArrAddress < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddress < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddress < mem.memorySize*7:
+        rType = "int"
+    elif mem.memorySize <= gv.currentArrAddress < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddress < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddress < mem.memorySize*8:
+        rType = "float"
+    elif mem.memorySize*2 <= gv.currentArrAddress < mem.memorySize*3 or mem.memorySize*5 <= gv.currentArrAddress < mem.memorySize*6 or mem.memorySize*8 <= gv.currentArrAddress < mem.memorySize*9:
+        rType = "bool"
+    
+    #result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict[rType]]
     if mem.checkSizeAvail(1, result_Type, "TEMP"):
         result = mem.nextAvail(result_Type)
         #print("simon wey " + str(result))

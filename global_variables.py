@@ -17,4 +17,7 @@ class global_variables:
         self.currentArrAddress = 0
         self.currentArrAddressL = 0
         self.minusFlag = False # Para numeros negativos
+        self.flagColor = False #Para el plot, color o no?
+        self.plotName = "" #Para el plot, guarda nombre
+        self.plotColor = "" #Para plot, guarda el color
 gv = global_variables()

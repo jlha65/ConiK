@@ -3,6 +3,11 @@ from semantics_cube import sem_cube
 from semantics_cube import operators_dict
 from semantics_cube import var_types_dict
 from global_variables import gv
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+from matplotlib.patches import Ellipse
+import math
 #counter = 0
 memorySize = 15000
 memory = memx
@@ -62,8 +67,11 @@ def run(quadList, symtab, mem) :
             memory.save(ACC(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'VER':
             VER(quadList[gv.counterVm][1],quadList[gv.counterVm][3])
+        elif quadList[gv.counterVm][0] == 'PLOT':
+            PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab)            
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
+            # plt.show()
         gv.counterVm = gv.counterVm + 1
     print(memory.print())
 
@@ -346,6 +354,118 @@ def VER(a,b):
         raise Exception("ERROR: Negative array index")
     if a >= b:
         raise Exception("ERROR: Index out of bounds")
+
+def PLOT(conicSection, color, symtab):
+    print(color)
+    if not isinstance(color, str):
+        color = "black"
+    # equation = memory.access(conicSection)
+    id = symtab.get_var_name(conicSection)
+    #Parabola plot, check if ID is in the memory ranges for parabola
+    if memory.memorySize*11 <= conicSection < memory.memorySize*12 or memory.memorySize*15 <= conicSection < memory.memorySize*16:
+        idScope = symtab.get_scope(conicSection)
+        A = symtab.get_var_address(idScope,"#" + id + "A")
+        B = symtab.get_var_address(idScope,"#" + id + "B")
+        C = symtab.get_var_address(idScope,"#" + id + "C")
+
+        A = memory.access(A)
+        B = memory.access(B)
+        C = memory.access(C)
+
+        axes()
+        parabola = createParabola(A, B, C, color)
+        # addPlot(parabola)
+    #Ellipse plot, check if ID is in the memory ranges for Ellipse
+    elif memory.memorySize*12 <= conicSection < memory.memorySize*13 or memory.memorySize*16 <= conicSection < memory.memorySize*17:
+        idScope = symtab.get_scope(conicSection)
+        A = symtab.get_var_address(idScope,"#" + id + "A")
+        B = symtab.get_var_address(idScope,"#" + id + "B")
+        R = symtab.get_var_address(idScope,"#" + id + "R")
+
+        A = memory.access(A)
+        B = memory.access(B)
+        R = memory.access(R)
+
+        ellipse = createEllipse(A, B, R, color)
+        axes()
+        addPlot(ellipse)
+    #Hyperbola plot, check if ID is in the memory ranges for Hyperbola
+    elif memory.memorySize*13 <= conicSection < memory.memorySize*14 or memory.memorySize*17 <= conicSection < memory.memorySize*18:
+        idScope = symtab.get_scope(conicSection)
+        A = symtab.get_var_address(idScope,"#" + id + "A")
+        B = symtab.get_var_address(idScope,"#" + id + "B")
+
+        A = memory.access(A)
+        B = memory.access(B)
+
+        axes()
+        hyperbola = createHyperbola(A, B, color)
+    #Circle plot, check if ID is in the memory ranges for Circle
+    elif memory.memorySize*14 <= conicSection < memory.memorySize*15 or memory.memorySize*18 <= conicSection < memory.memorySize*19:
+        idScope = symtab.get_scope(conicSection)
+        A = symtab.get_var_address(idScope,"#" + id + "A")
+        B = symtab.get_var_address(idScope,"#" + id + "B")
+        R = symtab.get_var_address(idScope,"#" + id + "R")
+
+        A = memory.access(A)
+        B = memory.access(B)
+        R = memory.access(R)
+
+        circle = createCircle(A, B, R, color)
+        axes()
+        addPlot(circle)
+    #This shouldn't happen, since semantics validation for receiving a plottable conic section is done in the parser
+    else:
+        raise Exception("Fatal error, not a conic section")
+
+def createEllipse(A, B, R, color):
+    ellipse = Ellipse(xy=(0,0), width = A, height = B, edgecolor = color, fc = "None")
+    return ellipse
+
+def createCircle(A, B, R, color):
+    R = math.sqrt(R)
+    circle = plt.Circle((0, 0), R, edgecolor=color, fc = 'None')
+    return circle
+
+def createParabola(A, B, C, color):
+    #Using code from https://mmas.github.io/conics-matplotlib, but modified for parabola general form usage
+
+    mpl.rcParams['lines.color'] = 'k'
+    mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
+
+    x = np.linspace(-90, 90, 400)
+    y = np.linspace(-50, 50, 400)
+    x, y = np.meshgrid(x, y)
+
+    axes()
+    plt.contour(x, y, (A*x**2 + B*x + C - y ), [0], colors=color)
+    plt.show()
+
+def createHyperbola(A, B, color):
+    #From https://mmas.github.io/conics-matplotlib
+    mpl.rcParams['lines.color'] = 'k'
+    mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
+
+    x = np.linspace(-90, 90, 400)
+    y = np.linspace(-50, 50, 400)
+    x, y = np.meshgrid(x, y)
+
+    #Draw hyperbola in standard position (0,0 center)
+    axes()
+    #Only one of A or B must be negative, we rely on semantics from parser for that
+    plt.contour(x, y,(x**2/A + y**2/B), [1], colors=color)
+    plt.show()
+
+def addPlot(patch):
+	ax=plt.gca()
+	ax.add_patch(patch)
+	plt.axis('scaled')
+	plt.show()
+
+#Plot the origin axes
+def axes():
+        plt.axhline(0, alpha=.1)
+        plt.axvline(0, alpha=.1)
 
 def getCons(x):
     if "." in x:

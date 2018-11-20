@@ -107,3 +107,15 @@ def get_dims1(scope,id):
 	return SYM_TABLE[scope][id]["#dim1"]
 def get_dims2(scope,id):
 	return SYM_TABLE[scope][id]["#dim2"]
+
+def get_scope(address):
+	for x,y in SYM_TABLE.items():
+		for w,z in y.items():
+			if z["#address"] == address:
+				return x
+
+def get_var_name(address):
+	for x,y in SYM_TABLE.items():
+		for w,z in y.items():
+			if z["#address"] == address:
+				return w

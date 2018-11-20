@@ -213,15 +213,27 @@ class mem:
             print("jeje equis de")
     
     def nextAvail(self, data_type):
-        if data_type == 0: #Int
+        if data_type == 0: #int
             self.tiCont += 1
             return self.tiCont - 1
-        elif data_type == 1: #Float
+        elif data_type == 1: #float
             self.tfCont += 1
             return self.tfCont - 1   
-        elif data_type == 2: #Bool
+        elif data_type == 2: #bool
             self.tbCont += 1
             return self.tbCont - 1
+        elif data_type == 3: #parabola
+            self.tpCont += 1
+            return self.tpCont - 1
+        elif data_type == 4: #circle
+            self.tcCont += 1
+            return self.tcCont - 1
+        elif data_type == 5: #ellipse
+            self.teCont += 1
+            return self.teCont - 1
+        elif data_type == 6: #hyperbola
+            self.thCont += 1
+            return self.thCont - 1
 
     def save(self,value,address):
         #print("value: " + str(value))
