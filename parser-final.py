@@ -263,7 +263,7 @@ def p_G(t):
             | CLOSE_BRACKET'''
 
 def p_STATEMENT(t):
-    '''STATEMENT : EXPRESSION_OP
+    '''STATEMENT : EXPRESSION_BOOL
             | ASSIGN
 			| WRITE
 			| FOR_LOOP
@@ -719,6 +719,7 @@ def p_ASSIGN1D(t):
 
     PAssign.append(result)
 
+#To be completed: Arrays 2D
 def p_ASSIGN2D(t):
     'ASSIGN2D :'
     gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,gv.currentId)
@@ -810,7 +811,7 @@ def p_forJump(t):
     PJumps.append(gv.quadCount - 1)
 	
 def p_MODULE(t):
-    'MODULE : ID modDef_paso1 OPEN_PARENTHESES I'
+    'MODULE : ID modDef_paso1 OPEN_PARENTHESES I'   
 
 def p_modDef_paso1(t):
     'modDef_paso1 :'
@@ -886,7 +887,7 @@ def p_M(t):
     gv.quadCount = gv.quadCount + 1
 
 def p_MM(t):
-    '''MM : EXPRESSION_OP CLOSE_PARENTHESES SEMICOLON'''
+    '''MM : EXPRESSION_BOOL CLOSE_PARENTHESES SEMICOLON'''
     if len(PTypes) > 0 :
         PTypes.pop()
         temp = PilaOp.pop()
@@ -980,8 +981,8 @@ def p_endif(t):
     end = PJumps.pop()
     gv.quadList[end][3] = gv.quadCount
 			
-def p_EXPRESSION_OP(t):
-    '''EXPRESSION_OP : EXPRESSION_BOOL'''
+# def p_EXPRESSION_OP(t):
+#     '''EXPRESSION_OP : EXPRESSION_BOOL'''
 
 def p_EXPRESSION_BOOL(t):
     '''EXPRESSION_BOOL : EXPRESSION paso2bool BBB
@@ -1062,6 +1063,12 @@ def p_pasoNotBool(t):
 def p_EXPRESSION(t):
     '''EXPRESSION : EXP RELOP paso8 EXP paso9
             | EXP'''
+# def p_EXPRESSION(t):
+#     '''EXPRESSION : EXP paso9 RRR
+#             | EXP paso9'''
+
+# def p_RRR(t):
+#     'RRR : RELOP paso8 EXPRESSION'
 
 def p_paso8(t):
     'paso8 :'
@@ -1254,17 +1261,20 @@ def p_paso1d(t):
 			
 def p_S(t):
     '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall1
-            | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET
-			| modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
+            | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET'''
+			# | modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
 
 def p_arrCall1(t):
     'arrCall1 :'
     gv.currentArrAddress = symtab.get_var_address(gv.currentScope,t[-4])
     pos = PilaOp.pop()
     posType = PTypes.pop()
+    posFlag = False #check if pos is a constant
     if isinstance(pos,str):
         if pos[0] == '%':
             pos = getCons(pos[1:])
+            posFlag = True
+
     if gv.currentArrAddress < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddress < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddress < mem.memorySize*7:
         rType = "int"
     elif mem.memorySize <= gv.currentArrAddress < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddress < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddress < mem.memorySize*8:
@@ -1280,7 +1290,7 @@ def p_arrCall1(t):
         raise Exception("Ran out of memory")
     #address1
     left_op = "%" + str(gv.currentArrAddress)
-    if mem.memorySize*6 <= pos < mem.memorySize*9 or pos == symtab.get_var_address(gv.currentScope,gv.currentId):
+    if (mem.memorySize*6 <= pos < mem.memorySize*9 or pos == symtab.get_var_address(gv.currentScope,gv.currentId)) and not posFlag:
         quad = ["+",left_op,pos,result]
     else:
         quad = ["+",left_op,"%" + str(pos),result]
@@ -1302,18 +1312,23 @@ def p_arrCall1(t):
         PTypes.append("float")
     elif result_Type == 2:
         PTypes.append("bool")
-    quad = ["VER",pos,[],symtab.get_size(gv.currentScope,t[-4])]
+    
+    if posFlag:
+        x = 1
+    else:
+        x = []
+    quad = ["VER",pos,x,symtab.get_size(gv.currentScope,t[-4])]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
 
 
-def p_SS(t):
-    '''SS : EXP modCall_paso3 SSS
-            | EXP modCall_paso3 COMMA modCall_paso4 SS
-			| SSS'''
+# def p_SS(t):
+#     '''SS : EXP modCall_paso3 SSS
+#             | EXP modCall_paso3 COMMA modCall_paso4 SS
+# 			| SSS'''
 
-def p_SSS(t):
-    '''SSS : modCall_paso5 CLOSE_PARENTHESES modCall_paso6'''
+# def p_SSS(t):
+#     '''SSS : modCall_paso5 CLOSE_PARENTHESES modCall_paso6'''
 
 def p_modCall_paso1(t):
     'modCall_paso1 :'

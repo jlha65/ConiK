@@ -3,8 +3,6 @@ import numpy as np
 num_var_types = 3
 num_operators = 14
 
-#semantics_cube = np.full([num_operators,num_var_types,num_var_types], -1)
-
 sem_cube = np.array([[[ 0,  1,  -1, -1, -1, -1, -1, -1],
         [ 1,  1,  -1, -1, -1, -1, -1, -1],
         [ -1,  -1,  -1, -1, -1, -1, -1, -1],
@@ -144,7 +142,7 @@ var_types_dict = {
 
 # The 3rd dimension will be: 
 
-# +   -   *   /   and   or   not   =   ==   ~   <   >   <>
+# +   -   *   /   and   or   not   =   ==   <   >   <>
 
 operators_dict = {
     #"PLUSOP" : 0,
@@ -169,9 +167,3 @@ operators_dict = {
     #"DIFFOP" : 11
 	"<>" : 11
 }
-
-#For '+'
-# sem_cube[var_types["int"]][var_types["int"]][operators["PLUSOP"]] = var_types["int"]
-
-
-#print(sem_cube)

@@ -61,7 +61,7 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'ACC':
             memory.save(ACC(quadList[gv.counterVm][1]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'VER':
-            VER(quadList[gv.counterVm][1],quadList[gv.counterVm][3])
+            VER(quadList[gv.counterVm][1],quadList[gv.counterVm][2],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'PLOT':
             PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab)            
         elif quadList[gv.counterVm][0] == 'END':
@@ -84,7 +84,6 @@ def GOTOV(condition, dir):
 
 def ERA(mod):
     gv.nextModule = mod
-    #print("jeje no hay ERA we xdXdxD")
 
 def PARAM(value, paramNum, symtab):
     for x,y in symtab.SYM_TABLE[gv.nextModule].items():
@@ -113,11 +112,16 @@ def PRINT(a):
 
 # B = A    #if 10000 <= number <= 30000:
 def EQUAL(a, b):
+    # print("Equal vm")
+    # print(type(a))
+    # print(a)
+    aisNum = False
     if isinstance(a,str):
         if a[0] == '%':
             a = getCons(a[1:])
     else:
         a = memory.access(a)
+        aisNum = True
     if isinstance(b,str):
         if b[0] == '%':
             b = getCons(b[1:])
@@ -127,15 +131,21 @@ def EQUAL(a, b):
         if memory.memorySize*6 <= b < memory.memorySize*9:
             b = memory.access(b)
         memory.save(a,b)
-    else:    
+    else:
         if memory.memorySize*6 <= b < memory.memorySize*9:
             memaux = memory.access(b)
             if memory.memorySize*6 <= a < memory.memorySize*9:
-                memory.save(memory.access(a),memaux)
+                if not aisNum:
+                    memory.save(memory.access(a),memaux)
+                else:
+                    memory.save(a,memaux)
             else :
                 memory.save(a,memaux)
         elif memory.memorySize*6 <= a < memory.memorySize*9:
-            memaux = memory.access(a)
+            if not aisNum:
+                memaux = memory.access(a)
+            else:
+                memaux = a
             if memory.memorySize*6 <= b < memory.memorySize*9:
                 memory.save(memaux,memory.access(b))
             else :
@@ -308,16 +318,24 @@ def NOT(a):
 def ACC(a):
     return memory.access(memory.access(a))
 
-def VER(a,b):
-    if memory.memorySize*6 <= a < memory.memorySize*9:
+def VER(a,x,b):
+    if isinstance(x,int):
+        if a < 0:
+            raise Exception("ERROR: Negative array index")
+        if a >= b:
+            raise Exception("ERROR: Index out of bounds")
+    elif memory.memorySize*6 <= a < memory.memorySize*9:
         a = memory.access(a)
-    if a < 0:
-        raise Exception("ERROR: Negative array index")
-    if a >= b:
-        raise Exception("ERROR: Index out of bounds")
+        # print(a)
+        if a < 0:
+            raise Exception("ERROR: Negative array index")
+        if a >= b:
+            raise Exception("ERROR: Index out of bounds")
 
+#The plot operation code receives 
 def PLOT(conicSection, color, symtab):
-    print(color)
+    print(symtab.SYM_TABLE)
+    #If no color is defined, then black is assigned
     if not isinstance(color, str):
         color = "black"
     id = symtab.get_var_name(conicSection)
@@ -361,6 +379,7 @@ def PLOT(conicSection, color, symtab):
         hyperbola = createHyperbola(A, B, color)
     #Circle plot, check if ID is in the memory ranges for Circle
     elif memory.memorySize*14 <= conicSection < memory.memorySize*15 or memory.memorySize*18 <= conicSection < memory.memorySize*19:
+        #The circle doesn't need the A and B values, just the R value for the radius.
         idScope = symtab.get_scope(conicSection)
         A = symtab.get_var_address(idScope,"#" + id + "A")
         B = symtab.get_var_address(idScope,"#" + id + "B")
@@ -377,21 +396,27 @@ def PLOT(conicSection, color, symtab):
     else:
         raise Exception("Fatal error, not a conic section")
 
+#Creates an ellipse object using parameters and returns it, it doesn't show the graph yet
 def createEllipse(A, B, R, color):
     ellipse = Ellipse(xy=(0,0), width = A, height = B, edgecolor = color, fc = "None")
     return ellipse
 
+#Creates a circle object using radius parameter and returns it, it doesn't show the graph yet
 def createCircle(A, B, R, color):
     R = math.sqrt(R)
     circle = plt.Circle((0, 0), R, edgecolor=color, fc = 'None')
     return circle
 
+#Creates a parabola and plots it, since there's no "Figure" for it we must calculate it by hand
 def createParabola(A, B, C, color):
     #Using code from https://mmas.github.io/conics-matplotlib, but modified for parabola general form usage
-
+    print("Creating parabola")
+    print(A)
+    print(B)
     mpl.rcParams['lines.color'] = 'k'
     mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
 
+    #This line is modifiable to change the range of the parabola plot.
     x = np.linspace(-90, 90, 400)
     y = np.linspace(-50, 50, 400)
     x, y = np.meshgrid(x, y)
@@ -400,32 +425,37 @@ def createParabola(A, B, C, color):
     plt.contour(x, y, (A*x**2 + B*x + C - y ), [0], colors=color)
     plt.show()
 
+#Creates a hyperbola and plots it, since there's no "Figure" for it we must calculate it by hand
 def createHyperbola(A, B, color):
     #From https://mmas.github.io/conics-matplotlib
     mpl.rcParams['lines.color'] = 'k'
     mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
 
+    #This line is modifiable to change the range of the hyperbola plot.
     x = np.linspace(-90, 90, 400)
     y = np.linspace(-50, 50, 400)
     x, y = np.meshgrid(x, y)
 
-    #Draw hyperbola in standard position (0,0 center)
     axes()
     #Only one of A or B must be negative, we rely on semantics from parser for that
+    #Draw hyperbola in standard position
     plt.contour(x, y,(x**2/A + y**2/B), [1], colors=color)
     plt.show()
 
+#Used for circles and ellipses, this function adds the figure to the current plot and shows it.
 def addPlot(patch):
 	ax=plt.gca()
 	ax.add_patch(patch)
+    #Make it so the width of the window scales with the size of the figure.
 	plt.axis('scaled')
 	plt.show()
 
-#Plot the origin axes
+#Plot the origin axes, with a bit of transparency (alpha)
 def axes():
         plt.axhline(0, alpha=.1)
         plt.axvline(0, alpha=.1)
 
+#Receives a string with a number on it, and returns either its float value (if float) or int value
 def getCons(x):
     if "." in x:
         return float(x)

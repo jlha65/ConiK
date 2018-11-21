@@ -1,15 +1,7 @@
 SYM_TABLE = dict()
 GLOBAL = dict()
 
-#cuScope = "GLOBAL"
-
-#lista de informacion de la variable
-#   name|type|params|scope|table
-
-
 SYM_TABLE["GLOBAL"] = GLOBAL
-
-#print(SYM_TABLE["global"])
 
 def add_variable(scope, id, data_type, size, address):
 	#print("Adding variable to var table: ")
@@ -79,7 +71,12 @@ def get_return_type(scope, id):
 		raise Exception("There is no \"" + id + "\" variable in this scope")
 
 def get_size(scope, id):
-	return SYM_TABLE[scope][id]["#size"]
+	if id in SYM_TABLE[scope]:
+		return SYM_TABLE[scope][id]["#size"]
+	elif id in SYM_TABLE["GLOBAL"]:
+		return SYM_TABLE["GLOBAL"][id]["#size"]
+	else:
+		raise Exception("There is no \"" + id + "\" variable in this scope")
 
 def mod_exist(scope):
 	if scope in SYM_TABLE:

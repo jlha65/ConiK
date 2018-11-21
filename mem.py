@@ -3,7 +3,7 @@
 class mem:
     
     #Size of the memory given to each of our lists
-    memorySize = 15000
+    memorySize = 100000
 
     #Constructor
     def __init__(self) :
@@ -229,7 +229,7 @@ class mem:
         self.memory[address] = value
 
     def access(self,address):
-        #print("access address: " + str(address))
+        # print("access address: " + str(address))
         return self.memory[address]
 
     def print(self):

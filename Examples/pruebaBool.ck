@@ -11,11 +11,11 @@ var int i;
     j = 2;
     #a[2] = 1;
     if((not i < 2) or j == 2){
-        print("jajaja asi es");
+        print("ESTE ES EL IF");
     }
     else
     {
-        print("nel paps");
+        print("ESTE ES EL ELSE");
     }
 
 }

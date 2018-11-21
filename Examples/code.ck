@@ -1,3 +1,5 @@
+#This program was used mostly for testing a bunch of stuff
+
 program prueba;
 var parabola p1;
     circle c2;
@@ -38,7 +40,7 @@ var int i1;
 
     #if(p1.area > c2.radius) {
     if(7 > 3) {
-        print("holy shit this works \n");
+        print("this works \n");
     } else {
         if(3>3.2) {
             # p1.translate(4*2);
@@ -47,7 +49,7 @@ var int i1;
     }
     for(i = 0 ; i < 5; i=i+1) {
         for(j = 0; j < 3; j=j+1) {
-            print("aaaa");
+            print("aaa");
             if(j <> i) {
                 print("lmao");
             } else {

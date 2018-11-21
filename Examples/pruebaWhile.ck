@@ -18,6 +18,4 @@ var int i;
         c = c + 1.3;
     }
     print("sale del while");
-    print("auxilio");
-    print("me desmayo");
 }
