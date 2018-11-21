@@ -1,13 +1,14 @@
-from mem import mem as memx
-from semantics_cube import sem_cube
-from semantics_cube import operators_dict
-from semantics_cube import var_types_dict
-from global_variables import gv
-import matplotlib.pyplot as plt
+import math
+
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Ellipse
-import math
+
+from global_variables import gv
+from mem import mem as memx
+from semantics_cube import operators_dict, sem_cube, var_types_dict
+
 #counter = 0
 memorySize = 15000
 memory = memx
@@ -15,16 +16,12 @@ memory = memx
 def run(quadList, symtab, mem) :                              
     print("Now in the VM")
     memory = mem
-    #print(quadList)
     finished = False
     while not finished:
-        #print(str(gv.counterVm) + " " + quadList[gv.counterVm][0])
         if quadList[gv.counterVm][0] == 'GOTO':
             GOTO(quadList[gv.counterVm][3])
-            # print(" Counter: " + str(gv.counterVm))
         elif quadList[gv.counterVm][0] == 'GOTOF':
             GOTOF(quadList[gv.counterVm][1], quadList[gv.counterVm][3])
-            # print("Gotof goes to " + str(quadList[gv.counterVm][3]))
         elif quadList[gv.counterVm][0] == 'GOTOV':
             GOTOV(quadList[gv.counterVm][1], quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'PRINT':
@@ -34,7 +31,6 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'PARAM':
             PARAM(quadList[gv.counterVm][1],quadList[gv.counterVm][3],symtab)
         elif quadList[gv.counterVm][0] == 'GOSUB':
-            #print(symtab.SYM_TABLE[quadList[gv.counterVm][1]])
             GOSUB(quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'ENDPROC':
             ENDPROC()
@@ -51,7 +47,6 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == '>':
             memory.save(MORETHAN(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '<':
-            # print(quadList[gv.counterVm])
             memory.save(LESSTHAN(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == '<>':
             memory.save(NOTEQUAL(quadList[gv.counterVm][1], quadList[gv.counterVm][2]),quadList[gv.counterVm][3])
@@ -71,7 +66,6 @@ def run(quadList, symtab, mem) :
             PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab)            
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
-            # plt.show()
         gv.counterVm = gv.counterVm + 1
     print(memory.print())
 
@@ -81,7 +75,6 @@ def GOTO(dir):
 def GOTOF(condition, dir):
     condition = memory.access(condition)
     if(not condition):
-        # print(" GOTOF Goes to: " + str(gv.counterVm))
         gv.counterVm = dir - 1
 
 def GOTOV(condition, dir):
@@ -95,9 +88,6 @@ def ERA(mod):
 
 def PARAM(value, paramNum, symtab):
     for x,y in symtab.SYM_TABLE[gv.nextModule].items():
-        #print(symtab.SYM_TABLE)
-        #print(symtab.SYM_TABLE[gv.nextModule])
-        #print(y)
         if y != "void":
             if y["#paramNum"] == paramNum:
                 if isinstance(value,str):
@@ -107,7 +97,6 @@ def PARAM(value, paramNum, symtab):
                     value = memory.access(value)
                 memory.save(value,y["#address"])
                 return
-                #return y["#address"]
 
 def GOSUB(dir):
     gv.currentQuad.append(gv.counterVm)
@@ -124,7 +113,6 @@ def PRINT(a):
 
 # B = A    #if 10000 <= number <= 30000:
 def EQUAL(a, b):
-    #print(b)
     if isinstance(a,str):
         if a[0] == '%':
             a = getCons(a[1:])
@@ -141,35 +129,19 @@ def EQUAL(a, b):
         memory.save(a,b)
     else:    
         if memory.memorySize*6 <= b < memory.memorySize*9:
-            #print("In equal left side, for arrays")
             memaux = memory.access(b)
-            #print(memaux)
             if memory.memorySize*6 <= a < memory.memorySize*9:
                 memory.save(memory.access(a),memaux)
-                #print("saved1 "+str(memory.access(a))+" in "+str(memaux))
             else :
                 memory.save(a,memaux)
-                #print("saved2 "+str(a)+" in "+str(memaux))
         elif memory.memorySize*6 <= a < memory.memorySize*9:
-            #print("In equal left side, for arrays")
             memaux = memory.access(a)
-            #print(memaux)
             if memory.memorySize*6 <= b < memory.memorySize*9:
                 memory.save(memaux,memory.access(b))
-                #print("saved3 "+str(memaux)+" in "+str(memory.access(b)))
             else :
                 memory.save(memaux,b)
-                #print("saved4 "+str(memaux)+" in "+str(b))
         else:
-            #if isinstance(a,str):
-                #if a[0] == '%':
-                    #a = getCons(a[1:])
-            #else:
-                #a = memory.access(a)
-            # print("Er " + str(b) + " = " + str(a))
             memory.save(a,b)
-            #print("saved "+str(a)+" in "+str(b))
-            #print(str(b) + " = " + str(a))
 
 def ADD(a, b):
     if isinstance(a,str):
@@ -183,7 +155,6 @@ def ADD(a, b):
             b = getCons(b[1:])
     else:
         b = memory.access(b)
-    #print(str(a) + " + " + str(b))
     return a + b
 
 def SUBSTRACT(a, b):
@@ -198,7 +169,6 @@ def SUBSTRACT(a, b):
             b = getCons(b[1:])
     else:
         b = memory.access(b)
-    #print(str(a) + " - " + str(b))
     return a - b
 
 def MULTIPLY(a, b):
@@ -213,7 +183,6 @@ def MULTIPLY(a, b):
             b = getCons(b[1:])
     else:
         b = memory.access(b)
-    #print(str(a) + " * " + str(b))
     return a * b
 
 def DIVIDE(a, b):
@@ -228,12 +197,9 @@ def DIVIDE(a, b):
             b = getCons(b[1:])
     else:
         b = memory.access(b)
-    #print(str(a) + " / " + str(b))
     if isinstance(a,float) or isinstance(b, float):
-        #print(a/b)
         return a / b
     else:
-        #print(a//b)
         return a//b
 
 def MORETHAN(a, b):
@@ -257,15 +223,12 @@ def LESSTHAN(a, b):
             a = getCons(a[1:])
     else:
         a = memory.access(a)
-        #print("aqui deberia salir la i: " + str(a))
     
     if isinstance(b,str):
         if b[0] == '%':
             b = getCons(b[1:])
     else:
         b = memory.access(b)
-    #print(str(a) + " < " + str(b))
-    # print(a<b)
     
     return a<b
 
@@ -343,8 +306,6 @@ def NOT(a):
     return not a
 
 def ACC(a):
-    #print("ACC"+str(a)+":")
-    #print(memory.access(memory.access(a)))
     return memory.access(memory.access(a))
 
 def VER(a,b):
@@ -359,7 +320,6 @@ def PLOT(conicSection, color, symtab):
     print(color)
     if not isinstance(color, str):
         color = "black"
-    # equation = memory.access(conicSection)
     id = symtab.get_var_name(conicSection)
     #Parabola plot, check if ID is in the memory ranges for parabola
     if memory.memorySize*11 <= conicSection < memory.memorySize*12 or memory.memorySize*15 <= conicSection < memory.memorySize*16:
@@ -374,7 +334,6 @@ def PLOT(conicSection, color, symtab):
 
         axes()
         parabola = createParabola(A, B, C, color)
-        # addPlot(parabola)
     #Ellipse plot, check if ID is in the memory ranges for Ellipse
     elif memory.memorySize*12 <= conicSection < memory.memorySize*13 or memory.memorySize*16 <= conicSection < memory.memorySize*17:
         idScope = symtab.get_scope(conicSection)

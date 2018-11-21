@@ -7,17 +7,6 @@ class mem:
 
     #Constructor
     def __init__(self) :
-        # self.globalInt = [None] * self.memorySize
-        # self.globalFloat = [None] * self.memorySize
-        # self.globalBool = [None] * self.memorySize
-        # self.localInt = [None] * self.memorySize
-        # self.localFloat = [None] * self.memorySize
-        # self.localBool = [None] * self.memorySize
-        # self.tempInt = [None] * self.memorySize
-        # self.tempFloat = [None] * self.memorySize
-        # self.tempBool = [None] * self.memorySize
-        # self.consInt = [None] * self.memorySize
-        # self.consFloat = [None] * self.memorySize
 
         self.memory = [None] * self.memorySize * 24
 
@@ -78,7 +67,6 @@ class mem:
                 return self.lbCont - size
         elif data_type == "parabola" :
             if scope == "GLOBAL":
-                #print(self.gpCont)
                 self.memory[self.gpCont] = value
                 self.gpCont += size
                 return self.gpCont - size
@@ -121,93 +109,93 @@ class mem:
         if data_type == "int" or data_type == 0 :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.giCont
-                # print("int global " + str(sumAddr))
+                # p
                 return sumAddr < self.memorySize
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tiCont
-                # print("int temp " + str(sumAddr))
+                #
                 return sumAddr < self.memorySize*7
             else :
                 sumAddr = sizeRequested + self.liCont
-                # print("int local " + str(sumAddr))
+                # 
                 return sumAddr < self.memorySize*4
         elif data_type == "float" or data_type == 1 :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gfCont
-                # print("float global " + str(sumAddr))
+                # pri
                 return sumAddr < self.memorySize*2
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tfCont
-                # print("float temp " + str(sumAddr))
+                # p
                 return sumAddr < self.memorySize*8
             else :
                 sumAddr = sizeRequested + self.lfCont
-                # print("float local " + str(sumAddr))
+                # pr
                 return sumAddr < self.memorySize*5
         elif data_type == "bool" or data_type == 2 :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gbCont
-                # print("bool global " + str(sumAddr))
+                # pr
                 return sumAddr < self.memorySize*3
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tbCont
-                # print("bool temporal " + str(sumAddr))
+                # prin
                 return sumAddr < self.memorySize*9
             else :
                 sumAddr = sizeRequested + self.lbCont
-                # print("bool local " + str(sumAddr))
+                # p
                 return sumAddr < self.memorySize*6
         elif data_type == "parabola" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gpCont
-                # print("parabola global " + str(sumAddr))
+                # print(
                 return sumAddr < self.memorySize*12
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tpCont
-                # print("parabola temporal " + str(sumAddr))
+                # print("p
                 return sumAddr < self.memorySize*20
             else :
                 sumAddr = sizeRequested + self.lpCont
-                # print("parabola local " + str(sumAddr))
+                # print
                 return sumAddr < self.memorySize*16
         elif data_type == "ellipse" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.geCont
-                # print("ellipse global " + str(sumAddr))
+                # print
                 return sumAddr < self.memorySize*13
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.teCont
-                # print("ellipse temporal " + str(sumAddr))
+                # print("
                 return sumAddr < self.memorySize*21
             else :
                 sumAddr = sizeRequested + self.leCont
-                # print("ellipse local " + str(sumAddr))
+                # prin
                 return sumAddr < self.memorySize*17
         elif data_type == "hyperbola" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.ghCont
-                # print("hyperbola global " + str(sumAddr))
+                # print("
                 return sumAddr < self.memorySize*14
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.thCont
-                # print("hyperbola temporal " + str(sumAddr))
+                # print("hy
                 return sumAddr < self.memorySize*22
             else :
                 sumAddr = sizeRequested + self.lhCont
-                # print("hyperbola local " + str(sumAddr))
+                # print(
                 return sumAddr < self.memorySize*18
         elif data_type == "circle" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gcCont
-                # print("circle global " + str(sumAddr))
+                # prin
                 return sumAddr < self.memorySize*15
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tcCont
-                # print("circle temporal " + str(sumAddr))
+                # print(
                 return sumAddr < self.memorySize*23
             else :
                 sumAddr = sizeRequested + self.lcCont
-                # print("circle local " + str(sumAddr))
+                # pri
                 return sumAddr < self.memorySize*19
         else :
             print("jeje equis de")
