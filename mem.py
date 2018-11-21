@@ -36,8 +36,6 @@ class mem:
         self.tcCont = self.memorySize*22
 
     def add_var(self, data_type, value, size, scope) :
-        print("In memory")
-        print(data_type)
         if data_type == "int" or data_type == 0 :
             if scope == "GLOBAL":
                 self.memory[self.giCont] = value
@@ -94,8 +92,6 @@ class mem:
                 return self.lhCont - size
         elif data_type == "circle" :
             if scope == "GLOBAL":
-                print("guardando circle...")
-                print("dir: "+ str(self.gcCont))
                 self.memory[self.gcCont] = value
                 self.gcCont += size
                 return self.gcCont - size
@@ -109,96 +105,75 @@ class mem:
         if data_type == "int" or data_type == 0 :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.giCont
-                # p
                 return sumAddr < self.memorySize
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tiCont
-                #
                 return sumAddr < self.memorySize*7
             else :
                 sumAddr = sizeRequested + self.liCont
-                # 
                 return sumAddr < self.memorySize*4
         elif data_type == "float" or data_type == 1 :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gfCont
-                # pri
                 return sumAddr < self.memorySize*2
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tfCont
-                # p
                 return sumAddr < self.memorySize*8
             else :
                 sumAddr = sizeRequested + self.lfCont
-                # pr
                 return sumAddr < self.memorySize*5
         elif data_type == "bool" or data_type == 2 :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gbCont
-                # pr
                 return sumAddr < self.memorySize*3
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tbCont
-                # prin
                 return sumAddr < self.memorySize*9
             else :
                 sumAddr = sizeRequested + self.lbCont
-                # p
                 return sumAddr < self.memorySize*6
         elif data_type == "parabola" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gpCont
-                # print(
                 return sumAddr < self.memorySize*12
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tpCont
-                # print("p
                 return sumAddr < self.memorySize*20
             else :
                 sumAddr = sizeRequested + self.lpCont
-                # print
                 return sumAddr < self.memorySize*16
         elif data_type == "ellipse" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.geCont
-                # print
                 return sumAddr < self.memorySize*13
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.teCont
-                # print("
                 return sumAddr < self.memorySize*21
             else :
                 sumAddr = sizeRequested + self.leCont
-                # prin
                 return sumAddr < self.memorySize*17
         elif data_type == "hyperbola" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.ghCont
-                # print("
                 return sumAddr < self.memorySize*14
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.thCont
-                # print("hy
                 return sumAddr < self.memorySize*22
             else :
                 sumAddr = sizeRequested + self.lhCont
-                # print(
                 return sumAddr < self.memorySize*18
         elif data_type == "circle" :
             if scope == "GLOBAL":
                 sumAddr = sizeRequested + self.gcCont
-                # prin
                 return sumAddr < self.memorySize*15
             elif scope == "TEMP":
                 sumAddr = sizeRequested + self.tcCont
-                # print(
                 return sumAddr < self.memorySize*23
             else :
                 sumAddr = sizeRequested + self.lcCont
-                # pri
                 return sumAddr < self.memorySize*19
         else :
-            print("jeje equis de")
+            raise Exception("Fatal error, no memory for such data type")
     
     def nextAvail(self, data_type):
         if data_type == 0: #int
@@ -223,15 +198,15 @@ class mem:
             self.thCont += 1
             return self.thCont - 1
 
+    #Save value in address in memory
     def save(self,value,address):
-        #print("value: " + str(value))
-        #print("address: " + str(address))
         self.memory[address] = value
 
+    #Returns the value stored in an address
     def access(self,address):
-        # print("access address: " + str(address))
         return self.memory[address]
 
+    #Utility function that prints memory in case it is needed
     def print(self):
         print("printing memory")
         cont = 0

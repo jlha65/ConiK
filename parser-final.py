@@ -133,9 +133,11 @@ def p_PROGRAM(t):
     gv.quadCount += 1
     cont=0
     #prints quad list generated from program    
-    for x in gv.quadList:
-        print(str(cont) + ".- " + str(x))
-        cont = cont + 1
+    # for x in gv.quadList:
+    #     print(str(cont) + ".- " + str(x))
+    #     cont = cont + 1
+
+    #Finally, after program ends, run the VM
     vm.run(gv.quadList, symtab, mem)
 
 def p_addProg(t):
@@ -360,9 +362,6 @@ def saveCircleEqValues(circleEquation):
         A = "1"
     if B == "":
         B = "1"
-    print(A)
-    print(B)
-    print(R)
     size = 1
     #Check type of A, B and R for adding in the symbol table
     if "." in A:
@@ -537,9 +536,6 @@ def saveEllipseEqValues(ellipseEquation):
         A = "1"
     if B == "":
         B = "1"
-    print(A)
-    print(B)
-    print(R)
     size = 1
     #Check type of A, B and R for adding in the symbol table
     if "." in A:
@@ -625,8 +621,6 @@ def saveHyperbolaEqValues(hyperbolaEquation):
             B = B + hyperbolaEquation[j:i]
             j = i + 1
         i = i + 1
-    print("Hyperbola A: "+A)
-    print("Hyperbola B: "+B)
     if A == "" or A == "+":
         A = "1"
     elif A == "-":
@@ -635,8 +629,6 @@ def saveHyperbolaEqValues(hyperbolaEquation):
         B = "1"
     elif B == "-":
         B = "-1"
-    print(A)
-    print(B)
     size = 1
     #Check type of A, B and R for adding in the symbol table
     if "." in A:
@@ -691,11 +683,7 @@ def p_ASSIGN1D(t):
     gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,t[-4])
     pos = PilaOp.pop()
     posType = PTypes.pop()
-    if posType == "int":
-        print("pos: " + str(pos))
-        print("CurrentArrAddressL : ")
-        print(gv.currentArrAddressL)
-    else:
+    if posType != "int":
         raise Exception("Array Index must be an integer")
     if gv.currentArrAddressL < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddressL < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddressL < mem.memorySize*7:
         rType = "int"
@@ -733,27 +721,20 @@ def p_ASSIGN2D(t):
     tipo2 = PTypes.pop()
     tipo1 = PTypes.pop()
     #PTypes.append(tipo)#regresar el tipo a la pila
-    if tipo1 == "int":
+    if tipo1 != "int":
         # if isinstance(index1,str):
         #     if index1[0] == '%':
         #         index1 = getCons(index1[1:])
         #         print("index1: " + str(index1))
-        print("index1: " + str(index1))
-    else:
         raise Exception("Array Index must be an integer")
-    if tipo2 == "int":
+    if tipo2 != "int":
         # if isinstance(index2,str):
         #     if index2[0] == '%':
         #         index2 = getCons(index2[1:])
         #         print("index2: " + str(index2))
-        print("index2: " + str(index2))
-    else:
         raise Exception("Array Index must be an integer")
 
-    
-
     gv.currentArrAddressL = gv.currentArrAddressL + index1*symtab.get_dims2(gv.currentScope,gv.currentId) + index2
-    print("address d2: " + str(gv.currentArrAddressL))
 
 def p_FOR_LOOP(t):
     'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ASSIGN forJump EXPRESSION_BOOL forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
@@ -927,7 +908,6 @@ def p_WHILE_paso3(t):
 def p_PLOT(t):
     '''PLOT : PLOT_KEYWORD OPEN_PARENTHESES ID save_name COMMA COLOR flagColor CLOSE_PARENTHESES SEMICOLON
             | PLOT_KEYWORD OPEN_PARENTHESES ID save_name CLOSE_PARENTHESES SEMICOLON'''
-    print("plot id: ")
     address = symtab.get_var_address(gv.currentScope,gv.plotName)
     if mem.memorySize*11 <= address < mem.memorySize*19:
         if gv.flagColor:

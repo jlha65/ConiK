@@ -13,15 +13,10 @@ def add_variable(scope, id, data_type, size, address):
 
 	if not SYM_TABLE["GLOBAL"]: #First variable
 		SYM_TABLE[scope][id] = dict()
-		#SYM_TABLE[cuScope][id] = dict()
 		SYM_TABLE[scope][id]["#type"] = data_type
 		SYM_TABLE[scope][id]["#size"] = size
 		SYM_TABLE[scope][id]["#address"] = address
-		#SYM_TABLE[cuScope][id]["type"] = data_type
-    #if scope in SYM_TABLE:
 	elif SYM_TABLE[scope]:
-	#if SYM_TABLE[cuScope]:
-		#print(SYM_TABLE[scope])
 		if id in SYM_TABLE[scope]:
 		#if id in SYM_TABLE[cuScope]:
 			raise Exception("variable already declared in scope: " + id)
@@ -78,12 +73,14 @@ def get_size(scope, id):
 	else:
 		raise Exception("There is no \"" + id + "\" variable in this scope")
 
+#verifies if a module (scope) exists
 def mod_exist(scope):
 	if scope in SYM_TABLE:
 		return SYM_TABLE[scope]
 	else:
 		raise Exception("There is no \"" + scope + "\" scope")
 
+#get address of variable id in said scope
 def get_var_address(scope,id):
 	#print(SYM_TABLE)
 	if id in SYM_TABLE[scope]:
@@ -93,24 +90,30 @@ def get_var_address(scope,id):
 	else:
 		raise Exception("There is no \"" + id + "\" variable in this scope")
 
+#add parameter number to variable
 def add_param_num(scope,id,num):
 	SYM_TABLE[scope][id]["#paramNum"] = num
 
+#add dimension parameter to variable
 def add_dims(scope,id,dim1,dim2):
 	SYM_TABLE[scope][id]["#dim1"] = dim1
 	SYM_TABLE[scope][id]["#dim2"] = dim2
 
+#returns dim1 of id, dimension of array
 def get_dims1(scope,id):
 	return SYM_TABLE[scope][id]["#dim1"]
+#returns dim2 of id, dimension of array
 def get_dims2(scope,id):
 	return SYM_TABLE[scope][id]["#dim2"]
 
+#returns the scope of the variable whose address is "address"
 def get_scope(address):
 	for x,y in SYM_TABLE.items():
 		for w,z in y.items():
 			if z["#address"] == address:
 				return x
 
+#returns the name of the variable whose address is "address"
 def get_var_name(address):
 	for x,y in SYM_TABLE.items():
 		for w,z in y.items():

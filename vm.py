@@ -10,11 +10,10 @@ from mem import mem as memx
 from semantics_cube import operators_dict, sem_cube, var_types_dict
 
 #counter = 0
-memorySize = 15000
 memory = memx
 
 def run(quadList, symtab, mem) :                              
-    print("Now in the VM")
+    # print("Now in the VM")
     memory = mem
     finished = False
     while not finished:
@@ -67,7 +66,6 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
         gv.counterVm = gv.counterVm + 1
-    print(memory.print())
 
 def GOTO(dir):
     gv.counterVm = dir - 1
@@ -112,9 +110,6 @@ def PRINT(a):
 
 # B = A    #if 10000 <= number <= 30000:
 def EQUAL(a, b):
-    # print("Equal vm")
-    # print(type(a))
-    # print(a)
     aisNum = False
     if isinstance(a,str):
         if a[0] == '%':
@@ -326,7 +321,6 @@ def VER(a,x,b):
             raise Exception("ERROR: Index out of bounds")
     elif memory.memorySize*6 <= a < memory.memorySize*9:
         a = memory.access(a)
-        # print(a)
         if a < 0:
             raise Exception("ERROR: Negative array index")
         if a >= b:
@@ -334,7 +328,6 @@ def VER(a,x,b):
 
 #The plot operation code receives 
 def PLOT(conicSection, color, symtab):
-    print(symtab.SYM_TABLE)
     #If no color is defined, then black is assigned
     if not isinstance(color, str):
         color = "black"
@@ -410,9 +403,6 @@ def createCircle(A, B, R, color):
 #Creates a parabola and plots it, since there's no "Figure" for it we must calculate it by hand
 def createParabola(A, B, C, color):
     #Using code from https://mmas.github.io/conics-matplotlib, but modified for parabola general form usage
-    print("Creating parabola")
-    print(A)
-    print(B)
     mpl.rcParams['lines.color'] = 'k'
     mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
 
