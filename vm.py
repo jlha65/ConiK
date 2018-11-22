@@ -62,9 +62,12 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'VER':
             VER(quadList[gv.counterVm][1],quadList[gv.counterVm][2],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'PLOT':
-            PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab)            
+            PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab)
+        elif quadList[gv.counterVm][0] == 'RETURN':
+            RETURN(quadList[gv.counterVm][1],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
+            memory.print()
         gv.counterVm = gv.counterVm + 1
 
 def GOTO(dir):
@@ -85,7 +88,7 @@ def ERA(mod):
 
 def PARAM(value, paramNum, symtab):
     for x,y in symtab.SYM_TABLE[gv.nextModule].items():
-        if y != "void":
+        if x != "#type" and x != "#address":
             if y["#paramNum"] == paramNum:
                 if isinstance(value,str):
                     if value[0] == '%':
@@ -101,6 +104,7 @@ def GOSUB(dir):
 
 def ENDPROC():
     gv.counterVm = gv.currentQuad.pop()
+    print(gv.currentQuad)
 
 def PRINT(a):
     if type(a) == str:
@@ -128,7 +132,10 @@ def EQUAL(a, b):
         memory.save(a,b)
     else:
         if memory.memorySize*6 <= b < memory.memorySize*9:
-            memaux = memory.access(b)
+            memaux = memory.access(b)#arrays work thanks to this, don't delete
+            if memaux == None:
+                memaux = b
+            #memaux = b
             if memory.memorySize*6 <= a < memory.memorySize*9:
                 if not aisNum:
                     memory.save(memory.access(a),memaux)
@@ -147,6 +154,14 @@ def EQUAL(a, b):
                 memory.save(memaux,b)
         else:
             memory.save(a,b)
+
+def RETURN(a, addressToReturn):
+    if isinstance(a,str):
+        if a[0] == '%':
+            a = getCons(a[1:])
+    else:
+        a = memory.access(a)
+    memory.save(a, addressToReturn)
 
 def ADD(a, b):
     if isinstance(a,str):

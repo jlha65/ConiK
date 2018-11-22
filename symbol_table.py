@@ -31,13 +31,18 @@ def add_variable(scope, id, data_type, size, address):
 		SYM_TABLE[scope][id] = dict()
 		SYM_TABLE[scope][id]["#type"] = data_type
 		
-def add_module(id,return_type):
+def add_module(id,return_type,address):
 
 	if id in SYM_TABLE:
 		raise Exception("module already declared:: " + id)
 	else:
 		SYM_TABLE[id] = dict()
-		SYM_TABLE[id]["return"] = return_type
+		SYM_TABLE[id]["#type"] = return_type
+		SYM_TABLE[id]["#address"] = address
+
+def return_mod_address(id):
+	if id in SYM_TABLE:
+		return SYM_TABLE[id]["#address"]
 
 def add_num_param(scope):
 	SYM_TABLE[scope]["#params"] = len(SYM_TABLE[scope]) - 1
@@ -64,6 +69,12 @@ def get_return_type(scope, id):
 		return SYM_TABLE["GLOBAL"][id]["#type"]
 	else:
 		raise Exception("There is no \"" + id + "\" variable in this scope")
+
+def get_return_type_module(id):
+	if id in SYM_TABLE:
+		return SYM_TABLE[id]["#type"]
+	else:
+		raise Exception("There is no \"" + id + "\" module")
 
 def get_size(scope, id):
 	if id in SYM_TABLE[scope]:

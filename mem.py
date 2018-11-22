@@ -3,7 +3,7 @@
 class mem:
     
     #Size of the memory given to each of our lists
-    memorySize = 100000
+    memorySize = 1000
 
     #Constructor
     def __init__(self) :
@@ -176,30 +176,31 @@ class mem:
             raise Exception("Fatal error, no memory for such data type")
     
     def nextAvail(self, data_type):
-        if data_type == 0: #int
+        if data_type == 0 or data_type == "int": #int
             self.tiCont += 1
             return self.tiCont - 1
-        elif data_type == 1: #float
+        elif data_type == 1 or data_type == "float": #float
             self.tfCont += 1
             return self.tfCont - 1   
-        elif data_type == 2: #bool
+        elif data_type == 2 or data_type == "bool": #bool
             self.tbCont += 1
             return self.tbCont - 1
-        elif data_type == 3: #parabola
+        elif data_type == 3 or data_type == "parabola": #parabola
             self.tpCont += 1
             return self.tpCont - 1
-        elif data_type == 4: #circle
+        elif data_type == 4 or data_type == "circle": #circle
             self.tcCont += 1
             return self.tcCont - 1
-        elif data_type == 5: #ellipse
+        elif data_type == 5 or data_type == "ellipse": #ellipse
             self.teCont += 1
             return self.teCont - 1
-        elif data_type == 6: #hyperbola
+        elif data_type == 6  or data_type == "hyperbola": #hyperbola
             self.thCont += 1
             return self.thCont - 1
 
     #Save value in address in memory
     def save(self,value,address):
+        #print("saved value "+str(value)+" in address "+str(address))
         self.memory[address] = value
 
     #Returns the value stored in an address

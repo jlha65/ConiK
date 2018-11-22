@@ -1,6 +1,6 @@
 program factorialR;
 
-papa(int x, int cont, int stop)
+proc void papa(int x, int cont, int stop)
 {
     print(x);
     if(cont < stop)
@@ -8,6 +8,7 @@ papa(int x, int cont, int stop)
         proc papa(x*cont,cont+1,stop);
     }
 }
+
 {
     proc papa(1,1,50);
 }

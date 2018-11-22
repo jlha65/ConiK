@@ -27,7 +27,9 @@ reserved = {
     'or' : 'OR_KEYWORD',
     'not' : 'NOT_KEYWORD',
     'print' : 'PRINT_KEYWORD',
-    'program' : 'PROGRAM_KEYWORD'
+    'program' : 'PROGRAM_KEYWORD',
+    'void' : 'VOID_KEYWORD',
+    'return': 'RETURN_KEYWORD'
 
     #Planned tokens:
 
@@ -120,6 +122,7 @@ PilaOp = [] #Operands stack
 PTypes = [] #Types stack
 POper = [] #Operators stack
 PJumps = [] #Jumps stack
+PReturns = [] #Returns stack
 listPendingQuads = [] #List made of lists which are the quads that are missing
 PModDataTypes = [] #Stack for data types in module declaration
 temporal_mem = []
@@ -128,14 +131,15 @@ PAssign = [] #Stack where we save the array stuff from the left side
 #The starting rule:
 def p_PROGRAM(t):
     'PROGRAM : goto_main PROGRAM_KEYWORD ID addProg SEMICOLON A'
+    print(symtab.SYM_TABLE)
     quad = ["END",[],[],[]]
     gv.quadList.append(quad)
     gv.quadCount += 1
     cont=0
-    #prints quad list generated from program    
-    # for x in gv.quadList:
-    #     print(str(cont) + ".- " + str(x))
-    #     cont = cont + 1
+    # prints quad list generated from program    
+    for x in gv.quadList:
+        print(str(cont) + ".- " + str(x))
+        cont = cont + 1
 
     #Finally, after program ends, run the VM
     vm.run(gv.quadList, symtab, mem)
@@ -143,6 +147,7 @@ def p_PROGRAM(t):
 def p_addProg(t):
     'addProg :'
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
+    print(gv.currentId)
     symtab.add_variable("GLOBAL",gv.currentId,gv.currentType,None,None)    
 
 def p_TYPE_S(t):
@@ -271,8 +276,45 @@ def p_STATEMENT(t):
 			| FOR_LOOP
 			| WHILE_LOOP
 			| CONDITION
+            | RETURN_STATEMENT
             | PROC_CALL'''
             # | F_CALL'''
+
+def p_RETURN_STATEMENT(t):
+    '''RETURN_STATEMENT : RETURN_KEYWORD EXPRESSION_BOOL SEMICOLON ret
+            | RETURN_KEYWORD SEMICOLON ret_void'''
+
+def p_ret(t):
+    'ret :'
+    if symtab.get_return_type_module(gv.currentScope) != "void":
+        retValue = PilaOp.pop()
+        gv.retValue = retValue
+        quad = ["RETURN",retValue,[],symtab.return_mod_address(gv.currentScope)]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+        
+        quad = ["GOTO", [], [], []]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+
+        PReturns.append(gv.quadCount-1)
+        gv.flagReturn = True
+    else:
+        raise Exception("Void function can't return value")
+
+def p_ret_void(t):
+    '''ret_void :'''
+    if symtab.get_return_type_module(gv.currentScope) == "void":
+        quad = ["GOTO", [], [], []]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+        if not gv.flagReturn:
+            PJumps.append("piso")
+
+        PJumps.append(gv.currentQuad)
+        gv.flagReturn = True
+    else:
+        raise Exception("Function must return value")
 
 def p_PROC_CALL(t):
     '''PROC_CALL : PROC_KEYWORD ID modCall_paso1 modCall_paso2 OPEN_PARENTHESES V1 '''
@@ -792,12 +834,22 @@ def p_forJump(t):
     PJumps.append(gv.quadCount - 1)
 	
 def p_MODULE(t):
-    'MODULE : ID modDef_paso1 OPEN_PARENTHESES I'   
+    #'MODULE : ID modDef_paso1 OPEN_PARENTHESES I'
+    '''MODULE : PROC_KEYWORD TYPE_P ID modDef_paso1 OPEN_PARENTHESES I
+            | PROC_KEYWORD VOID_KEYWORD ID modDef_paso1 OPEN_PARENTHESES I'''
 
 def p_modDef_paso1(t):
     'modDef_paso1 :'
-    symtab.add_module(gv.currentId,"void")
-    gv.currentScope = t[-1]
+    if t[-2] == "void":
+        symtab.add_module(gv.currentId,"void", None)
+        gv.currentScope = t[-1]
+    else:
+        if mem.checkSizeAvail(1,gv.currentType,"GLOBAL"):
+            memAddress = mem.add_var(gv.currentType,None,1,"GLOBAL")
+            symtab.add_module(gv.currentId,gv.currentType,memAddress)
+            gv.currentScope = t[-1]
+        else:
+            raise Exception("Memory size exceeded in module declaration")
 	
 def p_I(t):
     '''I : TYPE_P ID modDef_paso2 J
@@ -837,6 +889,19 @@ def p_modDef_paso7(t):
     quad = ["ENDPROC",[],[],[]]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1
+
+    while PReturns:
+        jump = PReturns.pop()
+        print(jump)
+        gv.quadList[jump][3] = gv.quadCount - 1
+    #Check if there are pending return quads and fill them
+    # if gv.flagReturn:
+    #     jump = PReturns.pop()
+    #     PReturns.append(jump)
+    #     while jump != "piso":
+    #         print(jump)
+    #         gv.quadList[jump][3] = gv.quadCount - 1
+    #         jump = PReturns.pop()
 
 def p_ret_glob(t):
     'ret_glob :'
@@ -1196,7 +1261,8 @@ def p_paso7(t):
 
 def p_VAR_CONS(t):
     '''VAR_CONS : ID paso1a
-			| ID S
+			| PROC_KEYWORD ID S
+            | ID SC
 			| CONS_INT paso1b
             | CONS_FLOAT paso1c
             | MINUSOP addminus CONS_INT paso1b
@@ -1240,9 +1306,11 @@ def p_paso1d(t):
     PTypes.append("bool")
 			
 def p_S(t):
-    '''S : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall1
+    '''S : modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
+
+def p_SC(t):
+    '''SC : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall1
             | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET'''
-			# | modCall_paso1 modCall_paso2 OPEN_PARENTHESES SS'''
 
 def p_arrCall1(t):
     'arrCall1 :'
@@ -1302,13 +1370,13 @@ def p_arrCall1(t):
     gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
 
 
-# def p_SS(t):
-#     '''SS : EXP modCall_paso3 SSS
-#             | EXP modCall_paso3 COMMA modCall_paso4 SS
-# 			| SSS'''
+def p_SS(t):
+    '''SS : EXP modCall_paso3 SSS
+            | EXP modCall_paso3 COMMA modCall_paso4 SS
+			| SSS'''
 
-# def p_SSS(t):
-#     '''SSS : modCall_paso5 CLOSE_PARENTHESES modCall_paso6'''
+def p_SSS(t):
+    '''SSS : modCall_paso5 CLOSE_PARENTHESES modCall_paso6'''
 
 def p_modCall_paso1(t):
     'modCall_paso1 :'
@@ -1358,6 +1426,18 @@ def p_modCall_paso6(t):
     quad = ["GOSUB",gv.currentModCall,[],symtab.get_num_quad(gv.currentModCall)]
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1
+
+    if symtab.get_return_type_module(gv.currentModCall) != "void":
+        if mem.checkSizeAvail(1,symtab.get_return_type_module(gv.currentModCall),gv.currentScope):
+            #get next available temporal variable of the type of the function called
+            result = mem.nextAvail(symtab.get_return_type_module(gv.currentModCall))
+            print(symtab.get_return_type_module(gv.currentModCall))
+            #symtab.add_variable(gv.currentScope,"#"+gv.currentId+"A",AType, size, result)
+            modAddress = symtab.return_mod_address(gv.currentModCall)
+            quad = ["=", modAddress, [], result]
+            gv.quadList.append(quad)
+            gv.quadCount = gv.quadCount + 1
+            PilaOp.append(result)
 
 def p_error(p):
     if p:
