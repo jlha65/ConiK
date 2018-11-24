@@ -131,15 +131,15 @@ PAssign = [] #Stack where we save the array stuff from the left side
 #The starting rule:
 def p_PROGRAM(t):
     'PROGRAM : goto_main PROGRAM_KEYWORD ID addProg SEMICOLON A'
-    print(symtab.SYM_TABLE)
+    #print(symtab.SYM_TABLE)
     quad = ["END",[],[],[]]
     gv.quadList.append(quad)
     gv.quadCount += 1
     cont=0
     # prints quad list generated from program    
-    for x in gv.quadList:
-        print(str(cont) + ".- " + str(x))
-        cont = cont + 1
+    # for x in gv.quadList:
+    #     print(str(cont) + ".- " + str(x))
+    #     cont = cont + 1
 
     #Finally, after program ends, run the VM
     vm.run(gv.quadList, symtab, mem)
@@ -147,7 +147,6 @@ def p_PROGRAM(t):
 def p_addProg(t):
     'addProg :'
     gv.currentType = "PROGRAM" # tipo de dato "PROGRAM"
-    print(gv.currentId)
     symtab.add_variable("GLOBAL",gv.currentId,gv.currentType,None,None)    
 
 def p_TYPE_S(t):
@@ -241,11 +240,11 @@ def p_add_variableArr2(t):
     if isinstance(a,str):
         if a[0] == '%':
             a = getCons(a[1:])
-            print("a: " + str(a))
+            #print("a: " + str(a))
     if isinstance(b,str):
         if b[0] == '%':
             b = getCons(b[1:])
-            print("b: " + str(b))
+            #print("b: " + str(b))
 
     size = a * b
 
@@ -752,7 +751,7 @@ def p_ASSIGN1D(t):
 #To be completed: Arrays 2D
 def p_ASSIGN2D(t):
     'ASSIGN2D :'
-    gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,gv.currentId)
+    #gv.currentArrAddressL = symtab.get_var_address(gv.currentScope,gv.currentId)
     #symtab.get_var_address(gv.currentScope,t[-1])
     #print("arr1d " + str(gv.currentArrAddress))
     #ID OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET ASSIGN2D EQUALOP EXPRESSION SEMICOLON
@@ -776,7 +775,53 @@ def p_ASSIGN2D(t):
         #         print("index2: " + str(index2))
         raise Exception("Array Index must be an integer")
 
-    gv.currentArrAddressL = gv.currentArrAddressL + index1*symtab.get_dims2(gv.currentScope,gv.currentId) + index2
+    if gv.currentArrAddressL < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddressL < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddressL < mem.memorySize*7:
+        rType = "int"
+    elif mem.memorySize <= gv.currentArrAddressL < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddressL < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddressL < mem.memorySize*8:
+        rType = "float"
+    elif mem.memorySize*2 <= gv.currentArrAddressL < mem.memorySize*3 or mem.memorySize*5 <= gv.currentArrAddressL < mem.memorySize*6 or mem.memorySize*8 <= gv.currentArrAddressL < mem.memorySize*9:
+        rType = "bool"
+    result_Type = sem_cube[operators_dict["+"]][var_types_dict[tipo1]][var_types_dict[rType]]
+    #Create a new temp variable for use in the '+' quad just below
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+
+    #calculate address
+    rr = symtab.get_dims2(symtab.get_scope(gv.currentArrAddressL),t[-7])
+    #calculate addresses skipped by rows (first index a[X][])
+    quad = ["*", "%"+str(rr),index1,result]
+    #Add the '*' quad to quadlist
+    gv.quadList.append(quad)
+    gv.quadCount += 1
+
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result2 = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+
+    #calculate addresses skipped by columns (second index a[][X])
+    quad = ["+", result,index2,result2]
+    #Add the '+' quad to quadlist
+    gv.quadList.append(quad)
+    gv.quadCount += 1
+
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result3 = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+
+    #Create '+' quad for the BaseDir of Array + index of array
+    quad = ["+" ,result2 ,"%" + str(gv.currentArrAddressL),result3]
+
+    #Add the '+' quad to quadlist
+    gv.quadList.append(quad)
+    gv.quadCount += 1
+
+    PAssign.append(result3)
+
+    #gv.currentArrAddressL = gv.currentArrAddressL + index1*symtab.get_dims2(gv.currentScope,gv.currentId) + index2
 
 def p_FOR_LOOP(t):
     'FOR_LOOP : FOR_LOOP_KEYWORD saveCount OPEN_PARENTHESES ASSIGN forJump EXPRESSION_BOOL forExpression SEMICOLON ID EQUALOP EXP pop_exp CLOSE_PARENTHESES BLOCK forBack'
@@ -892,7 +937,7 @@ def p_modDef_paso7(t):
 
     while PReturns:
         jump = PReturns.pop()
-        print(jump)
+        #print(jump)
         gv.quadList[jump][3] = gv.quadCount - 1
     #Check if there are pending return quads and fill them
     # if gv.flagReturn:
@@ -1310,7 +1355,7 @@ def p_S(t):
 
 def p_SC(t):
     '''SC : OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall1
-            | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET'''
+            | OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET OPEN_SQUARE_BRACKET EXP CLOSE_SQUARE_BRACKET arrCall2'''
 
 def p_arrCall1(t):
     'arrCall1 :'
@@ -1369,6 +1414,115 @@ def p_arrCall1(t):
     gv.quadList.append(quad)
     gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
 
+def p_arrCall2(t):
+    'arrCall2 :'
+    gv.currentArrAddress = symtab.get_var_address(gv.currentScope,t[-7])
+
+    index2 = PilaOp.pop()
+    index1 = PilaOp.pop()
+    tipo2 = PTypes.pop()
+    tipo1 = PTypes.pop()
+
+    pos1Flag = False #check if index1 is a constant
+    if isinstance(index1,str):
+        if index1[0] == '%':
+            index1 = getCons(index1[1:])
+            pos1Flag = True
+    pos2Flag = False #check if index2 is a constant
+    if isinstance(index2,str):
+        if index2[0] == '%':
+            index2 = getCons(index2[1:])
+            pos2Flag = True
+
+    #print(pos1Flag,pos2Flag)
+
+    if gv.currentArrAddress < mem.memorySize or mem.memorySize*3 <= gv.currentArrAddress < mem.memorySize*4 or mem.memorySize*6 <= gv.currentArrAddress < mem.memorySize*7:
+        rType = "int"
+    elif mem.memorySize <= gv.currentArrAddress < mem.memorySize*2 or mem.memorySize*4 <= gv.currentArrAddress < mem.memorySize*5 or mem.memorySize*7 <= gv.currentArrAddress < mem.memorySize*8:
+        rType = "float"
+    elif mem.memorySize*2 <= gv.currentArrAddress < mem.memorySize*3 or mem.memorySize*5 <= gv.currentArrAddress < mem.memorySize*6 or mem.memorySize*8 <= gv.currentArrAddress < mem.memorySize*9:
+        rType = "bool"
+
+    #result_Type = sem_cube[operators_dict["+"]][var_types_dict[posType]][var_types_dict["int"]]
+    result_Type = sem_cube[operators_dict["+"]][var_types_dict[tipo1]][var_types_dict[rType]]
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+    #address1
+    #left_op = "%" + str(gv.currentArrAddress)
+    #calculate address
+    left_op = symtab.get_dims2(symtab.get_scope(gv.currentArrAddress),t[-7])
+    #calculate addresses skipped by rows (first index a[X][])
+    #left_op = "%" + str(gv.currentArrAddress)
+    #print("index1 :",index1)
+    #if (mem.memorySize*6 <= index1 < mem.memorySize*9 or index1 == symtab.get_var_address(gv.currentScope,t[-7])) and not pos1Flag:
+    if not pos1Flag:
+        quad = ["*","%"+str(left_op),index1,result]
+    else:
+        quad = ["*","%"+str(left_op),"%" + str(index1),result]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    #calculate addresses skipped by columns (second index a[][X])
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result2 = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+    if (mem.memorySize*6 <= index2 < mem.memorySize*9 or index2 == symtab.get_var_address(gv.currentScope,gv.currentId)) and not pos2Flag:
+    #if not pos2Flag:
+        quad = ["+",result,index2,result2]
+    else:
+        quad = ["+",result,"%" + str(index2),result2]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    #added base address
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result3 = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+    #if (mem.memorySize*6 <= index2 < mem.memorySize*9 or index2 == symtab.get_var_address(gv.currentScope,gv.currentId)) and not pos2Flag:
+    #    quad = ["+",result,index2,result2]
+    #else:
+    #    quad = ["+",result,"%" + str(index2),result2]
+    quad = ["+","%" + str(gv.currentArrAddress),result2,result3]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    #create ACC to access value in address
+    if mem.checkSizeAvail(1, result_Type, "TEMP"):
+        result4 = mem.nextAvail(result_Type)
+    else:
+        raise Exception("Ran out of memory")
+    
+    quad = ["ACC",result3,[],result4]#Acceso a valor en result (result es una direccion)
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+
+    PilaOp.append(result4)
+    if result_Type == 0:
+        PTypes.append("int")
+    elif result_Type == 1:
+        PTypes.append("float")
+    elif result_Type == 2:
+        PTypes.append("bool")
+    
+    if pos1Flag:
+        x = 1
+    else:
+        x = []
+    #quad = ["VER",index1,x,symtab.get_size(gv.currentScope,t[-7])]
+    quad = ["VER",index1,x,symtab.get_dims1(symtab.get_scope(gv.currentArrAddress),t[-7])]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
+    if pos2Flag:
+        x = 1
+    else:
+        x = []
+    quad = ["VER",index2,x,symtab.get_dims2(symtab.get_scope(gv.currentArrAddress),t[-7])]
+    gv.quadList.append(quad)
+    gv.quadCount = gv.quadCount + 1#incrmenta cuenta de cuadruplos
 
 def p_SS(t):
     '''SS : EXP modCall_paso3 SSS
@@ -1431,7 +1585,7 @@ def p_modCall_paso6(t):
         if mem.checkSizeAvail(1,symtab.get_return_type_module(gv.currentModCall),gv.currentScope):
             #get next available temporal variable of the type of the function called
             result = mem.nextAvail(symtab.get_return_type_module(gv.currentModCall))
-            print(symtab.get_return_type_module(gv.currentModCall))
+            #print(symtab.get_return_type_module(gv.currentModCall))
             #symtab.add_variable(gv.currentScope,"#"+gv.currentId+"A",AType, size, result)
             modAddress = symtab.return_mod_address(gv.currentModCall)
             quad = ["=", modAddress, [], result]

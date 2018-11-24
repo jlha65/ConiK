@@ -67,7 +67,7 @@ def run(quadList, symtab, mem) :
             RETURN(quadList[gv.counterVm][1],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
             finished = True
-            memory.print()
+            #memory.print()
         gv.counterVm = gv.counterVm + 1
 
 def GOTO(dir):
@@ -104,7 +104,7 @@ def GOSUB(dir):
 
 def ENDPROC():
     gv.counterVm = gv.currentQuad.pop()
-    print(gv.currentQuad)
+    #print(gv.currentQuad)
 
 def PRINT(a):
     if type(a) == str:
@@ -330,13 +330,17 @@ def ACC(a):
 
 def VER(a,x,b):
     if isinstance(x,int):
+        #print(str(a) + " : " + str(b))
         if a < 0:
             raise Exception("ERROR: Negative array index")
         if a >= b:
             raise Exception("ERROR: Index out of bounds")
     elif memory.memorySize*6 <= a < memory.memorySize*9:
+        #print(a)
         a = memory.access(a)
+        #print(str(a) + " : " + str(b))
         if a < 0:
+            #print(a)
             raise Exception("ERROR: Negative array index")
         if a >= b:
             raise Exception("ERROR: Index out of bounds")
