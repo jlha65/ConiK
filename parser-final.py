@@ -9,6 +9,8 @@ reserved = {
     'hyperbola' : 'HYPERBOLA_KEYWORD',
     'circle' : 'CIRCLE_KEYWORD',
     'plot' : 'PLOT_KEYWORD',
+    'rotate' : 'ROTATE_KEYWORD',
+    'reflect' : 'REFLECT_KEYWORD',
     'if' : 'IF_STATEMENT',
     'else' : 'ELSE_STATEMENT',
     'proc' : 'PROC_KEYWORD',
@@ -964,7 +966,9 @@ def p_COLOR(t):
 			
 def p_WRITE(t):
     '''WRITE : PRINT
-            | PLOT'''
+            | PLOT
+            | ROTATE
+            | REFLECT'''
 			
 def p_PRINT(t):
     '''PRINT : PRINT_KEYWORD OPEN_PARENTHESES M
@@ -1029,6 +1033,26 @@ def p_PLOT(t):
         gv.quadCount = gv.quadCount + 1
     else:
         raise Exception("ERROR: PLOT needs Parabola, Circle, Ellipse or Hyperbola input.")
+
+def p_ROTATE(t):
+    '''ROTATE : ROTATE_KEYWORD OPEN_PARENTHESES ID save_name CLOSE_PARENTHESES SEMICOLON'''
+    address = symtab.get_var_address(gv.currentScope,gv.plotName)
+    if mem.memorySize*11 <= address < mem.memorySize*19:
+        quad = ["ROTATE",address,[],[]]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    else:
+        raise Exception("ERROR: ROTATE needs Parabola, Circle, Ellipse or Hyperbola input.")
+
+def p_REFLECT(t):
+    '''REFLECT : REFLECT_KEYWORD OPEN_PARENTHESES ID save_name CLOSE_PARENTHESES SEMICOLON'''
+    address = symtab.get_var_address(gv.currentScope,gv.plotName)
+    if mem.memorySize*11 <= address < mem.memorySize*19:
+        quad = ["REFLECT",address,[],[]]
+        gv.quadList.append(quad)
+        gv.quadCount = gv.quadCount + 1
+    else:
+        raise Exception("ERROR: REFLECT needs Parabola, Circle, Ellipse or Hyperbola input.")
 
 def p_save_name(t):
     'save_name :'

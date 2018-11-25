@@ -16,6 +16,9 @@ def run(quadList, symtab, mem) :
     # print("Now in the VM")
     memory = mem
     finished = False
+    #Flag for rotation of parabola / hyperbola
+    hasBeenRotated = [False, False]
+    hasBeenReflected = [False]
     while not finished:
         if quadList[gv.counterVm][0] == 'GOTO':
             GOTO(quadList[gv.counterVm][3])
@@ -62,7 +65,11 @@ def run(quadList, symtab, mem) :
         elif quadList[gv.counterVm][0] == 'VER':
             VER(quadList[gv.counterVm][1],quadList[gv.counterVm][2],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'PLOT':
-            PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab)
+            PLOT(quadList[gv.counterVm][1],quadList[gv.counterVm][2], symtab, hasBeenRotated, hasBeenReflected)
+        elif quadList[gv.counterVm][0] == 'ROTATE':
+            ROTATE(quadList[gv.counterVm][1], symtab, hasBeenRotated)
+        elif quadList[gv.counterVm][0] == 'REFLECT':
+            REFLECT(quadList[gv.counterVm][1], symtab, hasBeenReflected)
         elif quadList[gv.counterVm][0] == 'RETURN':
             RETURN(quadList[gv.counterVm][1],quadList[gv.counterVm][3])
         elif quadList[gv.counterVm][0] == 'END':
@@ -346,7 +353,7 @@ def VER(a,x,b):
             raise Exception("ERROR: Index out of bounds")
 
 #The plot operation code receives 
-def PLOT(conicSection, color, symtab):
+def PLOT(conicSection, color, symtab, hasBeenRotated, hasBeenReflected):
     #If no color is defined, then black is assigned
     if not isinstance(color, str):
         color = "black"
@@ -363,7 +370,7 @@ def PLOT(conicSection, color, symtab):
         C = memory.access(C)
 
         axes()
-        parabola = createParabola(A, B, C, color)
+        parabola = createParabola(A, B, C, color, hasBeenRotated, hasBeenReflected)
     #Ellipse plot, check if ID is in the memory ranges for Ellipse
     elif memory.memorySize*12 <= conicSection < memory.memorySize*13 or memory.memorySize*16 <= conicSection < memory.memorySize*17:
         idScope = symtab.get_scope(conicSection)
@@ -388,7 +395,7 @@ def PLOT(conicSection, color, symtab):
         B = memory.access(B)
 
         axes()
-        hyperbola = createHyperbola(A, B, color)
+        hyperbola = createHyperbola(A, B, color, hasBeenRotated)
     #Circle plot, check if ID is in the memory ranges for Circle
     elif memory.memorySize*14 <= conicSection < memory.memorySize*15 or memory.memorySize*18 <= conicSection < memory.memorySize*19:
         #The circle doesn't need the A and B values, just the R value for the radius.
@@ -408,6 +415,60 @@ def PLOT(conicSection, color, symtab):
     else:
         raise Exception("Fatal error, not a conic section")
 
+#Rotate a conic section
+def ROTATE(conicSection, symtab, hasBeenRotated):
+    id = symtab.get_var_name(conicSection)
+    #Parabola rotate, check if ID is in the memory ranges for parabola
+    if memory.memorySize*11 <= conicSection < memory.memorySize*12 or memory.memorySize*15 <= conicSection < memory.memorySize*16:
+        #Change the flag of rotation 
+        hasBeenRotated[0] = not hasBeenRotated[0]
+    #Ellipse rotate, check if ID is in the memory ranges for Ellipse
+    elif memory.memorySize*12 <= conicSection < memory.memorySize*13 or memory.memorySize*16 <= conicSection < memory.memorySize*17:
+        idScope = symtab.get_scope(conicSection)
+        A = symtab.get_var_address(idScope,"#" + id + "A")
+        B = symtab.get_var_address(idScope,"#" + id + "B")
+
+        valA = memory.access(A)
+        valB = memory.access(B)
+
+        memory.save(valA, B)
+        memory.save(valB, A)
+
+
+    #Hyperbola rotate, check if ID is in the memory ranges for Hyperbola
+    elif memory.memorySize*13 <= conicSection < memory.memorySize*14 or memory.memorySize*17 <= conicSection < memory.memorySize*18:
+        #Change the flag of rotation 
+        hasBeenRotated[1] = not hasBeenRotated[1]
+    #Circle rotate, check if ID is in the memory ranges for Circle
+    elif memory.memorySize*14 <= conicSection < memory.memorySize*15 or memory.memorySize*18 <= conicSection < memory.memorySize*19:
+        #Nothing should be done, since a circle rotated is the same
+        pass
+    #This shouldn't happen, since semantics validation for receiving a plottable conic section is done in the parser
+    else:
+        raise Exception("Fatal error, not a conic section")
+
+#Reflect a conic section
+def REFLECT(conicSection, symtab, hasBeenReflected):
+    #Parabola Reflect, check if ID is in the memory ranges for parabola
+    if memory.memorySize*11 <= conicSection < memory.memorySize*12 or memory.memorySize*15 <= conicSection < memory.memorySize*16:
+        #Change the flag of reflection 
+        hasBeenReflected[0] = not hasBeenReflected[0]
+    #Ellipse Reflect, check if ID is in the memory ranges for Ellipse
+    elif memory.memorySize*12 <= conicSection < memory.memorySize*13 or memory.memorySize*16 <= conicSection < memory.memorySize*17:
+        #Nothing should be done, since an ellipse Reflected is the same
+        pass
+    #Hyperbola Reflect, check if ID is in the memory ranges for Hyperbola
+    elif memory.memorySize*13 <= conicSection < memory.memorySize*14 or memory.memorySize*17 <= conicSection < memory.memorySize*18:
+        #Nothing should be done, since an ellipse Reflected is the same
+        pass
+    #Circle Reflect, check if ID is in the memory ranges for Circle
+    elif memory.memorySize*14 <= conicSection < memory.memorySize*15 or memory.memorySize*18 <= conicSection < memory.memorySize*19:
+        #Nothing should be done, since a circle Reflected is the same
+        pass
+    #This shouldn't happen, since semantics validation for receiving a plottable conic section is done in the parser
+    else:
+        raise Exception("Fatal error, not a conic section")
+
 #Creates an ellipse object using parameters and returns it, it doesn't show the graph yet
 def createEllipse(A, B, R, color):
     ellipse = Ellipse(xy=(0,0), width = A, height = B, edgecolor = color, fc = "None")
@@ -420,7 +481,7 @@ def createCircle(A, B, R, color):
     return circle
 
 #Creates a parabola and plots it, since there's no "Figure" for it we must calculate it by hand
-def createParabola(A, B, C, color):
+def createParabola(A, B, C, color, hasBeenRotated, hasBeenReflected):
     #Using code from https://mmas.github.io/conics-matplotlib, but modified for parabola general form usage
     mpl.rcParams['lines.color'] = 'k'
     mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
@@ -430,12 +491,18 @@ def createParabola(A, B, C, color):
     y = np.linspace(-50, 50, 400)
     x, y = np.meshgrid(x, y)
 
+    if hasBeenReflected[0]:
+        A = -A
+
     axes()
-    plt.contour(x, y, (A*x**2 + B*x + C - y ), [0], colors=color)
+    if not hasBeenRotated[0]:
+        plt.contour(x, y, (A*x**2 + B*x + C - y ), [0], colors=color)
+    else:
+        plt.contour(x, y, (A*y**2 + B*y + C - x ), [0], colors=color)
     plt.show()
 
 #Creates a hyperbola and plots it, since there's no "Figure" for it we must calculate it by hand
-def createHyperbola(A, B, color):
+def createHyperbola(A, B, color, hasBeenRotated):
     #From https://mmas.github.io/conics-matplotlib
     mpl.rcParams['lines.color'] = 'k'
     mpl.rcParams['axes.prop_cycle'] = mpl.cycler('color', ['k'])
@@ -448,7 +515,11 @@ def createHyperbola(A, B, color):
     axes()
     #Only one of A or B must be negative, we rely on semantics from parser for that
     #Draw hyperbola in standard position
-    plt.contour(x, y,(x**2/A + y**2/B), [1], colors=color)
+    if not hasBeenRotated[1]:
+        plt.contour(x, y,(x**2/A + y**2/B), [1], colors=color)
+    else:
+        print("rotaeted")
+        plt.contour(x, y,(x**2/B + y**2/A), [1], colors=color)
     plt.show()
 
 #Used for circles and ellipses, this function adds the figure to the current plot and shows it.
